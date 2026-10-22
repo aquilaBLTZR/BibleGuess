@@ -1,471 +1,780 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="tl" class="dark">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BibleGuess — Ang Dating Biblia Edition</title>
-<style>
-:root {
-  --bg: #323437;
-  --panel: #2c2e31;
-  --text: #d1d0c5;
-  --muted: #77797c;
-  --yellow: #e2b714;
-  --green: #b8d7a3;
-  --red: #ca4754;
-  --line: #45474a;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font: 16px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-.wrap {
-  max-width: 1050px;
-  margin: auto;
-  padding: 30px 22px;
-  width: 100%;
-  flex: 1;
-}
-
-/* Splash Screen */
-.splash-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 80vh;
-  text-align: center;
-}
-.splash-title {
-  font-size: clamp(40px, 8vw, 72px);
-  font-weight: 900;
-  letter-spacing: -3px;
-  margin-bottom: 8px;
-  animation: popIn 0.3s ease-out;
-}
-.splash-title span { color: var(--yellow); }
-.splash-sub {
-  color: var(--muted);
-  font-size: 14px;
-  letter-spacing: 2px;
-  margin-bottom: 36px;
-  text-transform: uppercase;
-}
-.btn-start {
-  background: var(--yellow);
-  color: #242629;
-  font-size: 18px;
-  font-weight: 800;
-  padding: 16px 40px;
-  border-radius: 10px;
-  border: 0;
-  cursor: pointer;
-  letter-spacing: 1px;
-  box-shadow: 0 8px 24px rgba(226, 183, 20, 0.2);
-}
-.btn-start:hover {
-  filter: brightness(1.1);
-  transform: translateY(-2px);
-}
-
-/* Game Interface */
-.game-interface { display: none; }
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-.brand {
-  font-size: 26px;
-  font-weight: 900;
-  letter-spacing: -1.5px;
-}
-.brand span { color: var(--yellow); }
-.sub, .muted { color: var(--muted); font-size: 12px; }
-.pill {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 8px 12px;
-  color: var(--muted);
-  font-size: 12px;
-}
-.settings {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin: 20px 0;
-  color: var(--muted);
-  font-size: 12px;
-}
-.tag-btn {
-  background: #3b3d40;
-  color: var(--yellow);
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  border: 0;
-  cursor: pointer;
-}
-.tag-btn:hover { background: #484a4e; }
-.game, .card {
-  background: var(--panel);
-  border: 1px solid #393b3e;
-  border-radius: 12px;
-}
-.game { padding: 34px 36px; }
-.kicker {
-  color: var(--yellow);
-  font-size: 12px;
-  letter-spacing: 1.4px;
-  margin-bottom: 18px;
-}
-.verse {
-  font-size: clamp(18px, 2.5vw, 26px);
-  line-height: 1.6;
-  min-height: 140px;
-  display: flex;
-  align-items: center;
-  color: #e5e4dc;
-}
-.timerline {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--muted);
-  font-size: 12px;
-  margin: 10px 0 20px;
-}
-.bar {
-  height: 3px;
-  background: #45474a;
-  flex: 1;
-  border-radius: 8px;
-  overflow: hidden;
-}
-.fill {
-  height: 100%;
-  background: var(--yellow);
-  width: 100%;
-  transition: width .1s linear;
-}
-.entryrow { display: flex; gap: 10px; }
-.entry {
-  flex: 1;
-  min-width: 0;
-  background: #242629;
-  border: 1px solid #4c4e51;
-  border-radius: 7px;
-  padding: 15px;
-  color: #f0efe7;
-  font: 15px monospace;
-  outline: none;
-}
-.entry:focus { border-color: var(--yellow); }
-.entry::placeholder { color: #6c6e70; }
-button { font: inherit; cursor: pointer; border: 0; }
-.primary {
-  background: var(--yellow);
-  color: #242629;
-  border-radius: 7px;
-  padding: 12px 20px;
-  font-weight: 800;
-}
-.primary:hover { filter: brightness(1.08); }
-.bottom {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 18px;
-}
-.card { padding: 18px; }
-.cardhead {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  font-size: 12px;
-}
-.count { color: var(--muted); }
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-height: 145px;
-  overflow: auto;
-}
-.record {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 12px;
-  color: var(--muted);
-}
-.record strong { color: var(--text); font-weight: 500; }
-.help {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 20px;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-/* Modals & Backdrops */
-.backdrop {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  background: rgba(18, 19, 20, 0.85);
-  backdrop-filter: blur(4px);
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-}
-.backdrop.show { display: flex !important; }
-.modal {
-  width: min(480px, 100%);
-  background: #2c2e31;
-  border: 1px solid #55585b;
-  border-radius: 14px;
-  padding: 26px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
-  animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-.modal-title {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--text);
-}
-.btn-back {
-  background: transparent;
-  color: var(--muted);
-  font-size: 13px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--line);
-  cursor: pointer;
-}
-.btn-back:hover {
-  color: var(--yellow);
-  border-color: var(--yellow);
-}
-.option-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.option-btn {
-  background: #242629;
-  border: 1px solid #45474a;
-  border-radius: 10px;
-  padding: 16px;
-  color: var(--text);
-  text-align: left;
-  cursor: pointer;
-}
-.option-btn:hover {
-  border-color: var(--yellow);
-  background: #2a2c30;
-}
-.option-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--yellow);
-  margin-bottom: 4px;
-}
-.option-desc {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-/* Result Modal Specifics */
-.modalStatus {
-  font-size: 28px;
-  font-weight: 900;
-  letter-spacing: -1px;
-  color: var(--green);
-  margin-bottom: 18px;
-}
-.modalStatus.wrong { color: var(--red); }
-.label {
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 1px;
-  margin: 14px 0 6px;
-}
-.ref { color: var(--yellow); font-size: 14px; font-weight: bold; }
-.modalVerse { font-size: 15px; line-height: 1.6; color: #e5e4dc; }
-.stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  border-top: 1px solid var(--line);
-  padding-top: 16px;
-  margin-top: 18px;
-}
-.statbox { background: #242629; border-radius: 8px; padding: 12px; }
-.statnum { font-size: 22px; font-weight: bold; }
-.statname { font-size: 11px; color: var(--muted); }
-.actions { display: flex; justify-content: flex-end; margin-top: 20px; }
-
-@keyframes popIn {
-  from { opacity: 0; transform: translateY(12px) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@media(max-width: 650px) {
-  .wrap { padding: 20px 13px; }
-  .game { padding: 24px 18px; }
-  .verse { min-height: 175px; }
-  .entryrow { flex-direction: column; }
-  .bottom { grid-template-columns: 1fr; }
-  .top { margin-bottom: 25px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BibleGuess - Tagalog Edition</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            gold: {
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
+            },
+            darkbg: '#0f172a',
+            cardbg: '#1e293b',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      min-height: 100vh;
+      margin: 0;
+      user-select: none;
+    }
+    .custom-glow {
+      box-shadow: 0 0 25px -5px rgba(234, 179, 8, 0.25);
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .modal-backdrop {
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(8px);
+    }
+    .timer-bar {
+      transition: width 0.1s linear;
+    }
+  </style>
 </head>
-<body>
+<body class="flex flex-col min-h-screen text-slate-100 antialiased overflow-x-hidden justify-between">
 
-<main class="wrap">
-  <!-- SPLASH SCREEN -->
-  <section id="splashScreen" class="splash-container">
-    <div class="splash-title">Bible<span>Guess</span></div>
-    <div class="splash-sub">ANG DATING BIBLIA (ZEFANIA XML)</div>
-    <button id="btnStartGame" class="btn-start" type="button">START GAME</button>
-  </section>
-
-  <!-- MAIN GAME INTERFACE -->
-  <section id="gameInterface" class="game-interface">
-    <header class="top">
+  <!-- TOP HEADER / NAV -->
+  <header class="w-full max-w-4xl mx-auto px-4 py-4 flex items-center justify-between border-b border-slate-800">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xl">
+        <i class="fa-solid font-bold fa-book-bible"></i>
+      </div>
       <div>
-        <div class="brand">Bible<span>Guess</span></div>
-        <div class="sub">ANG DATING BIBLIA (ADB 1905)</div>
+        <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+          Bible<span class="text-amber-400">Guess</span>
+        </h1>
+        <p class="text-xs text-slate-400 font-medium">Ang Dating Biblia (1905)</p>
       </div>
-      <div class="pill"><span id="modeDisplayTag">Beginner</span> MODE <span style="color:var(--yellow)">●</span></div>
-    </header>
+    </div>
 
-    <section class="settings">
-      <span>MODE: <button id="modeTagBtn" class="tag-btn" type="button">Beginner</button></span>
-      <span style="margin-left: 12px;">TIMER: <button id="timerTag" class="tag-btn" type="button">5s</button></span>
-      <button id="btnChangeSettings" class="tag-btn" style="margin-left:auto;" type="button">⚙ Change Setup</button>
-    </section>
+    <!-- Mode Badge & Change Setup -->
+    <div id="game-info-badge" class="hidden flex items-center gap-2">
+      <span id="current-mode-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+        Beginner
+      </span>
+      <span id="current-timer-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+        5s
+      </span>
+      <button id="btn-change-setup" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-sm flex items-center gap-1 border border-slate-700">
+        <i class="fa-solid fa-gear text-xs"></i>
+        <span class="hidden sm:inline">Setup</span>
+      </button>
+    </div>
+  </header>
 
-    <section class="game">
-      <div class="kicker">WHICH VERSE IS THIS?</div>
-      <div id="verse" class="verse">Loading verse...</div>
-      <div class="timerline">
-        <span id="timerText">—</span>
-        <div class="bar"><div id="fill" class="fill" style="width:100%"></div></div>
-        <span id="round">READY</span>
+  <!-- MAIN CONTAINER -->
+  <main class="w-full max-w-4xl mx-auto px-4 py-6 flex-grow flex flex-col justify-center items-center">
+
+    <!-- 1. SPLASH SCREEN -->
+    <div id="screen-splash" class="w-full max-w-md text-center py-10 flex flex-col items-center">
+      <div class="w-24 h-24 rounded-3xl bg-amber-500/10 border-2 border-amber-500/30 flex items-center justify-center text-amber-400 text-5xl mb-6 shadow-2xl custom-glow">
+        <i class="fa-solid fa-book-open text-amber-400"></i>
       </div>
-      <form id="guessForm">
-        <div class="entryrow">
-          <input id="answer" class="entry" autocomplete="off" placeholder="Book shortcut chapter:verse · e.g. ex 20:1, aw 37:5, heb 6:10" aria-label="Guess book chapter and verse">
-          <button class="primary" id="guessButton" type="submit">GUESS ↵</button>
+      <h2 class="text-3xl font-extrabold text-white mb-2">BIBLE GUESS</h2>
+      <p class="text-slate-400 text-sm max-w-sm mb-8 leading-relaxed">
+        Subukin ang iyong kaalaman sa mga talata ng Banal na Kasulatan. Hulaan ang tamang Aklat, Kabanata, at Talata.
+      </p>
+      <button id="btn-start-game" class="w-full py-4 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/20 transition transform active:scale-95 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-play"></i> START GAME
+      </button>
+    </div>
+
+    <!-- 2. MODE SELECTION MODAL -->
+    <div id="modal-mode" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
+      <div class="glass-card w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/50 flex flex-col">
+        <div class="flex items-center justify-between mb-6">
+          <button id="btn-back-to-splash" class="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 transition py-1 px-2.5 rounded-lg bg-slate-800/80 border border-slate-700">
+            <i class="fa-solid fa-arrow-left"></i> ← Back
+          </button>
+          <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Step 1 of 2</span>
+        </div>
+
+        <h3 class="text-2xl font-bold text-white text-center mb-1">Choose Mode</h3>
+        <p class="text-xs text-slate-400 text-center mb-6">Pumili ng antas ng kahirapan ng mga talata</p>
+
+        <div class="space-y-4 mb-2">
+          <!-- Beginner Button -->
+          <button id="btn-select-beginner" class="w-full p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 text-left transition group flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
+              <i class="fa-solid fa-seedling text-lg"></i>
+            </div>
+            <div>
+              <div class="font-bold text-white group-hover:text-amber-400 transition flex items-center gap-2">
+                Beginner
+                <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-semibold border border-amber-500/30">Curated Pool</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                Naglalaman ng partikular na tanyag at mahahalagang talata (Exodo, Isaias, Kawikaan, Mateo, Roma, Corinto, atbp.)
+              </p>
+            </div>
+          </button>
+
+          <!-- Pro Button -->
+          <button id="btn-select-pro" class="w-full p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 text-left transition group flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
+              <i class="fa-solid fa-fire text-lg"></i>
+            </div>
+            <div>
+              <div class="font-bold text-white group-hover:text-amber-400 transition flex items-center gap-2">
+                Pro
+                <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-semibold border border-purple-500/30">Full Pool</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                Gamitin ang lahat ng talata sa database para sa higit na hamon at malawak na pagsusulit.
+              </p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. TIMER SELECTION MODAL -->
+    <div id="modal-timer" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
+      <div class="glass-card w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/50 flex flex-col">
+        <div class="flex items-center justify-between mb-6">
+          <button id="btn-back-to-mode" class="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 transition py-1 px-2.5 rounded-lg bg-slate-800/80 border border-slate-700">
+            <i class="fa-solid fa-arrow-left"></i> ← Back
+          </button>
+          <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Step 2 of 2</span>
+        </div>
+
+        <h3 class="text-2xl font-bold text-white text-center mb-1">Select Timer</h3>
+        <p class="text-xs text-slate-400 text-center mb-6">Ilang segundo ang ibibigay sa bawat bawat talata?</p>
+
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <button data-timer="3" class="btn-timer-opt p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-center transition flex flex-col items-center">
+            <span class="text-2xl font-black text-amber-400 mb-1">3s</span>
+            <span class="text-xs text-slate-400">Extreme</span>
+          </button>
+          <button data-timer="5" class="btn-timer-opt p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-center transition flex flex-col items-center">
+            <span class="text-2xl font-black text-amber-400 mb-1">5s</span>
+            <span class="text-xs text-slate-400">Standard</span>
+          </button>
+          <button data-timer="10" class="btn-timer-opt p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-center transition flex flex-col items-center">
+            <span class="text-2xl font-black text-amber-400 mb-1">10s</span>
+            <span class="text-xs text-slate-400">Relaxed</span>
+          </button>
+          <button data-timer="0" class="btn-timer-opt p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-center transition flex flex-col items-center">
+            <span class="text-2xl font-black text-amber-400 mb-1">∞</span>
+            <span class="text-xs text-slate-400">Untimed</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. GAME INTERFACE -->
+    <div id="screen-game" class="w-full max-w-2xl hidden flex-col">
+      <!-- Game Top Status Bar -->
+      <div class="flex items-center justify-between mb-4 bg-slate-800/60 border border-slate-700/60 rounded-2xl p-4 backdrop-blur-md">
+        <div class="flex items-center gap-3">
+          <div class="text-xs font-semibold text-slate-400">
+            TALATA <span id="verse-counter" class="text-base font-bold text-white">1</span> / <span id="verse-total">10</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="text-xs font-semibold text-slate-400">
+            SCORE <span id="score-counter" class="text-base font-bold text-amber-400">0</span>
+          </div>
+          <!-- Timer Display -->
+          <div id="timer-display-container" class="flex items-center gap-1.5 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700">
+            <i class="fa-regular fa-clock text-amber-400 text-xs"></i>
+            <span id="timer-seconds" class="font-mono font-bold text-sm text-white">5s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Progress / Timer Bar -->
+      <div id="timer-bar-wrapper" class="w-full bg-slate-800 h-2 rounded-full overflow-hidden mb-6 border border-slate-700/50">
+        <div id="timer-bar" class="bg-amber-400 h-full w-full timer-bar"></div>
+      </div>
+
+      <!-- Verse Card Display -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-700/80 mb-6 shadow-2xl relative overflow-hidden flex flex-col justify-center min-h-[220px]">
+        <div class="absolute top-3 left-4 text-slate-600 text-4xl select-none font-serif opacity-30">“</div>
+        <p id="verse-text-display" class="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed text-slate-100 text-center relative z-10 px-2">
+          ...
+        </p>
+        <div class="absolute bottom-1 right-4 text-slate-600 text-4xl select-none font-serif opacity-30">”</div>
+      </div>
+
+      <!-- Input Form -->
+      <form id="guess-form" class="space-y-4">
+        <div class="relative">
+          <input 
+            type="text" 
+            id="guess-input" 
+            placeholder="Halimbawa: aw 37:5, ex 20:3, roma 8:28..." 
+            autocomplete="off" 
+            class="w-full py-4 px-5 rounded-2xl bg-slate-800/90 border-2 border-slate-700 text-white placeholder-slate-500 font-medium text-base focus:outline-none focus:border-amber-400 transition shadow-inner"
+          >
+          <button 
+            type="submit" 
+            class="absolute right-2 top-2 bottom-2 px-6 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition flex items-center justify-center gap-2 shadow"
+          >
+            IPASA <i class="fa-solid fa-paper-plane text-xs"></i>
+          </button>
+        </div>
+        <div class="text-center">
+          <span class="text-xs text-slate-400">Format: <code class="text-amber-300 font-mono">[Aklat] [Kabanata]:[Talata]</code></span>
         </div>
       </form>
-      <div class="muted" style="margin-top:12px">Format: <b>ex 20:1</b> · Shortcuts: <i>ex, aw, kaw, isa, mat, rom, 1co, 2co, san, 1pe</i></div>
-    </section>
+    </div>
 
-    <section class="bottom">
-      <div class="card">
-        <div class="cardhead"><span>✓ CORRECT GUESSES</span><span id="correctCount" class="count">0</span></div>
-        <div id="correctList" class="list"><div class="muted">No correct guesses yet.</div></div>
+    <!-- 5. FEEDBACK MODAL (After each guess) -->
+    <div id="modal-feedback" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
+      <div class="glass-card w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/80 text-center flex flex-col items-center">
+        <div id="feedback-icon-container" class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4">
+          <i id="feedback-icon" class="fa-solid"></i>
+        </div>
+        <h3 id="feedback-title" class="text-2xl font-extrabold text-white mb-2"></h3>
+        <p id="feedback-subtitle" class="text-sm text-slate-300 mb-6"></p>
+
+        <!-- Details Card -->
+        <div class="w-full bg-slate-900/90 rounded-2xl p-4 border border-slate-800 text-left mb-6 space-y-2 text-xs">
+          <div>
+            <span class="text-slate-500 block uppercase tracking-wider font-semibold">Iyong Hula:</span>
+            <span id="feedback-user-guess" class="font-mono font-bold text-sm text-white"></span>
+          </div>
+          <div>
+            <span class="text-slate-500 block uppercase tracking-wider font-semibold">Tamang Sagot:</span>
+            <span id="feedback-correct-answer" class="font-mono font-bold text-sm text-amber-400"></span>
+          </div>
+          <div>
+            <span class="text-slate-500 block uppercase tracking-wider font-semibold mt-2">Buong Teksto:</span>
+            <p id="feedback-verse-text" class="text-slate-300 italic text-xs mt-0.5 leading-relaxed"></p>
+          </div>
+        </div>
+
+        <button id="btn-next-verse" class="w-full py-3.5 px-6 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-base transition flex items-center justify-center gap-2">
+          SUSUNOD NA TALATA <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
       </div>
-      <div class="card">
-        <div class="cardhead"><span>× INCORRECT GUESSES</span><span id="wrongCount" class="count">0</span></div>
-        <div id="wrongList" class="list"><div class="muted">No incorrect guesses yet.</div></div>
+    </div>
+
+    <!-- 6. SUMMARY / GAME OVER SCREEN -->
+    <div id="screen-summary" class="w-full max-w-xl hidden flex-col items-center">
+      <div class="glass-card w-full rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-center">
+        <div class="w-20 h-20 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-4xl mx-auto mb-4">
+          <i class="fa-solid fa-trophy"></i>
+        </div>
+        <h2 class="text-3xl font-extrabold text-white mb-1">Tapos na ang Laro!</h2>
+        <p class="text-xs text-slate-400 mb-6">Narito ang buod ng iyong mga nasagot</p>
+
+        <!-- Final Score Display -->
+        <div class="bg-slate-900/80 rounded-2xl p-4 border border-slate-800 mb-6 flex justify-around items-center">
+          <div>
+            <div class="text-xs text-slate-500 uppercase tracking-wider">Kabuuan</div>
+            <div id="summary-total" class="text-2xl font-black text-white">0/10</div>
+          </div>
+          <div class="h-8 w-px bg-slate-800"></div>
+          <div>
+            <div class="text-xs text-slate-500 uppercase tracking-wider">Puntos %</div>
+            <div id="summary-percentage" class="text-2xl font-black text-amber-400">0%</div>
+          </div>
+        </div>
+
+        <!-- Answers Review List -->
+        <div class="text-left mb-6">
+          <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Pagsusuri ng mga Sagot</h4>
+          <div id="summary-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+            <!-- Dynamic elements -->
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button id="btn-play-again" class="flex-1 py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-rotate-right"></i> ULITIN ANG LARO
+          </button>
+          <button id="btn-change-setup-summary" class="flex-1 py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-sm transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-sliders"></i> BAGUHIN ANG SETUP
+          </button>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <footer class="help">
-      <span>English User Interface · Ang Dating Biblia Scripture</span>
-      <span>Session stats reset when refreshed</span>
-    </footer>
-  </section>
-</main>
+  </main>
 
-<!-- STEP 1: MODE SELECTION MODAL -->
-<div id="modeModal" class="backdrop">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Choose Game Mode</div>
-      <button id="btnBackToSplash" class="btn-back" type="button">← Back</button>
-    </div>
-    <div class="option-grid">
-      <button class="option-btn mode-option" data-mode="beginner" type="button">
-        <div class="option-title">Beginner</div>
-        <div class="option-desc">Uses strictly the curated list of custom user verses</div>
-      </button>
-      <button class="option-btn mode-option" data-mode="pro" type="button">
-        <div class="option-title">Pro</div>
-        <div class="option-desc">Uses all available verses in the database</div>
-      </button>
-    </div>
-  </div>
-</div>
+  <!-- FOOTER -->
+  <footer class="w-full text-center py-4 border-t border-slate-800/80 text-xs text-slate-500">
+    <p>BibleGuess • Tagalog ADB 1905 Scripture Quiz</p>
+  </footer>
 
-<!-- STEP 2: TIMER SELECTION MODAL -->
-<div id="timerModal" class="backdrop">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Select Timer</div>
-      <button id="btnBackToMode" class="btn-back" type="button">← Back</button>
-    </div>
-    <div class="option-grid">
-      <button class="option-btn timer-option" data-time="3" type="button">
-        <div class="option-title">3 Seconds</div>
-        <div class="option-desc">Fast-paced lightning mode</div>
-      </button>
-      <button class="option-btn timer-option" data-time="5" type="button">
-        <div class="option-title">5 Seconds</div>
-        <div class="option-desc">Standard fast gameplay</div>
-      </button>
-      <button class="option-btn timer-option" data-time="10" type="button">
-        <div class="option-title">10 Seconds</div>
-        <div class="option-desc">Relaxed guessing pace</div>
-      </button>
-      <button class="option-btn timer-option" data-time="0" type="button">
-        <div class="option-title">Untimed (∞)</div>
-        <div class="option-desc">Take as much time as you need</div>
-      </button>
-    </div>
-  </div>
-</div>
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // --- VERSE DATABASE ---
+    // Contains accurate ADB 1905 Tagalog texts
+    const VERSE_DATABASE = [
+      // NEW USER-PROVIDED SPECIFIC LIST (Used for Beginner + included in Pro)
+      { id: "b1", ref: "Exodo 20:1-3", book: "exodo", ch: 20, v: "1-3", altBook: ["ex"], isBeginner: true, text: "At sinalita ng Dios ang lahat ng salitang ito, na sinasabi, Ako ang Panginoon mong Dios, na naglabas sa iyo sa lupain ng Egipto, sa bahay ng pagkaalipin. Huwag kang magkakaroon ng ibang mga dios sa harap ko." },
+      { id: "b2", ref: "Isaias 35:8", book: "isaias", ch: 35, v: "8", altBook: ["is"], isBeginner: true, text: "At magkakaroon doon ng isang lansangan, at ng isang daan, at tatawagin Ang daan ng kabanalan; ang marumi ay hindi dadaan doon; kundi magiging sa kanila: ang naglalakad sa daan, oo, maging ang mga mangmang, ay hindi magkakamali roon." },
+      { id: "b3", ref: "Isaias 57:1", book: "isaias", ch: 57, v: "1", altBook: ["is"], isBeginner: true, text: "Ang matuwid ay namamatay, at walang taong naglalagay sa loob: at ang mga maawaing tao ay naalis, walang nag-aalaala na ang matuwid ay naalis sa kasamaan na darating." },
+      { id: "b4", ref: "Kawikaan 22:6", book: "kawikaan", ch: 22, v: "6", altBook: ["kaw", "pr"], isBeginner: true, text: "Turuan mo ang bata sa daan na dapat niyang lakaran, at pagka tumanda man siya ay hindi niya hihiwalayan." },
+      { id: "b5", ref: "Kawikaan 1:23-33", book: "kawikaan", ch: 1, v: "23-33", altBook: ["kaw", "pr"], isBeginner: true, text: "Magbalik kayo sa aking saway: narito, aking ibubuhos ang aking espiritu sa inyo, aking ipatatalastas sa inyo ang aking mga salita..." },
+      { id: "b6", ref: "Kawikaan 11:2", book: "kawikaan", ch: 11, v: "2", altBook: ["kaw", "pr"], isBeginner: true, text: "Pagka dumarating ang kapalaluan, dumarating nga ang kahiyaan: kundi sa mga mapagpakumbaba ay naroon ang karunungan." },
+      { id: "b7", ref: "Kawikaan 11:12", book: "kawikaan", ch: 11, v: "12", altBook: ["kaw", "pr"], isBeginner: true, text: "Siyang humahamak sa kaniyang kapuwa ay kulang ng karunungan: kundi ang taong may pag-unawa ay tumatahimik." },
+      { id: "b8", ref: "Kawikaan 10:19", book: "kawikaan", ch: 10, v: "19", altBook: ["kaw", "pr"], isBeginner: true, text: "Sa karamihan ng mga salita ay hindi nagkukulang ng kasalanan: kundi siyang nagpipigil ng kaniyang mga labi ay gumagawang may kapangyarihan." },
+      { id: "b9", ref: "Kawikaan 17:22", book: "kawikaan", ch: 17, v: "22", altBook: ["kaw", "pr"], isBeginner: true, text: "Ang masayang puso ay mabuting gamot: kundi ang bagbag na diwa ay nagpapatuyo ng mga buto." },
+      { id: "b10", ref: "Kawikaan 19:14", book: "kawikaan", ch: 19, v: "14", altBook: ["kaw", "pr"], isBeginner: true, text: "Bahay at mga kayamanan ay pamana mula sa mga magulang: kundi ang mabait na asawa ay galing sa Panginoon." },
+      { id: "b11", ref: "Mateo 5:28", book: "mateo", ch: 5, v: "28", altBook: ["mat", "mt"], isBeginner: true, text: "Datapuwa't sinasabi ko sa inyo, na ang bawa't tumitingin sa isang babae na nagnanasa sa kaniya ay nagkakasala na ng pakikiapid sa kaniyang puso." },
+      { id: "b12", ref: "Mateo 5:16", book: "mateo", ch: 5, v: "16", altBook: ["mat", "mt"], isBeginner: true, text: "Lumiwanag na gayon ang inyong ilaw sa harap ng mga tao, upang mangakita nila ang inyong mabubuting gawa, at kanilang luwalhatiin ang inyong Ama na berada sa langit." },
+      { id: "b13", ref: "Kawikaan 10:4", book: "kawikaan", ch: 10, v: "4", altBook: ["kaw", "pr"], isBeginner: true, text: "Siya'y nagiging dukha na gumagawa ng mabagal na kamay: kundi ang kamay ng masipag ay nagpapayaman." },
+      { id: "b14", ref: "Roma 10:4", book: "roma", ch: 10, v: "4", altBook: ["rom"], isBeginner: true, text: "Sapagka't si Cristo ang katapusan ng kautusan sa katuwiran ng bawa't sumasampalataya." },
+      { id: "b15", ref: "Roma 12:9", book: "roma", ch: 12, v: "9", altBook: ["rom"], isBeginner: true, text: "Ang pag-ibig ay maging walang pagpapaimbabaw. Kapootan ninyo ang masama; makipagkapwa-tao kayo sa mabuti." },
+      { id: "b16", ref: "Roma 12:21", book: "roma", ch: 12, v: "21", altBook: ["rom"], isBeginner: true, text: "Huwag kang padaig sa masama, kundi daigin mo ng mabuti ang masama." },
+      { id: "b17", ref: "Roma 8:28-30", book: "roma", ch: 8, v: "28-30", altBook: ["rom"], isBeginner: true, text: "At nalalaman natin na ang lahat ng mga bagay ay nagkakalakip na gumagawa sa ikabubuti ng mga sa Dios ay nagsisiibig..." },
+      { id: "b18", ref: "Mateo 6:33", book: "mateo", ch: 6, v: "33", altBook: ["mat", "mt"], isBeginner: true, text: "Datapuwa't hanapin muna ninyo ang kaniyang kaharian, at ang kaniyang katuwiran; at ang lahat ng mga bagay na ito ay pawang idaragdag sa inyo." },
+      { id: "b19", ref: "1 Corinto 1:1-2", book: "1 corinto", ch: 1, v: "1-2", altBook: ["1co", "1 cor"], isBeginner: true, text: "Si Pablo, na tinawag na maging apostol ni Jesucristo sa pamamagitan ng kalooban ng Dios, at si Sostenes na ating kapatid..." },
+      { id: "b20", ref: "1 Corinto 14:33", book: "1 corinto", ch: 14, v: "33", altBook: ["1co", "1 cor"], isBeginner: true, text: "Sapagka't ang Dios ay hindi Dios ng kaguluhan, kundi ng kapayapaan; kung paano sa lahat ng mga iglesia ng mga banal." },
+      { id: "b21", ref: "1 Corinto 14:40", book: "1 corinto", ch: 14, v: "40", altBook: ["1co", "1 cor"], isBeginner: true, text: "Datapuwa't gawin ninyong may kagandahang-asal at may kaayusan ang lahat ng mga bagay." },
+      { id: "b22", ref: "1 Corinto 15:33", book: "1 corinto", ch: 15, v: "33", altBook: ["1co", "1 cor"], isBeginner: true, text: "Huwag kayong padaya: Ang masasamang kasama ay sumisira ng mabubuting ugali." },
+      { id: "b23", ref: "1 Corinto 16:14", book: "1 corinto", ch: 16, v: "14", altBook: ["1co", "1 cor"], isBeginner: true, text: "Gawin ninyo sa pag-ibig ang lahat ninyong ginagawa." },
+      { id: "b24", ref: "1 Corinto 13:13", book: "1 corinto", ch: 13, v: "13", altBook: ["1co", "1 cor"], isBeginner: true, text: "Ngayon nga'y nananatili ang pananampalataya, ang pag-asa, ang pag-ibig, ang tatlong itong; ngunit ang pinakadakila sa mga ito ay ang pag-ibig." },
+      { id: "b25", ref: "2 Corinto 9:7-8", book: "2 corinto", ch: 9, v: "7-8", altBook: ["2co", "2 cor"], isBeginner: true, text: "Magbigay ang bawa't isa ayon sa ipinasiya ng kaniyang puso: huwag mabigat sa loob, o dahil sa kailangan: sapagka't iniibig ng Dios ang nagbibigay na masaya..." },
+      { id: "b26", ref: "2 Corinto 11:3", book: "2 corinto", ch: 11, v: "3", altBook: ["2co", "2 cor"], isBeginner: true, text: "Nguni't natatakot ako, baka sa anomang paraan, kung paanong si Eva ay nadaya ng ahas sa kaniyang katusuhan, ang inyong mga pagiisip ay masira sa katuwiran at sa kalinisan na kay Cristo." },
+      { id: "b27", ref: "2 Corinto 13:5", book: "2 corinto", ch: 13, v: "5", altBook: ["2co", "2 cor"], isBeginner: true, text: "Siyasatin ninyo ang inyong sarili, kung kayo'y nangasa pananampalataya; subukin ninyo ang inyong sarili." },
+      { id: "b28", ref: "2 Cronica 7:14", book: "2 cronica", ch: 7, v: "14", altBook: ["2cr", "2 cron"], isBeginner: true, text: "Kung ang aking bayan na tinatawag sa pamamagitan ng aking pangalan ay magpakumbaba, at manalangin, at hanapin ang aking mukha, at talikdan ang kanilang masasamang lakad; akin ngang diringgin sa langit..." },
+      { id: "b29", ref: "1 Corinto 14:26", book: "1 corinto", ch: 14, v: "26", altBook: ["1co", "1 cor"], isBeginner: true, text: "Ano nga baga, mga kapatid? Pagka kayo'y nangagkakatipon, bawa't isa sa inyo'y may isang awit, may isang turo, may isang pahayag, may wika, may isang pagpapaliwanag. Gawin ninyo ang lahat ng mga bagay sa ikatitibay." },
+      { id: "b30", ref: "1 Corinto 13:4-8", book: "1 corinto", ch: 13, v: "4-8", altBook: ["1co", "1 cor"], isBeginner: true, text: "Ang pag-ibig ay mapagtiis, at magandang-loob; ang pag-ibig ay hindi nananaghali; ang pag-ibig ay hindi nagmamapuri, hindi mapagpalo..." },
+      { id: "b31", ref: "1 Pedro 1:9", book: "1 pedro", ch: 1, v: "9", altBook: ["1pe", "1 ped"], isBeginner: true, text: "Na inyong tinatanggap ang dulo ng inyong pananampalataya, ang kaligtasan ng inyong mga kaluluwa." },
+      { id: "b32", ref: "1 Pedro 3:9", book: "1 pedro", ch: 3, v: "9", altBook: ["1pe", "1 ped"], isBeginner: true, text: "Na huwag ninyong bayaran ng masama ang masama, o ng alipusta ang alipusta; kundi ng pagpapala; sapagka't dahil dito kayo'y tinawag, upang kayo'y magsimana ng pagpapala." },
+      { id: "b33", ref: "1 Pedro 4:9", book: "1 pedro", ch: 4, v: "9", altBook: ["1pe", "1 ped"], isBeginner: true, text: "Maging mapagpatuloy kayo sa isa't isa na walang bulong-bulungan." },
+      { id: "b34", ref: "1 Pedro 1:7", book: "1 pedro", ch: 1, v: "7", altBook: ["1pe", "1 ped"], isBeginner: true, text: "Upang ang pagsubok sa inyong pananampalataya, na lalong mahalaga kaysa ginto na nasisira bagama't ito'y sinusubok sa pamamagitan ng apoy, ay masumpungan sa ikapupuri..." },
+      { id: "b35", ref: "Santiago 1:12", book: "santiago", ch: 1, v: "12", altBook: ["san", "jas"], isBeginner: true, text: "Mapalad ang taong nagtitiis ng tukso; sapagka't pagkabagbag niya, siya'y tatanggap ng korona ng buhay..." },
+      { id: "b36", ref: "Santiago 1:15", book: "santiago", ch: 1, v: "15", altBook: ["san", "jas"], isBeginner: true, text: "Lalong higit, ang pagnanasa pagka naglihi ay nanganganak ng kasalanan: at ang kasalanan, pagka lumaki na, ay nanganganak ng kamatayan." },
+      { id: "b37", ref: "Santiago 5:12", book: "santiago", ch: 5, v: "12", altBook: ["san", "jas"], isBeginner: true, text: "Nguni't higit sa lahat ng mga bagay, mga kapatid ko, huwag kayong manumpa, kahit sa langit, ni sa lupa, ni sa anoman ibang sumpa..." },
+      { id: "b38", ref: "Santiago 5:16-17", book: "santiago", ch: 5, v: "16-17", altBook: ["san", "jas"], isBeginner: true, text: "Mangagfefesipagpahayag kayo ng inyong mga kasalanan sa isa't isa, at ipanalangin ninyo ang isa't isa, upang kayo'y gumaling. Malaki ang nagagawa ng panalangin ng taong matuwid..." },
+      { id: "b39", ref: "Santiago 4:17", book: "santiago", ch: 4, v: "17", altBook: ["san", "jas"], isBeginner: true, text: "Sa nakakaalam nga ng paggawa ng mabuti, at hindi ginagawa, sa kaniya'y kasalanan." },
+      { id: "b40", ref: "Santiago 2:13", book: "santiago", ch: 2, v: "13", altBook: ["san", "jas"], isBeginner: true, text: "Sapagka't ang paghuhukom ay walang awa doon sa hindi nagpakita ng awa: ang awa ay nagmamagaling laban sa paghuhukom." },
+      { id: "b41", ref: "Santiago 4:15", book: "santiago", ch: 4, v: "15", altBook: ["san", "jas"], isBeginner: true, text: "Sapagka't ang dapat ninyong sabihin ay, Kung loobin ng Panginoon, ay mabubuhay kami, at gagawin namin ito o yaon." },
+      { id: "b42", ref: "2 Pedro 1:5-8", book: "2 pedro", ch: 1, v: "5-8", altBook: ["2pe", "2 ped"], isBeginner: true, text: "Oo, at dahil dito, sa pagpapakasakit ng inyong buong makakaya, ay idagdag ninyo sa inyong pananampalataya ang kagalingan; at sa kagalingan ay ang kaalaman..." },
+      { id: "b43", ref: "Santiago 1:7-8", book: "santiago", ch: 1, v: "7-8", altBook: ["san", "jas"], isBeginner: true, text: "Sapagka't huwag isipin ng taong iyon na siya'y tatanggap ng anoman bagay sa Panginoon; Ang taong nag-aalinlangan ay walang tiyaga sa lahat ng kaniyang mga lakad." },
+      { id: "b44", ref: "1 Tesalonica 4:4-7", book: "1 tesalonica", ch: 4, v: "4-7", altBook: ["1th", "1 tes"], isBeginner: true, text: "Na ang bawa't isa sa inyo'y marunong mag-ingat ng kaniyang sariling sisidlan sa kesanalan at sa kapurihan..." },
+      { id: "b45", ref: "1 Tesalonica 5:15-18", book: "1 tesalonica", ch: 5, v: "15-18", altBook: ["1th", "1 tes"], isBeginner: true, text: "Tingnan ninyo na huwag gumanti ang sinoman ng masama sa masama sa kanino man; kundi sundin ninyong lagi ang mabuti... Mangagalak kayong lagi; Magsipanalangin kayong walang patid..." },
+      { id: "b46", ref: "2 Corinto 8:1", book: "2 corinto", ch: 8, v: "1", altBook: ["2co", "2 cor"], isBeginner: true, text: "Bukas din naman, mga kapatid, ay ipinauunawa namin sa inyo ang biyaya ng Dios na ipinagkaloob sa mga iglesia ng Macedonia." },
+      { id: "b47", ref: "2 Timoteo 3:15-17", book: "2 timoteo", ch: 3, v: "15-17", altBook: ["2ti", "2 tim"], isBeginner: true, text: "At mula sa pagkabata ay iyong nalalaman ang mga banal na kasulatan na makakapagpamulat sa iyo sa kaligtasan sa pamamagitan ng pananampalataya kay Cristo Jesus..." },
+      { id: "b48", ref: "1 Timoteo 3:15", book: "1 timoteo", ch: 3, v: "15", altBook: ["1ti", "1 tim"], isBeginner: true, text: "Nguni't kung ako'y magpaliban ng mahabang panahon, upang maalaman mo kung paano ang dapat sa mga tao na pag-uugali sa bahay ng Dios, na siyang iglesia ng Dios na buhay, ang haligi at patibayan ng katotohanan." },
+      { id: "b49", ref: "1 Timoteo 4:8", book: "1 timoteo", ch: 4, v: "8", altBook: ["1ti", "1 tim"], isBeginner: true, text: "Sapagka't ang pagsasanay sa katawan ay may kaunting pakinabang; nguni't ang kabanalan ay kapaki-pakinabang sa lahat ng mga bagay..." },
+      { id: "b50", ref: "Tito 1:2", book: "tito", ch: 1, v: "2", altBook: ["tit"], isBeginner: true, text: "Sa pag-asa sa buhay na walang hanggan, na ipinangako ng Dios na hindi makapagsisinungaling bago pa ang simula ng mga panahon." },
+      { id: "b51", ref: "Tito 3:9", book: "tito", ch: 3, v: "9", altBook: ["tit"], isBeginner: true, text: "Nguni't ilagan mo ang mga maanghang na katanungan, at ang mga salaysay ng lahi, at ang mga pagtatalo, at mga paglalaban tungkol sa kautusan; sapagka't ang mga ito ay walang pakinabang at walang kabuluhan." },
+      { id: "b52", ref: "Awit 92:1", book: "awit", ch: 92, v: "1", altBook: ["aw", "ps"], isBeginner: true, text: "Isang mabuting bagay ang magpasalamat sa Panginoon, at umawit ng mga pagpuri sa iyong pangalan, O Mataas." },
+      { id: "b53", ref: "Awit 37:4-5", book: "awit", ch: 37, v: "4-5", altBook: ["aw", "ps"], isBeginner: true, text: "Magpakaligaya ka naman sa Panginoon; at ibibigay niya sa iyo ang hinahangad ng iyong puso. Ipagkatiwala mo ang iyong lakad sa Panginoon; tumiwala ka rin naman sa kaniya, at kaniyang isasagawa." },
+      { id: "b54", ref: "Awit 34:19", book: "awit", ch: 34, v: "19", altBook: ["aw", "ps"], isBeginner: true, text: "Marami ang mga kapighatian ng matuwid: nguni't inililigtas ng Panginoon sa lahat ng yaon." },
+      { id: "b55", ref: "Awit 90:12", book: "awit", ch: 90, v: "12", altBook: ["aw", "ps"], isBeginner: true, text: "Turuan mo kaming bumilang ng aming mga araw, upang kami'y makapagtamo ng pusong may karunungan." },
+      { id: "b56", ref: "Awit 100:1-5", book: "awit", ch: 100, v: "1-5", altBook: ["aw", "ps"], isBeginner: true, text: "Mag-ingay kayo na may kagalakan sa Panginoon, kayong lahat na lupain. Maglingkod kayo sa Panginoon na may kagalakan..." },
 
-<!-- RESULT MODAL -->
-<div id="resultModal" class="backdrop" role="dialog" aria-modal="true">
-  <div class="modal">
-    <div id="modalStatus" class="modalStatus">Correct!</div>
-    <div id="answerBlock">
-      <div class="label">CORRECT ANSWER</div>
-      <div id="modalRef" class="ref"></div>
-      <div id="modalVerse" class="modalVerse"></div>
-    </div>
-    <div class="label">STATISTICS</div>
-    <div class="stats">
-      <div class="statbox"><div id="modalCorrect" class="statnum">0</div><div class="statname">Correct guesses</div></div>
-      <div class="statbox"><div id="modalWrong" class="statnum">0</div><div class="statname">Incorrect guesses</div></div>
-      <div class="statbox"><div id="modalAccuracy" class="statnum">0%</div><div class="statname">Accuracy</div></div>
-      <div class="statbox"><div id="modalRounds" class="statnum">0</div><div class="statname">Total answered</div></div>
-    </div>
-    <div class="actions"><button id="continue" class="primary" type="button">Next Verse →</button></div>
-  </div>
-</div>
+      // ADDITIONAL PRO POOL VERSES
+      { id: "p1", ref: "Juan 3:16", book: "juan", ch: 3, v: "16", altBook: ["jn", "jhn"], isBeginner: false, text: "Sapagka't gayon na lamang ang pag-ibig ng Dios sa sanglibutan, na ibinigay niya ang kaniyang anaking bugtong na Anak, upang ang sinomang sa kaniya'y sumampalataya ay huwag mapahamak, kundi magkaroon ng buhay na walang hanggan." },
+      { id: "p2", ref: "Filipos 4:13", book: "filipos", ch: 4, v: "13", altBook: ["fil", "php"], isBeginner: false, text: "Lahat ng mga bagay ay aking magagawa sa kaniya na nagpapalakas sa akin." },
+      { id: "p3", ref: "Genesis 1:1", book: "genesis", ch: 1, v: "1", altBook: ["gen"], isBeginner: false, text: "Nang pasimula ay nilikha ng Dios ang langit at ang lupa." },
+      { id: "p4", ref: "Awit 23:1", book: "awit", ch: 23, v: "1", altBook: ["aw", "ps"], isBeginner: false, text: "Ang Panginoon ay aking pastol; hindi ako mangangailangan." },
+      { id: "p5", ref: "Efeso 2:8-9", book: "efeso", ch: 2, v: "8-9", altBook: ["efe", "eph"], isBeginner: false, text: "Sapagka't sa biyaya kayo'y nangaligtas sa pamamagitan ng pananampalataya; at ito'y hindi sa inyong sarili, ito'y kaloob ng Dios: Hindi sa pamamagitan ng mga gawa, upang ang sinoman ay huwag magmapuri." },
+      { id: "p6", ref: "Hebreo 11:1", book: "hebreo", ch: 11, v: "1", altBook: ["heb"], isBeginner: false, text: "Ngayon, ang pananampalataya ay siyang kapanatagan sa mga bagay na inaasahan, ang katunayan ng mga bagay na hindi nakikita." },
+      { id: "p7", ref: "Galacia 5:22-23", book: "galacia", ch: 5, v: "22-23", altBook: ["gal"], isBeginner: false, text: "Datapuwa't ang bunga ng Espiritu ay pag-ibig, kagalakan, kapayapaan, pagpapahinuhod, kagandahang-loob, kabutihan, katapatan, Kaamuan, pagpipigil sa sarili: laban sa mga gayong bagay ay walang kautusan." },
+      { id: "p8", ref: "Jeremias 29:11", book: "jeremias", ch: 29, v: "11", altBook: ["jer"], isBeginner: false, text: "Sapagka't nalalaman ko ang mga pag-iisip na aking iniisip sa inyo, sabi ng Panginoon, mga pag-iisip sa kapayapaan, at hindi sa kasamaan, upang bigyan kayo ng pag-asa sa inyong wakas." }
+    ];
 
-<script>
+    // --- GAME STATE ---
+    let state = {
+      selectedMode: 'beginner', // 'beginner' or 'pro'
+      selectedTimer: 5,         // seconds: 3, 5, 10, or 0 (untimed)
+      activeVerses: [],
+      currentIndex: 0,
+      score: 0,
+      timerId: null,
+      timeLeft: 0,
+      userAnswers: [],
+      maxRounds: 10
+    };
+
+    // --- DOM ELEMENTS ---
+    const screens = {
+      splash: document.getElementById('screen-splash'),
+      game: document.getElementById('screen-game'),
+      summary: document.getElementById('screen-summary')
+    };
+
+    const modals = {
+      mode: document.getElementById('modal-mode'),
+      timer: document.getElementById('modal-timer'),
+      feedback: document.getElementById('modal-feedback')
+    };
+
+    const elements = {
+      badgeContainer: document.getElementById('game-info-badge'),
+      currentModeBadge: document.getElementById('current-mode-badge'),
+      currentTimerBadge: document.getElementById('current-timer-badge'),
+      btnChangeSetup: document.getElementById('btn-change-setup'),
+      btnStartGame: document.getElementById('btn-start-game'),
+      btnBackToSplash: document.getElementById('btn-back-to-splash'),
+      btnSelectBeginner: document.getElementById('btn-select-beginner'),
+      btnSelectPro: document.getElementById('btn-select-pro'),
+      btnBackToMode: document.getElementById('btn-back-to-mode'),
+      timerOptButtons: document.querySelectorAll('.btn-timer-opt'),
+      verseCounter: document.getElementById('verse-counter'),
+      verseTotal: document.getElementById('verse-total'),
+      scoreCounter: document.getElementById('score-counter'),
+      timerDisplayContainer: document.getElementById('timer-display-container'),
+      timerSeconds: document.getElementById('timer-seconds'),
+      timerBar: document.getElementById('timer-bar'),
+      timerBarWrapper: document.getElementById('timer-bar-wrapper'),
+      verseTextDisplay: document.getElementById('verse-text-display'),
+      guessForm: document.getElementById('guess-form'),
+      guessInput: document.getElementById('guess-input'),
+      feedbackIconContainer: document.getElementById('feedback-icon-container'),
+      feedbackIcon: document.getElementById('feedback-icon'),
+      feedbackTitle: document.getElementById('feedback-title'),
+      feedbackSubtitle: document.getElementById('feedback-subtitle'),
+      feedbackUserGuess: document.getElementById('feedback-user-guess'),
+      feedbackCorrectAnswer: document.getElementById('feedback-correct-answer'),
+      feedbackVerseText: document.getElementById('feedback-verse-text'),
+      btnNextVerse: document.getElementById('btn-next-verse'),
+      summaryTotal: document.getElementById('summary-total'),
+      summaryPercentage: document.getElementById('summary-percentage'),
+      summaryList: document.getElementById('summary-list'),
+      btnPlayAgain: document.getElementById('btn-play-again'),
+      btnChangeSetupSummary: document.getElementById('btn-change-setup-summary')
+    };
+
+    // --- INITIALIZATION & EVENT LISTENERS ---
+    window.addEventListener('DOMContentLoaded', () => {
+      initEventListeners();
+    });
+
+    function initEventListeners() {
+      // 1. Splash -> Start Game
+      elements.btnStartGame.addEventListener('click', () => {
+        showModal('mode');
+      });
+
+      // 2. Mode Modal Navigation
+      elements.btnBackToSplash.addEventListener('click', () => {
+        hideModal('mode');
+      });
+
+      elements.btnSelectBeginner.addEventListener('click', () => {
+        state.selectedMode = 'beginner';
+        hideModal('mode');
+        showModal('timer');
+      });
+
+      elements.btnSelectPro.addEventListener('click', () => {
+        state.selectedMode = 'pro';
+        hideModal('mode');
+        showModal('timer');
+      });
+
+      // 3. Timer Modal Navigation
+      elements.btnBackToMode.addEventListener('click', () => {
+        hideModal('timer');
+        showModal('mode');
+      });
+
+      elements.timerOptButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const val = parseInt(e.currentTarget.getAttribute('data-timer'), 10);
+          state.selectedTimer = val;
+          hideModal('timer');
+          startNewGame();
+        });
+      });
+
+      // Change Setup button in header
+      elements.btnChangeSetup.addEventListener('click', () => {
+        stopTimer();
+        showModal('mode');
+      });
+
+      // Guess Form Submit
+      elements.guessForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        handleAnswerSubmit(elements.guessInput.value.trim());
+      });
+
+      // Next Verse Button
+      elements.btnNextVerse.addEventListener('click', () => {
+        hideModal('feedback');
+        advanceGame();
+      });
+
+      // Summary Screen Buttons
+      elements.btnPlayAgain.addEventListener('click', () => {
+        startNewGame();
+      });
+
+      elements.btnChangeSetupSummary.addEventListener('click', () => {
+        showScreen('splash');
+        showModal('mode');
+      });
+    }
+
+    // --- SCREEN & MODAL HELPERS ---
+    function showScreen(screenKey) {
+      Object.keys(screens).forEach(key => {
+        screens[key].classList.add('hidden');
+        screens[key].classList.remove('flex');
+      });
+      screens[screenKey].classList.remove('hidden');
+      screens[screenKey].classList.add('flex');
+
+      if (screenKey === 'game') {
+        elements.badgeContainer.classList.remove('hidden');
+        elements.currentModeBadge.textContent = state.selectedMode === 'beginner' ? 'Beginner' : 'Pro';
+        elements.currentTimerBadge.textContent = state.selectedTimer > 0 ? `${state.selectedTimer}s` : 'Untimed';
+      }
+    }
+
+    function showModal(modalKey) {
+      modals[modalKey].classList.remove('hidden');
+    }
+
+    function hideModal(modalKey) {
+      modals[modalKey].classList.add('hidden');
+    }
+
+    // --- GAME ENGINE LOGIC ---
+    function startNewGame() {
+      // 1. Filter Verse Pool
+      let pool = [];
+      if (state.selectedMode === 'beginner') {
+        pool = VERSE_DATABASE.filter(v => v.isBeginner);
+      } else {
+        pool = [...VERSE_DATABASE];
+      }
+
+      // Shuffle Pool
+      pool = shuffleArray(pool);
+
+      // Select max 10
+      state.activeVerses = pool.slice(0, Math.min(10, pool.length));
+      state.currentIndex = 0;
+      state.score = 0;
+      state.userAnswers = [];
+      state.maxRounds = state.activeVerses.length;
+
+      // Update UI Counters
+      elements.verseTotal.textContent = state.maxRounds;
+      elements.scoreCounter.textContent = "0";
+
+      // Show Game Screen
+      showScreen('game');
+      loadCurrentVerse();
+    }
+
+    function loadCurrentVerse() {
+      const currentVerse = state.activeVerses[state.currentIndex];
+      elements.verseCounter.textContent = state.currentIndex + 1;
+      elements.verseTextDisplay.textContent = currentVerse.text;
+      elements.guessInput.value = '';
+      elements.guessInput.focus();
+
+      // Configure Timer Display
+      if (state.selectedTimer > 0) {
+        elements.timerDisplayContainer.classList.remove('hidden');
+        elements.timerBarWrapper.classList.remove('hidden');
+        elements.timerSeconds.textContent = `${state.selectedTimer}s`;
+        startTimer(state.selectedTimer);
+      } else {
+        elements.timerDisplayContainer.classList.add('hidden');
+        elements.timerBarWrapper.classList.add('hidden');
+      }
+    }
+
+    function startTimer(duration) {
+      stopTimer();
+      state.timeLeft = duration;
+      updateTimerUI(100);
+
+      const startTime = Date.now();
+      const endTime = startTime + duration * 1000;
+
+      state.timerId = setInterval(() => {
+        const now = Date.now();
+        const remaining = Math.max(0, endTime - now);
+        const pct = (remaining / (duration * 1000)) * 100;
+        
+        elements.timerSeconds.textContent = `${Math.ceil(remaining / 1000)}s`;
+        updateTimerUI(pct);
+
+        if (remaining <= 0) {
+          stopTimer();
+          handleAnswerSubmit('', true); // Time out
+        }
+      }, 50);
+    }
+
+    function stopTimer() {
+      if (state.timerId) {
+        clearInterval(state.timerId);
+        state.timerId = null;
+      }
+    }
+
+    function updateTimerUI(percentage) {
+      elements.timerBar.style.width = `${percentage}%`;
+      if (percentage < 30) {
+        elements.timerBar.className = "bg-red-500 h-full w-full timer-bar";
+      } else if (percentage < 60) {
+        elements.timerBar.className = "bg-amber-400 h-full w-full timer-bar";
+      } else {
+        elements.timerBar.className = "bg-emerald-400 h-full w-full timer-bar";
+      }
+    }
+
+    // --- ANSWER EVALUATION & FLEXIBLE MATCHING ---
+    function handleAnswerSubmit(userGuessRaw, isTimeout = false) {
+      stopTimer();
+      const currentVerse = state.activeVerses[state.currentIndex];
+      let isCorrect = false;
+
+      if (!isTimeout && userGuessRaw.length > 0) {
+        isCorrect = evaluateGuess(userGuessRaw, currentVerse);
+      }
+
+      if (isCorrect) {
+        state.score += 1;
+        elements.scoreCounter.textContent = state.score;
+      }
+
+      // Record Answer
+      state.userAnswers.push({
+        verse: currentVerse,
+        userGuess: isTimeout ? 'Naubusan ng oras' : (userGuessRaw || 'Walang sagot'),
+        isCorrect: isCorrect
+      });
+
+      // Present Feedback
+      showFeedbackModal(isCorrect, isTimeout, userGuessRaw, currentVerse);
+    }
+
+    function evaluateGuess(guessStr, verse) {
+      const normalizedStr = guessStr.toLowerCase().replace(/\s+/g, ' ').trim();
+      
+      // Match Patterns e.g., "aw 37:4-5", "1 cor 13:4", "exodo 20:1-3"
+      // Match: [book portion] [chapter]:[verse]
+      const regex = /^([1-3]?\s*[a-z\s]+?)\s*(\d+)\s*:\s*([\d\-]+)$/i;
+      const match = normalizedStr.match(regex);
+
+      if (!match) return false;
+
+      const userBook = match[1].replace(/\s+/g, '').trim();
+      const userCh = parseInt(match[2], 10);
+      const userV = match[3].trim();
+
+      // Check Chapter & Verse
+      if (userCh !== verse.ch) return false;
+      if (userV !== verse.v) return false;
+
+      // Check Book Name or Alternative Key
+      const actualBookNorm = verse.book.toLowerCase().replace(/\s+/g, '');
+      if (userBook === actualBookNorm) return true;
+
+      if (verse.altBook) {
+        for (let alt of verse.altBook) {
+          if (userBook === alt.toLowerCase().replace(/\s+/g, '')) return true;
+        }
+      }
+
+      return false;
+    }
+
+    function showFeedbackModal(isCorrect, isTimeout, userGuess, verse) {
+      if (isCorrect) {
+        elements.feedbackIconContainer.className = "w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+        elements.feedbackIcon.className = "fa-solid fa-check";
+        elements.feedbackTitle.textContent = "TAMA!";
+        elements.feedbackTitle.className = "text-2xl font-extrabold text-emerald-400 mb-1";
+        elements.feedbackSubtitle.textContent = "Magaling! Nakuha mo ang tamang talata.";
+      } else {
+        elements.feedbackIconContainer.className = "w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4 bg-rose-500/20 text-rose-400 border border-rose-500/30";
+        elements.feedbackIcon.className = "fa-solid fa-xmark";
+        elements.feedbackTitle.textContent = isTimeout ? "ORAS NA!" : "MALI!";
+        elements.feedbackTitle.className = "text-2xl font-extrabold text-rose-400 mb-1";
+        elements.feedbackSubtitle.textContent = isTimeout ? "Naubusan ka ng oras sa pagsagot." : "Subukang muli sa susunod na pagkakataon.";
+      }
+
+      elements.feedbackUserGuess.textContent = isTimeout ? "--- (Naubusan ng oras) ---" : (userGuess || "---");
+      elements.feedbackCorrectAnswer.textContent = verse.ref;
+      elements.feedbackVerseText.textContent = `"${verse.text}"`;
+
+      showModal('feedback');
+    }
+
+    function advanceGame() {
+      state.currentIndex += 1;
+      if (state.currentIndex < state.maxRounds) {
+        loadCurrentVerse();
+      } else {
+        showSummaryScreen();
+      }
+    }
+
+    // --- SUMMARY SCREEN ---
+    function showSummaryScreen() {
+      elements.summaryTotal.textContent = `${state.score} / ${state.maxRounds}`;
+      const pct = Math.round((state.score / state.maxRounds) * 100);
+      elements.summaryPercentage.textContent = `${pct}%`;
+
+      // Render Breakdown
+      elements.summaryList.innerHTML = '';
+      state.userAnswers.forEach((ans, idx) => {
+        const item = document.createElement('div');
+        item.className = `p-3 rounded-xl border flex items-center justify-between text-xs ${
+          ans.isCorrect ? 'bg-emerald-950/30 border-emerald-800/50 text-emerald-200' : 'bg-rose-950/30 border-rose-800/50 text-rose-200'
+        }`;
+        
+        item.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="font-bold w-5 text-slate-500">${idx + 1}.</span>
+            <div>
+              <div class="font-bold text-white">${ans.verse.ref}</div>
+              <div class="text-[11px] opacity-80">Iyong Hula: <code class="font-mono">${ans.userGuess}</code></div>
+            </div>
+          </div>
+          <div class="text-sm">
+            ${ans.isCorrect ? '<i class="fa-solid fa-circle-check text-emerald-400"></i>' : '<i class="fa-solid fa-circle-xmark text-rose-400"></i>'}
+          </div>
+        `;
+        elements.summaryList.appendChild(item);
+      });
+
+      showScreen('summary');
+    }
+
+    // --- UTILS ---
+    function shuffleArray(arr) {
+      const array = [...arr];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+  </script>
+</body>
+</html>
