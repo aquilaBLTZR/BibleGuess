@@ -678,39 +678,27 @@
     }
 
     function evaluateGuess(guessStr, verse) {
-      const normalizedStr = guessStr
-        .toLowerCase()
-        .replace(/\s+/g, ' ')
-        .trim();
-
-      // Accept either colon or period between chapter and verse:
-      // "kaw 22:6" and "kaw 22.6" are both valid.
-      // Also tolerate a trailing dot after the book shortcut: "kaw. 22.6".
-      const regex = /^([1-3]?\s*[a-z.\s]+?)\s*(\d+)\s*[:.]\s*([\d-]+)$/i;
-      const match = normalizedStr.match(regex);
+      // Case-insensitive: lowercase, uppercase, and mixed-case book names all work.
+      // Accepts "kaw 22:6", "KAW 22:6", "Kawikaan 22.6", and "kaw. 22:6".
+      const normalizedStr = String(guessStr || '').trim().toLowerCase();
+      const match = normalizedStr.match(/^(.+?)\s+(\d+)\s*[:.]\s*([\d-]+)$/);
 
       if (!match) return false;
 
-      // Ignore dots and spaces in the book shortcut, so "kaw." matches "kaw". 
-      const userBook = match[1].toLowerCase().replace(/[.\s]+/g, '').trim();
+      // Normalize book names/shortcuts by ignoring spaces, dots, and hyphens.
+      const normalizeBook = value => value.toLowerCase().replace(/[.\s-]+/g, '');
+      const userBook = normalizeBook(match[1]);
       const userCh = parseInt(match[2], 10);
       const userV = match[3].trim();
 
-      // Check Chapter & Verse
-      if (userCh !== verse.ch) return false;
-      if (userV !== verse.v) return false;
-
-      // Check Book Name or Alternative Key
-      const actualBookNorm = verse.book.toLowerCase().replace(/\s+/g, '');
-      if (userBook === actualBookNorm) return true;
-
-      if (verse.altBook) {
-        for (let alt of verse.altBook) {
-          if (userBook === alt.toLowerCase().replace(/\s+/g, '')) return true;
-        }
+      if (userCh !== Number(verse.ch) || userV !== String(verse.v).trim()) {
+        return false;
       }
 
-      return false;
+      if (userBook === normalizeBook(verse.book)) return true;
+
+      return Array.isArray(verse.altBook) &&
+        verse.altBook.some(alt => userBook === normalizeBook(alt));
     }
 
     function showFeedbackModal(isCorrect, isTimeout, userGuess, verse) {
