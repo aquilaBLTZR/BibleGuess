@@ -54,6 +54,11 @@
     .timer-bar {
       transition: width 0.1s linear;
     }
+
+    /* Keep hidden screens hidden even if the Tailwind CDN is unavailable. */
+    .hidden {
+      display: none !important;
+    }
   </style>
 </head>
 <body class="flex flex-col min-h-screen text-slate-100 antialiased overflow-x-hidden justify-between">
@@ -462,9 +467,9 @@
     };
 
     // --- INITIALIZATION & EVENT LISTENERS ---
-    window.addEventListener('DOMContentLoaded', () => {
-      initEventListeners();
-    });
+    // This script is at the end of the page, so the DOM is already available.
+    // Initialize immediately instead of relying on DOMContentLoaded timing.
+    initEventListeners();
 
     function initEventListeners() {
       // 1. Splash -> Start Game
