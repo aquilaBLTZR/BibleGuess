@@ -73,7 +73,7 @@
         <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
           Bible<span class="text-amber-400">Guess</span>
         </h1>
-        <p class="text-xs text-slate-400 font-medium">Ang Dating Biblia (1905)</p>
+        <p class="text-xs text-slate-400 font-medium">Ang Dating Biblia • Source: supplied ZIP</p>
       </div>
     </div>
 
@@ -337,144 +337,77 @@
     const VERSE_DATABASE = [
       // NEW USER-PROVIDED SPECIFIC LIST (Used for Beginner + included in Pro)
       { id: "b1", ref: "Exodo 20:1-3", book: "exodo", ch: 20, v: "1-3", altBook: ["ex"], isBeginner: true, text: "At sinalita ng Dios ang lahat ng salitang ito, na sinasabi, Ako ang Panginoon mong Dios, na naglabas sa iyo sa lupain ng Egipto, sa bahay ng pagkaalipin. Huwag kang magkakaroon ng ibang mga dios sa harap ko." },
-      { id: "b2", ref: "Isaias 35:8", book: "isaias", ch: 35, v: "8", altBook: ["is"], isBeginner: true, text: "At magkakaroon doon ng isang lansangan, at ng isang daan, at tatawagin Ang daan ng kabanalan; ang marumi ay hindi dadaan doon; kundi magiging sa kanila: ang naglalakad sa daan, oo, maging ang mga mangmang, ay hindi magkakamali roon." },
-      { id: "b3", ref: "Isaias 57:1", book: "isaias", ch: 57, v: "1", altBook: ["is"], isBeginner: true, text: "Ang matuwid ay namamatay, at walang taong naglalagay sa loob: at ang mga maawaing tao ay naalis, walang nag-aalaala na ang matuwid ay naalis sa kasamaan na darating." },
+      { id: "b2", ref: "Isaias 35:8", book: "isaias", ch: 35, v: "8", altBook: ["is"], isBeginner: true, text: "At magkakaroon doon ng isang lansangan, at ng isang daan, at tatawagin Ang daan ng kabanalan; ang marumi ay hindi daraan doon; kundi magiging sa kaniyang bayan: ang mga palalakad na tao, oo, maging ang mga mangmang, ay hindi mangaliligaw roon." },
+      { id: "b3", ref: "Isaias 57:1", book: "isaias", ch: 57, v: "1", altBook: ["is"], isBeginner: true, text: "Ang matuwid na namamatay, at walang taong nagdadamdam; at mga taong mahabagin ay pumapanaw, walang gumugunita na ang matuwid ay naalis sa kasamaan na darating." },
       { id: "b4", ref: "Kawikaan 22:6", book: "kawikaan", ch: 22, v: "6", altBook: ["kaw", "pr"], isBeginner: true, text: "Turuan mo ang bata sa daan na dapat niyang lakaran, at pagka tumanda man siya ay hindi niya hihiwalayan." },
-      { id: "b5", ref: "Kawikaan 1:23-33", book: "kawikaan", ch: 1, v: "23-33", altBook: ["kaw", "pr"], isBeginner: true, text: "Magbalik kayo sa aking saway: narito, aking ibubuhos ang aking espiritu sa inyo, aking ipatatalastas sa inyo ang aking mga salita..." },
-      { id: "b6", ref: "Kawikaan 11:2", book: "kawikaan", ch: 11, v: "2", altBook: ["kaw", "pr"], isBeginner: true, text: "Pagka dumarating ang kapalaluan, dumarating nga ang kahiyaan: kundi sa mga mapagpakumbaba ay naroon ang karunungan." },
-      { id: "b7", ref: "Kawikaan 11:12", book: "kawikaan", ch: 11, v: "12", altBook: ["kaw", "pr"], isBeginner: true, text: "Siyang humahamak sa kaniyang kapuwa ay kulang ng karunungan: kundi ang taong may pag-unawa ay tumatahimik." },
-      { id: "b8", ref: "Kawikaan 10:19", book: "kawikaan", ch: 10, v: "19", altBook: ["kaw", "pr"], isBeginner: true, text: "Sa karamihan ng mga salita ay hindi nagkukulang ng kasalanan: kundi siyang nagpipigil ng kaniyang mga labi ay gumagawang may kapangyarihan." },
-      { id: "b9", ref: "Kawikaan 17:22", book: "kawikaan", ch: 17, v: "22", altBook: ["kaw", "pr"], isBeginner: true, text: "Ang masayang puso ay mabuting gamot: kundi ang bagbag na diwa ay nagpapatuyo ng mga buto." },
-      { id: "b10", ref: "Kawikaan 19:14", book: "kawikaan", ch: 19, v: "14", altBook: ["kaw", "pr"], isBeginner: true, text: "Bahay at mga kayamanan ay pamana mula sa mga magulang: kundi ang mabait na asawa ay galing sa Panginoon." },
-      { id: "b11", ref: "Mateo 5:28", book: "mateo", ch: 5, v: "28", altBook: ["mat", "mt"], isBeginner: true, text: "Datapuwa't sinasabi ko sa inyo, na ang bawa't tumitingin sa isang babae na nagnanasa sa kaniya ay nagkakasala na ng pakikiapid sa kaniyang puso." },
-      { id: "b12", ref: "Mateo 5:16", book: "mateo", ch: 5, v: "16", altBook: ["mat", "mt"], isBeginner: true, text: "Lumiwanag na gayon ang inyong ilaw sa harap ng mga tao, upang mangakita nila ang inyong mabubuting gawa, at kanilang luwalhatiin ang inyong Ama na berada sa langit." },
-      { id: "b13", ref: "Kawikaan 10:4", book: "kawikaan", ch: 10, v: "4", altBook: ["kaw", "pr"], isBeginner: true, text: "Siya'y nagiging dukha na gumagawa ng mabagal na kamay: kundi ang kamay ng masipag ay nagpapayaman." },
-      { id: "b14", ref: "Roma 10:4", book: "roma", ch: 10, v: "4", altBook: ["rom"], isBeginner: true, text: "Sapagka't si Cristo ang katapusan ng kautusan sa katuwiran ng bawa't sumasampalataya." },
-      { id: "b15", ref: "Roma 12:9", book: "roma", ch: 12, v: "9", altBook: ["rom"], isBeginner: true, text: "Ang pag-ibig ay maging walang pagpapaimbabaw. Kapootan ninyo ang masama; makipagkapwa-tao kayo sa mabuti." },
-      { id: "b16", ref: "Roma 12:21", book: "roma", ch: 12, v: "21", altBook: ["rom"], isBeginner: true, text: "Huwag kang padaig sa masama, kundi daigin mo ng mabuti ang masama." },
-      { id: "b17", ref: "Roma 8:28-30", book: "roma", ch: 8, v: "28-30", altBook: ["rom"], isBeginner: true, text: "At nalalaman natin na ang lahat ng mga bagay ay nagkakalakip na gumagawa sa ikabubuti ng mga sa Dios ay nagsisiibig..." },
+      { id: "b5", ref: "Kawikaan 1:23-33", book: "kawikaan", ch: 1, v: "23-33", altBook: ["kaw", "pr"], isBeginner: true, text: "Magsibalik kayo sa aking saway: narito, aking ibubuhos ang aking espiritu sa inyo. Sapagka't ako'y tumawag, at kayo'y tumanggi: aking iniunat ang aking kamay, at walang makinig; Kundi inyong iniuwi sa wala ang buo kong payo, at hindi ninyo inibig ang aking saway: Ako naman ay tatawa sa kaarawan ng inyong kasakunaan: ako'y manunuya pagka ang inyong takot ay dumarating; Pagka ang iyong takot ay dumarating na parang bagyo. At ang inyong kasakunaan ay dumarating na parang ipoipo; pagka ang hirap at hapis ay dumating sa inyo. Kung magkagayo'y tatawag sila sa akin, nguni't hindi ako sasagot; hahanapin nila akong masikap, nguni't hindi nila ako masusumpungan: Sapagka't kanilang ipinagtanim ang kaalaman, at hindi pinili ang takot sa Panginoon. Ayaw sila ng aking payo; kanilang hinamak ang buo kong pagsaway: Kaya't sila'y magsisikain ng bunga ng kanilang sariling lakad, at mabubusog ng kanilang sariling mga kagagawan. Sapagka't papatayin sila ng pagtalikod ng musmos, at ang pagkawalang balisa ng mga mangmang ay ang sisira sa kanila. Nguni't ang nakikinig sa akin ay tatahang tiwasay. At tatahimik na walang takot sa kasamaan." },
+      { id: "b6", ref: "Kawikaan 11:2", book: "kawikaan", ch: 11, v: "2", altBook: ["kaw", "pr"], isBeginner: true, text: "Pagka dumarating ang kapalaluan ay dumarating nga ang kahihiyan: nguni't nasa mababa ang karunungan." },
+      { id: "b7", ref: "Kawikaan 11:12", book: "kawikaan", ch: 11, v: "12", altBook: ["kaw", "pr"], isBeginner: true, text: "Siyang humahamak sa kaniyang kapuwa ay walang karunungan: nguni't ang taong naguunawa ay tumatahimik." },
+      { id: "b8", ref: "Kawikaan 10:19", book: "kawikaan", ch: 10, v: "19", altBook: ["kaw", "pr"], isBeginner: true, text: "Sa karamihan ng mga salita ay hindi nagkukulang ng pagsalangsang: nguni't siyang nagpipigil ng kaniyang mga labi ay gumagawang may kapantasan." },
+      { id: "b9", ref: "Kawikaan 17:22", book: "kawikaan", ch: 17, v: "22", altBook: ["kaw", "pr"], isBeginner: true, text: "Ang masayang puso ay mabuting kagamutan: nguni't ang bagbag na diwa ay tumutuyo ng mga buto." },
+      { id: "b10", ref: "Kawikaan 19:14", book: "kawikaan", ch: 19, v: "14", altBook: ["kaw", "pr"], isBeginner: true, text: "Bahay at mga kayamanan ay minamana sa mga magulang: nguni't ang mabait na asawa ay galing sa Panginoon." },
+      { id: "b11", ref: "Mateo 5:28", book: "mateo", ch: 5, v: "28", altBook: ["mat", "mt"], isBeginner: true, text: "Datapuwa't sinasabi ko sa inyo, na ang bawa't tumingin sa isang babae na taglay ang masamang hangad ay nagkakasala, na ng pangangalunya sa kaniyang puso." },
+      { id: "b12", ref: "Mateo 5:16", book: "mateo", ch: 5, v: "16", altBook: ["mat", "mt"], isBeginner: true, text: "Lumiwanag na gayon ang inyong ilaw sa harap ng mga tao; upang mangakita nila ang inyong mabubuting gawa, at kanilang luwalhatiin ang inyong Ama na nasa langit." },
+      { id: "b13", ref: "Kawikaan 10:4", book: "kawikaan", ch: 10, v: "4", altBook: ["kaw", "pr"], isBeginner: true, text: "Siya'y nagiging dukha na gumagawa ng kamay na walang kasipagan: nguni't yumayaman ang kamay ng masipag." },
+      { id: "b14", ref: "Roma 10:4", book: "roma", ch: 10, v: "4", altBook: ["rom"], isBeginner: true, text: "Sapagka't si Cristo ang kinauuwian ng kautusan sa ikatutuwid ng bawa't sumasampalataya." },
+      { id: "b15", ref: "Roma 12:9", book: "roma", ch: 12, v: "9", altBook: ["rom"], isBeginner: true, text: "Ang pagibig ay maging walang pagpapaimbabaw. Kapootan ninyo ang masama; makisanib kayo sa mabuti." },
+      { id: "b16", ref: "Roma 12:21", book: "roma", ch: 12, v: "21", altBook: ["rom"], isBeginner: true, text: "Huwag kang padaig sa masama, kundi bagkus daigin mo ng mabuti ang masama." },
+      { id: "b17", ref: "Roma 8:28-30", book: "roma", ch: 8, v: "28-30", altBook: ["rom"], isBeginner: true, text: "At nalalaman natin na ang lahat ng mga bagay ay nagkakalakip na gumagawa sa ikabubuti ng mga nagsisiibig sa Dios, sa makatuwid baga'y niyaong mga tinawag alinsunod sa kaniyang nasa. Sapagka't yaong mga nang una pa'y kaniyang nakilala, ay itinalaga naman niya na maging katulad ng larawan ng kaniyang Anak, upang siya ang maging panganay sa maraming magkakapatid: At yaong mga itinalaga niya, ay kaniyang tinawag naman: at ang mga tinawag ay inaring-ganap naman niya: at ang mga inaring-ganap ay niluwalhati din naman niya." },
       { id: "b18", ref: "Mateo 6:33", book: "mateo", ch: 6, v: "33", altBook: ["mat", "mt"], isBeginner: true, text: "Datapuwa't hanapin muna ninyo ang kaniyang kaharian, at ang kaniyang katuwiran; at ang lahat ng mga bagay na ito ay pawang idaragdag sa inyo." },
-      { id: "b19", ref: "1 Corinto 1:1-2", book: "1 corinto", ch: 1, v: "1-2", altBook: ["1co", "1 cor"], isBeginner: true, text: "Si Pablo, na tinawag na maging apostol ni Jesucristo sa pamamagitan ng kalooban ng Dios, at si Sostenes na ating kapatid..." },
-      { id: "b20", ref: "1 Corinto 14:33", book: "1 corinto", ch: 14, v: "33", altBook: ["1co", "1 cor"], isBeginner: true, text: "Sapagka't ang Dios ay hindi Dios ng kaguluhan, kundi ng kapayapaan; kung paano sa lahat ng mga iglesia ng mga banal." },
-      { id: "b21", ref: "1 Corinto 14:40", book: "1 corinto", ch: 14, v: "40", altBook: ["1co", "1 cor"], isBeginner: true, text: "Datapuwa't gawin ninyong may kagandahang-asal at may kaayusan ang lahat ng mga bagay." },
-      { id: "b22", ref: "1 Corinto 15:33", book: "1 corinto", ch: 15, v: "33", altBook: ["1co", "1 cor"], isBeginner: true, text: "Huwag kayong padaya: Ang masasamang kasama ay sumisira ng mabubuting ugali." },
-      { id: "b23", ref: "1 Corinto 16:14", book: "1 corinto", ch: 16, v: "14", altBook: ["1co", "1 cor"], isBeginner: true, text: "Gawin ninyo sa pag-ibig ang lahat ninyong ginagawa." },
-      { id: "b24", ref: "1 Corinto 13:13", book: "1 corinto", ch: 13, v: "13", altBook: ["1co", "1 cor"], isBeginner: true, text: "Ngayon nga'y nananatili ang pananampalataya, ang pag-asa, ang pag-ibig, ang tatlong itong; ngunit ang pinakadakila sa mga ito ay ang pag-ibig." },
-      { id: "b25", ref: "2 Corinto 9:7-8", book: "2 corinto", ch: 9, v: "7-8", altBook: ["2co", "2 cor"], isBeginner: true, text: "Magbigay ang bawa't isa ayon sa ipinasiya ng kaniyang puso: huwag mabigat sa loob, o dahil sa kailangan: sapagka't iniibig ng Dios ang nagbibigay na masaya..." },
-      { id: "b26", ref: "2 Corinto 11:3", book: "2 corinto", ch: 11, v: "3", altBook: ["2co", "2 cor"], isBeginner: true, text: "Nguni't natatakot ako, baka sa anomang paraan, kung paanong si Eva ay nadaya ng ahas sa kaniyang katusuhan, ang inyong mga pagiisip ay masira sa katuwiran at sa kalinisan na kay Cristo." },
-      { id: "b27", ref: "2 Corinto 13:5", book: "2 corinto", ch: 13, v: "5", altBook: ["2co", "2 cor"], isBeginner: true, text: "Siyasatin ninyo ang inyong sarili, kung kayo'y nangasa pananampalataya; subukin ninyo ang inyong sarili." },
-      { id: "b28", ref: "2 Cronica 7:14", book: "2 cronica", ch: 7, v: "14", altBook: ["2cr", "2 cron"], isBeginner: true, text: "Kung ang aking bayan na tinatawag sa pamamagitan ng aking pangalan ay magpakumbaba, at manalangin, at hanapin ang aking mukha, at talikdan ang kanilang masasamang lakad; akin ngang diringgin sa langit..." },
-      { id: "b29", ref: "1 Corinto 14:26", book: "1 corinto", ch: 14, v: "26", altBook: ["1co", "1 cor"], isBeginner: true, text: "Ano nga baga, mga kapatid? Pagka kayo'y nangagkakatipon, bawa't isa sa inyo'y may isang awit, may isang turo, may isang pahayag, may wika, may isang pagpapaliwanag. Gawin ninyo ang lahat ng mga bagay sa ikatitibay." },
-      { id: "b30", ref: "1 Corinto 13:4-8", book: "1 corinto", ch: 13, v: "4-8", altBook: ["1co", "1 cor"], isBeginner: true, text: "Ang pag-ibig ay mapagtiis, at magandang-loob; ang pag-ibig ay hindi nananaghali; ang pag-ibig ay hindi nagmamapuri, hindi mapagpalo..." },
-      { id: "b31", ref: "1 Pedro 1:9", book: "1 pedro", ch: 1, v: "9", altBook: ["1pe", "1 ped"], isBeginner: true, text: "Na inyong tinatanggap ang dulo ng inyong pananampalataya, ang kaligtasan ng inyong mga kaluluwa." },
-      { id: "b32", ref: "1 Pedro 3:9", book: "1 pedro", ch: 3, v: "9", altBook: ["1pe", "1 ped"], isBeginner: true, text: "Na huwag ninyong bayaran ng masama ang masama, o ng alipusta ang alipusta; kundi ng pagpapala; sapagka't dahil dito kayo'y tinawag, upang kayo'y magsimana ng pagpapala." },
-      { id: "b33", ref: "1 Pedro 4:9", book: "1 pedro", ch: 4, v: "9", altBook: ["1pe", "1 ped"], isBeginner: true, text: "Maging mapagpatuloy kayo sa isa't isa na walang bulong-bulungan." },
-      { id: "b34", ref: "1 Pedro 1:7", book: "1 pedro", ch: 1, v: "7", altBook: ["1pe", "1 ped"], isBeginner: true, text: "Upang ang pagsubok sa inyong pananampalataya, na lalong mahalaga kaysa ginto na nasisira bagama't ito'y sinusubok sa pamamagitan ng apoy, ay masumpungan sa ikapupuri..." },
-      { id: "b35", ref: "Santiago 1:12", book: "santiago", ch: 1, v: "12", altBook: ["san", "jas"], isBeginner: true, text: "Mapalad ang taong nagtitiis ng tukso; sapagka't pagkabagbag niya, siya'y tatanggap ng korona ng buhay..." },
-      { id: "b36", ref: "Santiago 1:15", book: "santiago", ch: 1, v: "15", altBook: ["san", "jas"], isBeginner: true, text: "Lalong higit, ang pagnanasa pagka naglihi ay nanganganak ng kasalanan: at ang kasalanan, pagka lumaki na, ay nanganganak ng kamatayan." },
-      { id: "b37", ref: "Santiago 5:12", book: "santiago", ch: 5, v: "12", altBook: ["san", "jas"], isBeginner: true, text: "Nguni't higit sa lahat ng mga bagay, mga kapatid ko, huwag kayong manumpa, kahit sa langit, ni sa lupa, ni sa anoman ibang sumpa..." },
-      { id: "b38", ref: "Santiago 5:16-17", book: "santiago", ch: 5, v: "16-17", altBook: ["san", "jas"], isBeginner: true, text: "Mangagfefesipagpahayag kayo ng inyong mga kasalanan sa isa't isa, at ipanalangin ninyo ang isa't isa, upang kayo'y gumaling. Malaki ang nagagawa ng panalangin ng taong matuwid..." },
-      { id: "b39", ref: "Santiago 4:17", book: "santiago", ch: 4, v: "17", altBook: ["san", "jas"], isBeginner: true, text: "Sa nakakaalam nga ng paggawa ng mabuti, at hindi ginagawa, sa kaniya'y kasalanan." },
-      { id: "b40", ref: "Santiago 2:13", book: "santiago", ch: 2, v: "13", altBook: ["san", "jas"], isBeginner: true, text: "Sapagka't ang paghuhukom ay walang awa doon sa hindi nagpakita ng awa: ang awa ay nagmamagaling laban sa paghuhukom." },
-      { id: "b41", ref: "Santiago 4:15", book: "santiago", ch: 4, v: "15", altBook: ["san", "jas"], isBeginner: true, text: "Sapagka't ang dapat ninyong sabihin ay, Kung loobin ng Panginoon, ay mabubuhay kami, at gagawin namin ito o yaon." },
-      { id: "b42", ref: "2 Pedro 1:5-8", book: "2 pedro", ch: 1, v: "5-8", altBook: ["2pe", "2 ped"], isBeginner: true, text: "Oo, at dahil dito, sa pagpapakasakit ng inyong buong makakaya, ay idagdag ninyo sa inyong pananampalataya ang kagalingan; at sa kagalingan ay ang kaalaman..." },
-      { id: "b43", ref: "Santiago 1:7-8", book: "santiago", ch: 1, v: "7-8", altBook: ["san", "jas"], isBeginner: true, text: "Sapagka't huwag isipin ng taong iyon na siya'y tatanggap ng anoman bagay sa Panginoon; Ang taong nag-aalinlangan ay walang tiyaga sa lahat ng kaniyang mga lakad." },
-      { id: "b44", ref: "1 Tesalonica 4:4-7", book: "1 tesalonica", ch: 4, v: "4-7", altBook: ["1th", "1 tes"], isBeginner: true, text: "Na ang bawa't isa sa inyo'y marunong mag-ingat ng kaniyang sariling sisidlan sa kesanalan at sa kapurihan..." },
-      { id: "b45", ref: "1 Tesalonica 5:15-18", book: "1 tesalonica", ch: 5, v: "15-18", altBook: ["1th", "1 tes"], isBeginner: true, text: "Tingnan ninyo na huwag gumanti ang sinoman ng masama sa masama sa kanino man; kundi sundin ninyong lagi ang mabuti... Mangagalak kayong lagi; Magsipanalangin kayong walang patid..." },
-      { id: "b46", ref: "2 Corinto 8:1", book: "2 corinto", ch: 8, v: "1", altBook: ["2co", "2 cor"], isBeginner: true, text: "Bukas din naman, mga kapatid, ay ipinauunawa namin sa inyo ang biyaya ng Dios na ipinagkaloob sa mga iglesia ng Macedonia." },
-      { id: "b47", ref: "2 Timoteo 3:15-17", book: "2 timoteo", ch: 3, v: "15-17", altBook: ["2ti", "2 tim"], isBeginner: true, text: "At mula sa pagkabata ay iyong nalalaman ang mga banal na kasulatan na makakapagpamulat sa iyo sa kaligtasan sa pamamagitan ng pananampalataya kay Cristo Jesus..." },
-      { id: "b48", ref: "1 Timoteo 3:15", book: "1 timoteo", ch: 3, v: "15", altBook: ["1ti", "1 tim"], isBeginner: true, text: "Nguni't kung ako'y magpaliban ng mahabang panahon, upang maalaman mo kung paano ang dapat sa mga tao na pag-uugali sa bahay ng Dios, na siyang iglesia ng Dios na buhay, ang haligi at patibayan ng katotohanan." },
-      { id: "b49", ref: "1 Timoteo 4:8", book: "1 timoteo", ch: 4, v: "8", altBook: ["1ti", "1 tim"], isBeginner: true, text: "Sapagka't ang pagsasanay sa katawan ay may kaunting pakinabang; nguni't ang kabanalan ay kapaki-pakinabang sa lahat ng mga bagay..." },
-      { id: "b50", ref: "Tito 1:2", book: "tito", ch: 1, v: "2", altBook: ["tit"], isBeginner: true, text: "Sa pag-asa sa buhay na walang hanggan, na ipinangako ng Dios na hindi makapagsisinungaling bago pa ang simula ng mga panahon." },
-      { id: "b51", ref: "Tito 3:9", book: "tito", ch: 3, v: "9", altBook: ["tit"], isBeginner: true, text: "Nguni't ilagan mo ang mga maanghang na katanungan, at ang mga salaysay ng lahi, at ang mga pagtatalo, at mga paglalaban tungkol sa kautusan; sapagka't ang mga ito ay walang pakinabang at walang kabuluhan." },
-      { id: "b52", ref: "Awit 92:1", book: "awit", ch: 92, v: "1", altBook: ["aw", "ps"], isBeginner: true, text: "Isang mabuting bagay ang magpasalamat sa Panginoon, at umawit ng mga pagpuri sa iyong pangalan, O Mataas." },
-      { id: "b53", ref: "Awit 37:4-5", book: "awit", ch: 37, v: "4-5", altBook: ["aw", "ps"], isBeginner: true, text: "Magpakaligaya ka naman sa Panginoon; at ibibigay niya sa iyo ang hinahangad ng iyong puso. Ipagkatiwala mo ang iyong lakad sa Panginoon; tumiwala ka rin naman sa kaniya, at kaniyang isasagawa." },
-      { id: "b54", ref: "Awit 34:19", book: "awit", ch: 34, v: "19", altBook: ["aw", "ps"], isBeginner: true, text: "Marami ang mga kapighatian ng matuwid: nguni't inililigtas ng Panginoon sa lahat ng yaon." },
-      { id: "b55", ref: "Awit 90:12", book: "awit", ch: 90, v: "12", altBook: ["aw", "ps"], isBeginner: true, text: "Turuan mo kaming bumilang ng aming mga araw, upang kami'y makapagtamo ng pusong may karunungan." },
-      { id: "b56", ref: "Awit 100:1-5", book: "awit", ch: 100, v: "1-5", altBook: ["aw", "ps"], isBeginner: true, text: "Mag-ingay kayo na may kagalakan sa Panginoon, kayong lahat na lupain. Maglingkod kayo sa Panginoon na may kagalakan..." },
+      { id: "b19", ref: "1 Corinto 1:1-2", book: "1 corinto", ch: 1, v: "1-2", altBook: ["1co", "1 cor"], isBeginner: true, text: "Si Pablo, na tinawag na maging apostol ni Jesucristo sa pamamagitan ng kalooban ng Dios, at si Sostenes na ating kapatid, Sa iglesia ng Dios na nasa Corinto, sa makatuwid baga'y sa mga pinapagingbanal kay Cristo Jesus, na tinawag na mangagbanal, na kasama ng lahat ng mga nagsisitawag sa bawa't dako, sa pangalan ng ating Panginoong Jesucristo, na kanila at ating Panginoon:" },
+      { id: "b20", ref: "1 Corinto 14:33", book: "1 corinto", ch: 14, v: "33", altBook: ["1co", "1 cor"], isBeginner: true, text: "Sapagka't ang Dios ay hindi Dios ng kaguluhan, kundi ng kapayapaan. Gaya sa lahat ng mga iglesia ng mga banal," },
+      { id: "b21", ref: "1 Corinto 14:40", book: "1 corinto", ch: 14, v: "40", altBook: ["1co", "1 cor"], isBeginner: true, text: "Datapuwa't gawin ninyong may karapatan at may kaayusan ang lahat ng mga bagay." },
+      { id: "b22", ref: "1 Corinto 15:33", book: "1 corinto", ch: 15, v: "33", altBook: ["1co", "1 cor"], isBeginner: true, text: "Huwag kayong padaya: Ang masasamang kasama ay sumisira ng magagandang ugali." },
+      { id: "b23", ref: "1 Corinto 16:14", book: "1 corinto", ch: 16, v: "14", altBook: ["1co", "1 cor"], isBeginner: true, text: "Gawin ninyo sa pagibig ang lahat ninyong ginagawa." },
+      { id: "b24", ref: "1 Corinto 13:13", book: "1 corinto", ch: 13, v: "13", altBook: ["1co", "1 cor"], isBeginner: true, text: "Datapuwa't ngayo'y nanatili ang tatlong ito: ang pananampalataya, ang pagasa, at ang pagibig; nguni't ang pinakadakila sa mga ito ay ang pagibig." },
+      { id: "b25", ref: "2 Corinto 9:7-8", book: "2 corinto", ch: 9, v: "7-8", altBook: ["2co", "2 cor"], isBeginner: true, text: "Magbigay ang bawa't isa ayon sa ipinasiya ng kaniyang puso: huwag mabigat sa loob, o dahil sa kailangan: sapagka't iniibig ng Dios ang nagbibigay na masaya. At maaaring gawin ng Dios na ang lahat ng biyaya ay magsisagana sa inyo; upang kayo, na mayroong laging buong kaya sa lahat ay magsipanagana sa bawa't mabuting gawa:" },
+      { id: "b26", ref: "2 Corinto 11:3", book: "2 corinto", ch: 11, v: "3", altBook: ["2co", "2 cor"], isBeginner: true, text: "Nguni't ako'y natatakot, baka sa anomang paraan, kung paanong si Eva ay nadaya ng ahas sa kaniyang katusuhan, ang inyong walang malay at malinis na mga pagiisip na kay Cristo ay pasamain." },
+      { id: "b27", ref: "2 Corinto 13:5", book: "2 corinto", ch: 13, v: "5", altBook: ["2co", "2 cor"], isBeginner: true, text: "Siyasatin ninyo ang inyong sarili, kung kayo'y nangasa pananampalataya; subukin ninyo ang inyong sarili. Hindi baga ninyo nalalaman sa ganang inyong sarili, na si Jesucristo ay nasa inyo? maliban na nga kung kayo'y itinakuwil na." },
+      { id: "b28", ref: "2 Cronica 7:14", book: "2 cronica", ch: 7, v: "14", altBook: ["2cr", "2 cron"], isBeginner: true, text: "Kung ang aking bayan na tinatawag sa pamamagitan ng aking pangalan ay magpakumbaba at dumalangin, at hanapin ang aking mukha, at talikuran ang kanilang masamang mga lakad; akin ngang didinggin sa langit, at ipatatawad ko ang kanilang kasalanan, at pagagalingin ko ang kanilang lupain." },
+      { id: "b29", ref: "1 Corinto 14:26", book: "1 corinto", ch: 14, v: "26", altBook: ["1co", "1 cor"], isBeginner: true, text: "Ano nga ito, mga kapatid? Pagka kayo'y nangagkakatipon ang bawa't isa sa inyo'y may isang awit, may isang aral, may isang pahayag, may wika, may isang pagpapaliwanag. Gawin ninyo ang lahat ng mga bagay sa ikatitibay." },
+      { id: "b30", ref: "1 Corinto 13:4-8", book: "1 corinto", ch: 13, v: "4-8", altBook: ["1co", "1 cor"], isBeginner: true, text: "Ang pagibig ay mapagpahinuhod, at magandang-loob; ang pagibig ay hindi nananaghili; ang pagibig ay hindi nagmamapuri, hindi mapagpalalo. Hindi naguugaling mahalay, hindi hinahanap ang kaniyang sarili, hindi nayayamot, hindi inaalumana ang masama; Hindi nagagalak sa kalikuan, kundi nakikigalak sa katotohanan; Lahat ay binabata, lahat ay pinaniniwalaan, lahat ay inaasahan, lahat ay tinitiis. Ang pagibig ay hindi nagkukulang kailan man: kahit maging mga hula, ay mangatatapos; maging mga wika, ay titigil: maging kaalaman, ay mawawala." },
+      { id: "b31", ref: "1 Pedro 1:9", book: "1 pedro", ch: 1, v: "9", altBook: ["1pe", "1 ped"], isBeginner: true, text: "Na inyong tinatanggap ang layunin ng inyong pananampalataya, ang pagkaligtas ng inyong mga kaluluwa." },
+      { id: "b32", ref: "1 Pedro 3:9", book: "1 pedro", ch: 3, v: "9", altBook: ["1pe", "1 ped"], isBeginner: true, text: "Na huwag ninyong gantihin ng masama ang masama, o ng alipusta ang pagalipusta; kundi ng pagpapala; sapagka't dahil dito kayo'y tinawag, upang kayo'y mangagmana ng pagpapala." },
+      { id: "b33", ref: "1 Pedro 4:9", book: "1 pedro", ch: 4, v: "9", altBook: ["1pe", "1 ped"], isBeginner: true, text: "Na mangagpatuluyan kayo ng walang bulongbulungan:" },
+      { id: "b34", ref: "1 Pedro 1:7", book: "1 pedro", ch: 1, v: "7", altBook: ["1pe", "1 ped"], isBeginner: true, text: "Upang ang pagsubok sa inyong pananampalataya na lalong mahalaga kay sa ginto na nasisira bagama't ito'y sinusubok sa pamamagitan ng apoy, ay masumpungan sa ikapupuri at ikaluluwalhati at ikararangal sa pagpapakahayag ni Jesucristo:" },
+      { id: "b35", ref: "Santiago 1:12", book: "santiago", ch: 1, v: "12", altBook: ["san", "jas"], isBeginner: true, text: "Mapalad ang taong nagtitiis ng tukso; sapagka't pagkasubok sa kaniya, siya'y tatanggap ng putong ng buhay, na ipinangako ng Panginoon sa mga nagsisiibig sa kaniya." },
+      { id: "b36", ref: "Santiago 1:15", book: "santiago", ch: 1, v: "15", altBook: ["san", "jas"], isBeginner: true, text: "Kung magkagayo'y ang kahalayan, kung maipaglihi ay nanganganak ng kasalanan: at ang kasalanan, pagka malaki na ay namumunga ng kamatayan." },
+      { id: "b37", ref: "Santiago 5:12", book: "santiago", ch: 5, v: "12", altBook: ["san", "jas"], isBeginner: true, text: "Nguni't higit sa lahat ng mga bagay, mga kapatid ko, ay huwag ninyong ipanumpa, kahit ang langit, ni ang lupa, ni ang anomang ibang sumpa: kundi ang inyong oo, ay maging oo; at ang inyong hindi, ay maging hindi; upang kayo'y huwag mangahulog sa ilalim ng hatol." },
+      { id: "b38", ref: "Santiago 5:16-17", book: "santiago", ch: 5, v: "16-17", altBook: ["san", "jas"], isBeginner: true, text: "Mangagpahayagan nga kayo sa isa't isa ng inyong mga kasalanan, at ipanalangin ng isa't isa ang iba, upang kayo'y magsigaling. Malaki ang nagagawa ng maningas na panalangin ng taong matuwid. Si Elias ay isang taong may pagkataong gaya rin ng atin, at siya'y nanalangin ng buong ningas upang huwag umulan; at hindi umulan sa lupa sa loob ng tatlong taon at anim na buwan." },
+      { id: "b39", ref: "Santiago 4:17", book: "santiago", ch: 4, v: "17", altBook: ["san", "jas"], isBeginner: true, text: "Sa nakakaalam nga ng paggawa ng mabuti, at hindi ginagawa, ito'y kasalanan sa kaniya." },
+      { id: "b40", ref: "Santiago 2:13", book: "santiago", ch: 2, v: "13", altBook: ["san", "jas"], isBeginner: true, text: "Sapagka't ang paghuhukom ay walang awa doon sa hindi nagpakita ng awa: ang awa ay lumuluwalhati laban sa paghuhukom." },
+      { id: "b41", ref: "Santiago 4:15", book: "santiago", ch: 4, v: "15", altBook: ["san", "jas"], isBeginner: true, text: "Sapagka't ang dapat ninyong sabihin ay, Kung loloobin ng Panginoon ay mangabubuhay kami, at gagawin namin ito o yaon." },
+      { id: "b42", ref: "2 Pedro 1:5-8", book: "2 pedro", ch: 1, v: "5-8", altBook: ["2pe", "2 ped"], isBeginner: true, text: "Oo, at dahil din dito, sa pagkaragdag sa ganang inyo ng buong sikap, ay ipamahagi ninyo sa inyong pananampalataya ang kagalingan; at sa kagalingan ay ang kaalaman; At sa kaalaman ay ang pagpipigil; at sa pagpipigil ay ang pagtitiis; at sa pagtitiis ay ang kabanalan; At sa kabanalan ay ang mabuting kalooban sa kapatid; at sa mabuting kalooban sa kapatid ay ang pagibig. Sapagka't kung nasa inyo ang mga bagay na ito at sumasagana, ay hindi kayo pababayaang maging mga tamad o mga walang bunga sa pagkakilala sa ating Panginoong Jesucristo." },
+      { id: "b43", ref: "Santiago 1:7-8", book: "santiago", ch: 1, v: "7-8", altBook: ["san", "jas"], isBeginner: true, text: "Sapagka't huwag isipin ng taong yaon na siya'y tatanggap ng anoman bagay sa Panginoon; Ang taong may dalawang akala, ay walang tiyaga sa lahat ng kaniyang mga paglakad." },
+      { id: "b44", ref: "1 Tesalonica 4:4-7", book: "1 tesalonica", ch: 4, v: "4-7", altBook: ["1th", "1 tes"], isBeginner: true, text: "Na ang bawa't isa sa inyo'y makaalam na maging mapagpigil sa kaniyang sariling katawan sa pagpapakabanal at kapurihan, Hindi sa pita ng kahalayan, na gaya ng mga Gentil na hindi nangakakakilala sa Dios; Na sinoma'y huwag lumapastangan at magdaya sa kaniyang kapatid sa bagay na ito: sapagka't ang Panginoon ay mapaghiganti sa lahat ng mga bagay na ito, na gaya naman ng aming ipinatalastas nang una na sa inyo at pinatotohanan. Sapagka't tayo'y tinawag ng Dios hindi sa ikarurumi, kundi sa pagpapakabanal." },
+      { id: "b45", ref: "1 Tesalonica 5:15-18", book: "1 tesalonica", ch: 5, v: "15-18", altBook: ["1th", "1 tes"], isBeginner: true, text: "Tingnan nga ninyo na huwag gumanti ang sinoman ng masama sa masama; nguni't sundin ninyong lagi ang mabuti, ang isa'y sa iba, at sa lahat. Mangagalak kayong lagi; Magsipanalangin kayong walang patid; Sa lahat ng mga bagay ay magpasalamat kayo; sapagka't ito ang kalooban ng Dios kay Cristo tungkol sa inyo." },
+      { id: "b46", ref: "2 Corinto 8:1", book: "2 corinto", ch: 8, v: "1", altBook: ["2co", "2 cor"], isBeginner: true, text: "Bukod dito, mga kapatid, ay ipinatatalastas namin sa inyo ang biyaya ng Dios na ipinagkaloob sa mga iglesia ng Macedonia;" },
+      { id: "b47", ref: "2 Timoteo 3:15-17", book: "2 timoteo", ch: 3, v: "15-17", altBook: ["2ti", "2 tim"], isBeginner: true, text: "At mula sa pagkasanggol ay iyong nalalaman ang mga banal na kasulatan na makapagpadunong sa iyo sa ikaliligtas sa pamamagitan ng pananampalataya kay Cristo Jesus. Ang lahat ng mga kasulatan na kinasihan ng Dios ay mapapakinabangan din naman sa pagtuturo, sa pagsansala, sa pagsaway, sa ikatututo na nasa katuwiran: Upang ang tao ng Dios ay maging sakdal, tinuruang lubos sa lahat ng mga gawang mabuti." },
+      { id: "b48", ref: "1 Timoteo 3:15", book: "1 timoteo", ch: 3, v: "15", altBook: ["1ti", "1 tim"], isBeginner: true, text: "Nguni't kung ako'y magluwat ng mahabang panahon, ay upang maalaman mo kung paano ang dapat sa mga tao na ugaliin nila sa bahay ng Dios, na siyang iglesia ng Dios na buhay, at haligi at suhay ng katotohanan." },
+      { id: "b49", ref: "1 Timoteo 4:8", book: "1 timoteo", ch: 4, v: "8", altBook: ["1ti", "1 tim"], isBeginner: true, text: "Sapagka't sa pagsasanay ng katawan ay may kaunting pakinabang, nguni't ang kabanalang sa lahat ng mga bagay ay pinakikinabangan, na may pangako sa buhay na ito, at sa darating." },
+      { id: "b50", ref: "Tito 1:2", book: "tito", ch: 1, v: "2", altBook: ["tit"], isBeginner: true, text: "Sa pagasa sa buhay na walang hanggan, na ipinangako ng Dios na di makapagsisinungaling buhat pa ng mga panahong walang hanggan;" },
+      { id: "b51", ref: "Tito 3:9", book: "tito", ch: 3, v: "9", altBook: ["tit"], isBeginner: true, text: "Nguni't ilagan mo ang mga hangal na usapan, at ang mga pagsasalaysay ng lahi, at ang mga pagtatalo, at pagtataltalan tungkol sa kautusan; sapagka't ang mga ito ay di pinakikinabangan at walang kabuluhan." },
+      { id: "b52", ref: "Awit 92:1", book: "awit", ch: 92, v: "1", altBook: ["aw", "ps"], isBeginner: true, text: "Isang mabuting bagay ang magpapasalamat sa Panginoon, at umawit ng mga pagpuri sa iyong pangalan, Oh Kataastaasan:" },
+      { id: "b53", ref: "Awit 37:4-5", book: "awit", ch: 37, v: "4-5", altBook: ["aw", "ps"], isBeginner: true, text: "Magpakaligaya ka naman sa Panginoon; at bibigyan ka niya ng nasa ng iyong puso. Ihabilin mo ang iyong lakad sa Panginoon; tumiwala ka rin naman sa kaniya, at kaniyang papangyayarihin." },
+      { id: "b54", ref: "Awit 34:19", book: "awit", ch: 34, v: "19", altBook: ["aw", "ps"], isBeginner: true, text: "Marami ang kadalamhatian ng matuwid; nguni't inililigtas ng Panginoon sa lahat." },
+      { id: "b55", ref: "Awit 90:12", book: "awit", ch: 90, v: "12", altBook: ["aw", "ps"], isBeginner: true, text: "Kaya ituro mo sa amin ang pagbilang ng aming mga kaarawan, upang kami ay mangagtamo sa amin ng pusong may karunungan." },
+      { id: "b56", ref: "Awit 100:1-5", book: "awit", ch: 100, v: "1-5", altBook: ["aw", "ps"], isBeginner: true, text: "Magkaingay kayo na may kagalakan sa Panginoon, kayong lahat na lupain. Mangaglingkod kayo na may kasayahan sa Panginoon; magsilapit kayo sa kaniyang harapan na may awitan. Alamin ninyo na ang Panginoon ay siyang Dios; siya ang lumalang sa atin, at tayo'y kaniya: tayo'y kaniyang bayan, at mga tupa ng kaniyang pastulan. Magsipasok kayo sa kaniyang mga pintuang-daan na may pagpapasalamat, at sa kaniyang looban na may pagpupuri: mangagpasalamat kayo sa kaniya, at purihin ninyo ang kaniyang pangalan. Sapagka't ang Panginoon ay mabuti; ang kaniyang kagandahang-loob ay magpakailan man; at ang kaniyang pagtatapat ay sa lahat ng sali't saling lahi." },
 
       // ADDITIONAL PRO POOL VERSES
-      { id: "p1", ref: "Juan 3:16", book: "juan", ch: 3, v: "16", altBook: ["jn", "jhn"], isBeginner: false, text: "Sapagka't gayon na lamang ang pag-ibig ng Dios sa sanglibutan, na ibinigay niya ang kaniyang anaking bugtong na Anak, upang ang sinomang sa kaniya'y sumampalataya ay huwag mapahamak, kundi magkaroon ng buhay na walang hanggan." },
-      { id: "p2", ref: "Filipos 4:13", book: "filipos", ch: 4, v: "13", altBook: ["fil", "php"], isBeginner: false, text: "Lahat ng mga bagay ay aking magagawa sa kaniya na nagpapalakas sa akin." },
+      { id: "p1", ref: "Juan 3:16", book: "juan", ch: 3, v: "16", altBook: ["jn", "jhn"], isBeginner: false, text: "Sapagka't gayon na lamang ang pagsinta ng Dios sa sanglibutan, na ibinigay niya ang kaniyang bugtong na Anak, upang ang sinomang sa kaniya'y sumampalataya ay huwag mapahamak, kundi magkaroon ng buhay na walang hanggan." },
+      { id: "p2", ref: "Filipos 4:13", book: "filipos", ch: 4, v: "13", altBook: ["fil", "php"], isBeginner: false, text: "Lahat ng mga bagay ay aking magagawa doon sa nagpapalakas sa akin." },
       { id: "p3", ref: "Genesis 1:1", book: "genesis", ch: 1, v: "1", altBook: ["gen"], isBeginner: false, text: "Nang pasimula ay nilikha ng Dios ang langit at ang lupa." },
-      { id: "p4", ref: "Awit 23:1", book: "awit", ch: 23, v: "1", altBook: ["aw", "ps"], isBeginner: false, text: "Ang Panginoon ay aking pastol; hindi ako mangangailangan." },
-      { id: "p5", ref: "Efeso 2:8-9", book: "efeso", ch: 2, v: "8-9", altBook: ["efe", "eph"], isBeginner: false, text: "Sapagka't sa biyaya kayo'y nangaligtas sa pamamagitan ng pananampalataya; at ito'y hindi sa inyong sarili, ito'y kaloob ng Dios: Hindi sa pamamagitan ng mga gawa, upang ang sinoman ay huwag magmapuri." },
-      { id: "p6", ref: "Hebreo 11:1", book: "hebreo", ch: 11, v: "1", altBook: ["heb"], isBeginner: false, text: "Ngayon, ang pananampalataya ay siyang kapanatagan sa mga bagay na inaasahan, ang katunayan ng mga bagay na hindi nakikita." },
-      { id: "p7", ref: "Galacia 5:22-23", book: "galacia", ch: 5, v: "22-23", altBook: ["gal"], isBeginner: false, text: "Datapuwa't ang bunga ng Espiritu ay pag-ibig, kagalakan, kapayapaan, pagpapahinuhod, kagandahang-loob, kabutihan, katapatan, Kaamuan, pagpipigil sa sarili: laban sa mga gayong bagay ay walang kautusan." },
-      { id: "p8", ref: "Jeremias 29:11", book: "jeremias", ch: 29, v: "11", altBook: ["jer"], isBeginner: false, text: "Sapagka't nalalaman ko ang mga pag-iisip na aking iniisip sa inyo, sabi ng Panginoon, mga pag-iisip sa kapayapaan, at hindi sa kasamaan, upang bigyan kayo ng pag-asa sa inyong wakas." }
+      { id: "p4", ref: "Awit 23:1", book: "awit", ch: 23, v: "1", altBook: ["aw", "ps"], isBeginner: false, text: "Ang Panginoon ay aking pastor; hindi ako mangangailangan." },
+      { id: "p5", ref: "Efeso 2:8-9", book: "efeso", ch: 2, v: "8-9", altBook: ["efe", "eph"], isBeginner: false, text: "Sapagka't sa biyaya kayo'y nangaligtas sa pamamagitan ng pananampalataya; at ito'y hindi sa inyong sarili, ito'y kaloob ng Dios; Hindi sa pamamagitan ng mga gawa, upang ang sinoman ay huwag magmapuri." },
+      { id: "p6", ref: "Hebreo 11:1", book: "hebreo", ch: 11, v: "1", altBook: ["heb"], isBeginner: false, text: "Ngayon, ang pananampalataya ay siyang kapanatagan sa mga bagay na hinihintay, ang katunayan ng mga bagay na hindi nakikita." },
+      { id: "p7", ref: "Galacia 5:22-23", book: "galacia", ch: 5, v: "22-23", altBook: ["gal"], isBeginner: false, text: "Datapuwa't ang bunga ng Espiritu ay pagibig, katuwaan, kapayapaan, pagpapahinuhod, kagandahang-loob, kabutihan, pagtatapat, Kaamuan, pagpipigil; laban sa mga gayong bagay ay walang kautusan." },
+      { id: "p8", ref: "Jeremias 29:11", book: "jeremias", ch: 29, v: "11", altBook: ["jer"], isBeginner: false, text: "Sapagka't nalalaman ko ang mga pagiisip na aking iniisip sa inyo, sabi ng Panginoon, mga pagiisip tungkol sa kapayapaan, at hindi tungkol sa kasamaan, upang bigyan kayo ng pagasa sa inyong huling wakas." }
     ];
 
     // --- LOAD VERIFIED PUBLIC-DOMAIN ADB 1905 TEXT ---
     // Source: getBible API, Tagalog / Ang Dating Biblia (1905).
     // This is the public-domain 1905 edition; it is not represented as the
     // separately corrected edition displayed by Digital Bible.
-    const ADB_BOOK_NUMBERS = {
-      "genesis":1,"exodo":2,"levitico":3,"mga bilang":4,"deuteronomio":5,
-      "josue":6,"mga hukom":7,"ruth":8,"1 samuel":9,"2 samuel":10,
-      "1 mga hari":11,"2 mga hari":12,"1 paralipomeno":13,"2 paralipomeno":14,"2 cronica":14,
-      "ezra":15,"nehemias":16,"ester":17,"job":18,"awit":19,"kawikaan":20,
-      "mangangaral":21,"awit ng mga awit":22,"isaias":23,"jeremias":24,
-      "panaghoy":25,"ezekiel":26,"daniel":27,"hosea":28,"joel":29,"amos":30,
-      "obadias":31,"jonas":32,"mikas":33,"nahum":34,"habacuc":35,"sofonias":36,
-      "hagai":37,"zacarias":38,"malakias":39,"mateo":40,"marcos":41,"lucas":42,
-      "juan":43,"mga gawa":44,"roma":45,"1 corinto":46,"2 corinto":47,"galacia":48,
-      "efeso":49,"filipos":50,"colosas":51,"1 tesalonica":52,"2 tesalonica":53,
-      "1 timoteo":54,"2 timoteo":55,"tito":56,"filemon":57,"hebreo":58,
-      "santiago":59,"1 pedro":60,"2 pedro":61,"1 juan":62,"2 juan":63,
-      "3 juan":64,"judas":65,"pahayag":66
-    };
-
-    function unpackADB(data) {
-      const books = Array.isArray(data) ? data : (data.books || data.data || []);
-      const result = new Map();
-      books.forEach((book, bi) => {
-        const bookNo = Number(book.book_nr || book.book_number || book.nr || book.id || bi + 1);
-        const chapters = Array.isArray(book.chapters) ? book.chapters : [];
-        chapters.forEach((chapter, ci) => {
-          const chapterNo = Number(chapter.chapter || chapter.chapter_nr || chapter.nr || ci + 1);
-          const verses = Array.isArray(chapter.verses) ? chapter.verses : [];
-          verses.forEach((verse, vi) => {
-            const verseNo = Number(verse.verse || verse.verse_nr || verse.nr || vi + 1);
-            if (verse.text) result.set(`${bookNo}:${chapterNo}:${verseNo}`, String(verse.text).replace(/<[^>]*>/g, '').trim());
-          });
-        });
-      });
-      return result;
-    }
-
-    async function loadADB1905Texts() {
-      try {
-        const response = await fetch('https://api.getbible.net/v2/tagalog.json');
-        if (!response.ok) throw new Error('Bible text source returned ' + response.status);
-        const data = await response.json();
-        const verses = unpackADB(data);
-        if (verses.size < 30000) throw new Error('Unexpected Bible data format');
-        let updated = 0;
-        for (const item of VERSE_DATABASE) {
-          const bookNo = ADB_BOOK_NUMBERS[item.book];
-          if (!bookNo) continue;
-          const range = String(item.v).split('-').map(Number);
-          const first = range[0], last = range.length > 1 ? range[1] : range[0];
-          const parts = [];
-          for (let n = first; n <= last; n++) {
-            const text = verses.get(`${bookNo}:${item.ch}:${n}`);
-            if (!text) break;
-            parts.push(text);
-          }
-          if (parts.length === last - first + 1) {
-            item.text = parts.join(' ');
-            updated++;
-          }
-        }
-        document.querySelector('header p').textContent = 'Ang Dating Biblia (1905) • ' + updated + ' verses synced';
-        console.info('ADB 1905 verse texts synced:', updated, 'of', VERSE_DATABASE.length);
-      } catch (error) {
-        console.error('Could not load ADB 1905 verse database:', error);
-        document.querySelector('header p').textContent = 'Ang Dating Biblia (1905) • offline text fallback';
-      }
-    }
-    loadADB1905Texts();
-
     // --- GAME STATE ---
     let state = {
       selectedMode: 'beginner', // 'beginner' or 'pro'
