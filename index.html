@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BibleGuess — Ang Dating Biblia Edition</title>
+<style>
+:root {
+  --bg: #323437;
+  --panel: #2c2e31;
+  --text: #d1d0c5;
+  --muted: #77797c;
+  --yellow: #e2b714;
+  --green: #b8d7a3;
+  --red: #ca4754;
+  --line: #45474a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.wrap {
+  max-width: 1050px;
+  margin: auto;
+  padding: 30px 22px;
+  width: 100%;
+  flex: 1;
+}
+
+/* Splash Screen */
+.splash-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+}
+.splash-title {
+  font-size: clamp(40px, 8vw, 72px);
+  font-weight: 900;
+  letter-spacing: -3px;
+  margin-bottom: 8px;
+  animation: popIn 0.3s ease-out;
+}
+.splash-title span { color: var(--yellow); }
+.splash-sub {
+  color: var(--muted);
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-bottom: 36px;
+  text-transform: uppercase;
+}
+.btn-start {
+  background: var(--yellow);
+  color: #242629;
+  font-size: 18px;
+  font-weight: 800;
+  padding: 16px 40px;
+  border-radius: 10px;
+  border: 0;
+  cursor: pointer;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 24px rgba(226, 183, 20, 0.2);
+}
+.btn-start:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+/* Game Interface */
+.game-interface { display: none; }
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.brand {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+}
+.brand span { color: var(--yellow); }
+.sub, .muted { color: var(--muted); font-size: 12px; }
+.pill {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.settings {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.tag-btn {
+  background: #3b3d40;
+  color: var(--yellow);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 0;
+  cursor: pointer;
+}
+.tag-btn:hover { background: #484a4e; }
+.game, .card {
+  background: var(--panel);
+  border: 1px solid #393b3e;
+  border-radius: 12px;
+}
+.game { padding: 34px 36px; }
+.kicker {
+  color: var(--yellow);
+  font-size: 12px;
+  letter-spacing: 1.4px;
+  margin-bottom: 18px;
+}
+.verse {
+  font-size: clamp(18px, 2.5vw, 26px);
+  line-height: 1.6;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  color: #e5e4dc;
+}
+.timerline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  margin: 10px 0 20px;
+}
+.bar {
+  height: 3px;
+  background: #45474a;
+  flex: 1;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.fill {
+  height: 100%;
+  background: var(--yellow);
+  width: 100%;
+  transition: width .1s linear;
+}
+.entryrow { display: flex; gap: 10px; }
+.entry {
+  flex: 1;
+  min-width: 0;
+  background: #242629;
+  border: 1px solid #4c4e51;
+  border-radius: 7px;
+  padding: 15px;
+  color: #f0efe7;
+  font: 15px monospace;
+  outline: none;
+}
+.entry:focus { border-color: var(--yellow); }
+.entry::placeholder { color: #6c6e70; }
+button { font: inherit; cursor: pointer; border: 0; }
+.primary {
+  background: var(--yellow);
+  color: #242629;
+  border-radius: 7px;
+  padding: 12px 20px;
+  font-weight: 800;
+}
+.primary:hover { filter: brightness(1.08); }
+.bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 18px;
+}
+.card { padding: 18px; }
+.cardhead {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  font-size: 12px;
+}
+.count { color: var(--muted); }
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 145px;
+  overflow: auto;
+}
+.record {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.record strong { color: var(--text); font-weight: 500; }
+.help {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* Modals & Backdrops */
+.backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(18, 19, 20, 0.85);
+  backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+.backdrop.show { display: flex !important; }
+.modal {
+  width: min(480px, 100%);
+  background: #2c2e31;
+  border: 1px solid #55585b;
+  border-radius: 14px;
+  padding: 26px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+  animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.modal-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+}
+.btn-back {
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+.btn-back:hover {
+  color: var(--yellow);
+  border-color: var(--yellow);
+}
+.option-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.option-btn {
+  background: #242629;
+  border: 1px solid #45474a;
+  border-radius: 10px;
+  padding: 16px;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+.option-btn:hover {
+  border-color: var(--yellow);
+  background: #2a2c30;
+}
+.option-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--yellow);
+  margin-bottom: 4px;
+}
+.option-desc {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Result Modal Specifics */
+.modalStatus {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: var(--green);
+  margin-bottom: 18px;
+}
+.modalStatus.wrong { color: var(--red); }
+.label {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin: 14px 0 6px;
+}
+.ref { color: var(--yellow); font-size: 14px; font-weight: bold; }
+.modalVerse { font-size: 15px; line-height: 1.6; color: #e5e4dc; }
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  margin-top: 18px;
+}
+.statbox { background: #242629; border-radius: 8px; padding: 12px; }
+.statnum { font-size: 22px; font-weight: bold; }
+.statname { font-size: 11px; color: var(--muted); }
+.actions { display: flex; justify-content: flex-end; margin-top: 20px; }
+
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media(max-width: 650px) {
+  .wrap { padding: 20px 13px; }
+  .game { padding: 24px 18px; }
+  .verse { min-height: 175px; }
+  .entryrow { flex-direction: column; }
+  .bottom { grid-template-columns: 1fr; }
+  .top { margin-bottom: 25px; }
+}
+</style>
+</head>
+<body>
+
+<main class="wrap">
+  <!-- SPLASH SCREEN -->
+  <section id="splashScreen" class="splash-container">
+    <div class="splash-title">Bible<span>Guess</span></div>
+    <div class="splash-sub">ANG DATING BIBLIA (ZEFANIA XML)</div>
+    <button id="btnStartGame" class="btn-start" type="button">START GAME</button>
+  </section>
+
+  <!-- MAIN GAME INTERFACE -->
+  <section id="gameInterface" class="game-interface">
+    <header class="top">
+      <div>
+        <div class="brand">Bible<span>Guess</span></div>
+        <div class="sub">ANG DATING BIBLIA (ADB 1905)</div>
+      </div>
+      <div class="pill"><span id="modeDisplayTag">Beginner</span> MODE <span style="color:var(--yellow)">●</span></div>
+    </header>
+
+    <section class="settings">
+      <span>MODE: <button id="modeTagBtn" class="tag-btn" type="button">Beginner</button></span>
+      <span style="margin-left: 12px;">TIMER: <button id="timerTag" class="tag-btn" type="button">5s</button></span>
+      <button id="btnChangeSettings" class="tag-btn" style="margin-left:auto;" type="button">⚙ Change Setup</button>
+    </section>
+
+    <section class="game">
+      <div class="kicker">WHICH VERSE IS THIS?</div>
+      <div id="verse" class="verse">Loading verse...</div>
+      <div class="timerline">
+        <span id="timerText">—</span>
+        <div class="bar"><div id="fill" class="fill" style="width:100%"></div></div>
+        <span id="round">READY</span>
+      </div>
+      <form id="guessForm">
+        <div class="entryrow">
+          <input id="answer" class="entry" autocomplete="off" placeholder="Book shortcut chapter:verse · e.g. ex 20:1, aw 37:5, heb 6:10" aria-label="Guess book chapter and verse">
+          <button class="primary" id="guessButton" type="submit">GUESS ↵</button>
+        </div>
+      </form>
+      <div class="muted" style="margin-top:12px">Format: <b>ex 20:1</b> · Shortcuts: <i>ex, aw, kaw, isa, mat, rom, 1co, 2co, san, 1pe</i></div>
+    </section>
+
+    <section class="bottom">
+      <div class="card">
+        <div class="cardhead"><span>✓ CORRECT GUESSES</span><span id="correctCount" class="count">0</span></div>
+        <div id="correctList" class="list"><div class="muted">No correct guesses yet.</div></div>
+      </div>
+      <div class="card">
+        <div class="cardhead"><span>× INCORRECT GUESSES</span><span id="wrongCount" class="count">0</span></div>
+        <div id="wrongList" class="list"><div class="muted">No incorrect guesses yet.</div></div>
+      </div>
+    </section>
+
+    <footer class="help">
+      <span>English User Interface · Ang Dating Biblia Scripture</span>
+      <span>Session stats reset when refreshed</span>
+    </footer>
+  </section>
+</main>
+
+<!-- STEP 1: MODE SELECTION MODAL -->
+<div id="modeModal" class="backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Choose Game Mode</div>
+      <button id="btnBackToSplash" class="btn-back" type="button">← Back</button>
+    </div>
+    <div class="option-grid">
+      <button class="option-btn mode-option" data-mode="beginner" type="button">
+        <div class="option-title">Beginner</div>
+        <div class="option-desc">Uses strictly the curated list of custom user verses</div>
+      </button>
+      <button class="option-btn mode-option" data-mode="pro" type="button">
+        <div class="option-title">Pro</div>
+        <div class="option-desc">Uses all available verses in the database</div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 2: TIMER SELECTION MODAL -->
+<div id="timerModal" class="backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Select Timer</div>
+      <button id="btnBackToMode" class="btn-back" type="button">← Back</button>
+    </div>
+    <div class="option-grid">
+      <button class="option-btn timer-option" data-time="3" type="button">
+        <div class="option-title">3 Seconds</div>
+        <div class="option-desc">Fast-paced lightning mode</div>
+      </button>
+      <button class="option-btn timer-option" data-time="5" type="button">
+        <div class="option-title">5 Seconds</div>
+        <div class="option-desc">Standard fast gameplay</div>
+      </button>
+      <button class="option-btn timer-option" data-time="10" type="button">
+        <div class="option-title">10 Seconds</div>
+        <div class="option-desc">Relaxed guessing pace</div>
+      </button>
+      <button class="option-btn timer-option" data-time="0" type="button">
+        <div class="option-title">Untimed (∞)</div>
+        <div class="option-desc">Take as much time as you need</div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div id="resultModal" class="backdrop" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div id="modalStatus" class="modalStatus">Correct!</div>
+    <div id="answerBlock">
+      <div class="label">CORRECT ANSWER</div>
+      <div id="modalRef" class="ref"></div>
+      <div id="modalVerse" class="modalVerse"></div>
+    </div>
+    <div class="label">STATISTICS</div>
+    <div class="stats">
+      <div class="statbox"><div id="modalCorrect" class="statnum">0</div><div class="statname">Correct guesses</div></div>
+      <div class="statbox"><div id="modalWrong" class="statnum">0</div><div class="statname">Incorrect guesses</div></div>
+      <div class="statbox"><div id="modalAccuracy" class="statnum">0%</div><div class="statname">Accuracy</div></div>
+      <div class="statbox"><div id="modalRounds" class="statnum">0</div><div class="statname">Total answered</div></div>
+    </div>
+    <div class="actions"><button id="continue" class="primary" type="button">Next Verse →</button></div>
+  </div>
+</div>
+
+<script>
