@@ -723,6 +723,134 @@
       p8: "Mga pagiisip tungkol sa kapayapaan, at hindi tungkol sa kasamaan"
     };
 
+    // Expand passage combinations into individual, numbered verses.
+    // Verse text is stored per verse so game rounds and review keywords stay aligned.
+    const COMBINED_VERSE_TEXTS = {
+      b1: [
+        "At sinalita ng Dios ang lahat ng salitang ito, na sinasabi,",
+        "Ako ang Panginoon mong Dios, na naglabas sa iyo sa lupain ng Egipto, sa bahay ng pagkaalipin.",
+        "Huwag kang magkakaroon ng ibang mga dios sa harap ko."
+      ],
+      b5: [
+        "Magsibalik kayo sa aking saway: narito, aking ibubuhos ang aking espiritu sa inyo.",
+        "Sapagka't ako'y tumawag, at kayo'y tumanggi: aking iniunat ang aking kamay, at walang makinig;",
+        "Kundi inyong iniuwi sa wala ang buo kong payo, at hindi ninyo inibig ang aking saway:",
+        "Ako naman ay tatawa sa kaarawan ng inyong kasakunaan: ako'y manunuya pagka ang inyong takot ay dumarating;",
+        "Pagka ang iyong takot ay dumarating na parang bagyo. At ang inyong kasakunaan ay dumarating na parang ipoipo; pagka ang hirap at hapis ay dumating sa inyo.",
+        "Kung magkagayo'y tatawag sila sa akin, nguni't hindi ako sasagot; hahanapin nila akong masikap, nguni't hindi nila ako masusumpungan:",
+        "Sapagka't kanilang ipinagtanim ang kaalaman, at hindi pinili ang takot sa Panginoon.",
+        "Ayaw sila ng aking payo; kanilang hinamak ang buo kong pagsaway:",
+        "Kaya't sila'y magsisikain ng bunga ng kanilang sariling lakad, at mabubusog ng kanilang sariling mga kagagawan.",
+        "Sapagka't papatayin sila ng pagtalikod ng musmos, at ang pagkawalang balisa ng mga mangmang ay ang sisira sa kanila.",
+        "Nguni't ang nakikinig sa akin ay tatahang tiwasay. At tatahimik na walang takot sa kasamaan."
+      ],
+      b17: [
+        "At nalalaman natin na ang lahat ng mga bagay ay nagkakalakip na gumagawa sa ikabubuti ng mga nagsisiibig sa Dios, sa makatuwid baga'y niyaong mga tinawag alinsunod sa kaniyang nasa.",
+        "Sapagka't yaong mga nang una pa'y kaniyang nakilala, ay itinalaga naman niya na maging katulad ng larawan ng kaniyang Anak, upang siya ang maging panganay sa maraming magkakapatid:",
+        "At yaong mga itinalaga niya, ay kaniyang tinawag naman: at ang mga tinawag ay inaring-ganap naman niya: at ang mga inaring-ganap ay niluwalhati din naman niya."
+      ],
+      b19: [
+        "Si Pablo, na tinawag na maging apostol ni Jesucristo sa pamamagitan ng kalooban ng Dios, at si Sostenes na ating kapatid,",
+        "Sa iglesia ng Dios na nasa Corinto, sa makatuwid baga'y sa mga pinapagingbanal kay Cristo Jesus, na tinawag na mangagbanal, na kasama ng lahat ng mga nagsisitawag sa bawa't dako, sa pangalan ng ating Panginoong Jesucristo, na kanila at ating Panginoon:"
+      ],
+      b25: [
+        "Magbigay ang bawa't isa ayon sa ipinasiya ng kaniyang puso: huwag mabigat sa loob, o dahil sa kailangan: sapagka't iniibig ng Dios ang nagbibigay na masaya.",
+        "At maaaring gawin ng Dios na ang lahat ng biyaya ay magsisagana sa inyo; upang kayo, na mayroong laging buong kaya sa lahat ay magsipanagana sa bawa't mabuting gawa:"
+      ],
+      b30: [
+        "Ang pagibig ay mapagpahinuhod, at magandang-loob; ang pagibig ay hindi nananaghili; ang pagibig ay hindi nagmamapuri, hindi mapagpalalo.",
+        "Hindi naguugaling mahalay, hindi hinahanap ang kaniyang sarili, hindi nayayamot, hindi inaalumana ang masama;",
+        "Hindi nagagalak sa kalikuan, kundi nakikigalak sa katotohanan;",
+        "Lahat ay binabata, lahat ay pinaniniwalaan, lahat ay inaasahan, lahat ay tinitiis.",
+        "Ang pagibig ay hindi nagkukulang kailan man: kahit maging mga hula, ay mangatatapos; maging mga wika, ay titigil: maging kaalaman, ay mawawala."
+      ],
+      b38: [
+        "Mangagpahayagan nga kayo sa isa't isa ng inyong mga kasalanan, at ipanalangin ng isa't isa ang iba, upang kayo'y magsigaling. Malaki ang nagagawa ng maningas na panalangin ng taong matuwid.",
+        "Si Elias ay isang taong may pagkataong gaya rin ng atin, at siya'y nanalangin ng buong ningas upang huwag umulan; at hindi umulan sa lupa sa loob ng tatlong taon at anim na buwan."
+      ],
+      b42: [
+        "Oo, at dahil din dito, sa pagkaragdag sa ganang inyo ng buong sikap, ay ipamahagi ninyo sa inyong pananampalataya ang kagalingan; at sa kagalingan ay ang kaalaman;",
+        "At sa kaalaman ay ang pagpipigil; at sa pagpipigil ay ang pagtitiis; at sa pagtitiis ay ang kabanalan;",
+        "At sa kabanalan ay ang mabuting kalooban sa kapatid; at sa mabuting kalooban sa kapatid ay ang pagibig.",
+        "Sapagka't kung nasa inyo ang mga bagay na ito at sumasagana, ay hindi kayo pababayaang maging mga tamad o mga walang bunga sa pagkakilala sa ating Panginoong Jesucristo."
+      ],
+      b43: [
+        "Sapagka't huwag isipin ng taong yaon na siya'y tatanggap ng anoman bagay sa Panginoon;",
+        "Ang taong may dalawang akala, ay walang tiyaga sa lahat ng kaniyang mga paglakad."
+      ],
+      b44: [
+        "Na ang bawa't isa sa inyo'y makaalam na maging mapagpigil sa kaniyang sariling katawan sa pagpapakabanal at kapurihan,",
+        "Hindi sa pita ng kahalayan, na gaya ng mga Gentil na hindi nangakakakilala sa Dios;",
+        "Na sinoma'y huwag lumapastangan at magdaya sa kaniyang kapatid sa bagay na ito: sapagka't ang Panginoon ay mapaghiganti sa lahat ng mga bagay na ito, na gaya naman ng aming ipinatalastas nang una na sa inyo at pinatotohanan.",
+        "Sapagka't tayo'y tinawag ng Dios hindi sa ikarurumi, kundi sa pagpapakabanal."
+      ],
+      b45: [
+        "Tingnan nga ninyo na huwag gumanti ang sinoman ng masama sa masama; nguni't sundin ninyong lagi ang mabuti, ang isa'y sa iba, at sa lahat.",
+        "Mangagalak kayong lagi;",
+        "Magsipanalangin kayong walang patid;",
+        "Sa lahat ng mga bagay ay magpasalamat kayo; sapagka't ito ang kalooban ng Dios kay Cristo tungkol sa inyo."
+      ],
+      b47: [
+        "At mula sa pagkasanggol ay iyong nalalaman ang mga banal na kasulatan na makapagpadunong sa iyo sa ikaliligtas sa pamamagitan ng pananampalataya kay Cristo Jesus.",
+        "Ang lahat ng mga kasulatan na kinasihan ng Dios ay mapapakinabangan din naman sa pagtuturo, sa pagsansala, sa pagsaway, sa ikatututo na nasa katuwiran:",
+        "Upang ang tao ng Dios ay maging sakdal, tinuruang lubos sa lahat ng mga gawang mabuti."
+      ],
+      b53: [
+        "Magpakaligaya ka naman sa Panginoon; at bibigyan ka niya ng nasa ng iyong puso.",
+        "Ihabilin mo ang iyong lakad sa Panginoon; tumiwala ka rin naman sa kaniya, at kaniyang papangyayarihin."
+      ],
+      b56: [
+        "Magkaingay kayo na may kagalakan sa Panginoon, kayong lahat na lupain.",
+        "Mangaglingkod kayo na may kasayahan sa Panginoon; magsilapit kayo sa kaniyang harapan na may awitan.",
+        "Alamin ninyo na ang Panginoon ay siyang Dios; siya ang lumalang sa atin, at tayo'y kaniya: tayo'y kaniyang bayan, at mga tupa ng kaniyang pastulan.",
+        "Magsipasok kayo sa kaniyang mga pintuang-daan na may pagpapasalamat, at sa kaniyang looban na may pagpupuri: mangagpasalamat kayo sa kaniya, at purihin ninyo ang kaniyang pangalan.",
+        "Sapagka't ang Panginoon ay mabuti; ang kaniyang kagandahang-loob ay magpakailan man; at ang kaniyang pagtatapat ay sa lahat ng sali't saling lahi."
+      ],
+      p5: [
+        "Sapagka't sa biyaya kayo'y nangaligtas sa pamamagitan ng pananampalataya; at ito'y hindi sa inyong sarili, ito'y kaloob ng Dios;",
+        "Hindi sa pamamagitan ng mga gawa, upang ang sinoman ay huwag magmapuri."
+      ],
+      p7: [
+        "Datapuwa't ang bunga ng Espiritu ay pagibig, katuwaan, kapayapaan, pagpapahinuhod, kagandahang-loob, kabutihan, pagtatapat,",
+        "Kaamuan, pagpipigil; laban sa mga gayong bagay ay walang kautusan."
+      ]
+    };
+
+    const COMBINED_VERSE_STARTS = {
+      b1: 1, b5: 23, b17: 28, b19: 1, b25: 7, b30: 4, b38: 16, b42: 5,
+      b43: 7, b44: 4, b45: 15, b47: 15, b53: 4, b56: 1, p5: 8, p7: 22
+    };
+
+    // Replace each range entry with one database item per verse.
+    const ORIGINAL_COMBINED_ENTRIES = VERSE_DATABASE.filter(v => COMBINED_VERSE_TEXTS[v.id]);
+    const expandedIds = new Set();
+    const EXPANDED_VERSE_DATABASE = [];
+    VERSE_DATABASE.forEach(verse => {
+      const texts = COMBINED_VERSE_TEXTS[verse.id];
+      if (!texts) {
+        EXPANDED_VERSE_DATABASE.push(verse);
+        return;
+      }
+      const start = COMBINED_VERSE_STARTS[verse.id];
+      texts.forEach((text, offset) => {
+        const verseNumber = start + offset;
+        const expanded = {
+          ...verse,
+          id: offset === 0 ? verse.id : `${verse.id}_v${verseNumber}`,
+          ref: `${verse.ref.replace(/:\\d+-\\d+$/, '')}:${verseNumber}`,
+          v: String(verseNumber),
+          text
+        };
+        EXPANDED_VERSE_DATABASE.push(expanded);
+        expandedIds.add(expanded.id);
+        const words = text.replace(/[,:;.!?]+/g, '').split(/\\s+/).filter(Boolean);
+        REVIEW_KEYWORDS[expanded.id] = words.slice(0, Math.min(6, words.length)).join(' ');
+      });
+    });
+    VERSE_DATABASE.splice(0, VERSE_DATABASE.length, ...EXPANDED_VERSE_DATABASE);
+
+
+
     function renderReviewMode(level) {
       const verses = level === 'beginner' ? VERSE_DATABASE.filter(v => v.isBeginner) : [...VERSE_DATABASE];
       elements.btnReviewBeginner.className = level === 'beginner'
@@ -731,7 +859,7 @@
       elements.btnReviewPro.className = level === 'pro'
         ? "py-3 px-4 rounded-xl border border-purple-400 bg-purple-500/15 text-purple-300 font-bold transition"
         : "py-3 px-4 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 font-bold transition";
-      elements.reviewCount.textContent = `${level === 'beginner' ? 'Beginner' : 'Pro'} review • ${verses.length} entries`;
+      elements.reviewCount.textContent = `${level === 'beginner' ? 'Beginner' : 'Pro'} review • ${verses.length} verses`;
       elements.reviewList.innerHTML = '';
 
       verses.forEach((verse, index) => {
