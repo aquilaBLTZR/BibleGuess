@@ -256,9 +256,6 @@
           <div class="text-xs font-semibold text-slate-400">
             SCORE <span id="score-counter" class="text-base font-bold text-amber-400">0</span>
           </div>
-          <button id="btn-stop-game" type="button" class="px-3 py-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-xs font-bold flex items-center gap-1.5">
-            <i class="fa-solid fa-stop"></i><span>STOP GAME</span>
-          </button>
           <!-- Timer Display -->
           <div id="timer-display-container" class="flex items-center gap-1.5 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700">
             <i class="fa-regular fa-clock text-amber-400 text-xs"></i>
@@ -302,6 +299,9 @@
           <span class="text-xs text-slate-400">Format: <code class="text-amber-300 font-mono">[Book] [Chapter]:[Verse]</code> (a dot also works)</span>
         </div>
       </form>
+      <button id="btn-stop-game" type="button" class="w-full mt-3 py-3 px-5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-sm font-bold flex items-center justify-center gap-2">
+        <i class="fa-solid fa-stop"></i> STOP GAME
+      </button>
     </div>
 
     <!-- Verse countdown overlay -->
