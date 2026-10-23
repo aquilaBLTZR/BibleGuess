@@ -182,16 +182,16 @@
         <h3 class="text-2xl font-extrabold text-white text-center mb-1">Choose Your Mode</h3><p class="text-sm text-slate-400 text-center mb-6">Four ways to test your Bible knowledge.</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <button data-game-mode="practice" class="game-mode-choice mode-card p-4 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-left flex flex-col gap-3 items-start min-h-36"><span class="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-lightbulb"></i></span><span><strong class="block text-white text-base">Practice Mode</strong><small class="block text-slate-400 mt-1 leading-relaxed">Untimed, with progressive hints.</small></span><span class="text-[10px] uppercase tracking-widest text-emerald-300 font-bold">Learn</span></button>
-          <button data-game-mode="multiple" class="game-mode-choice mode-card p-4 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-left flex flex-col gap-3 items-start min-h-36"><span class="w-12 h-12 rounded-2xl bg-sky-500/15 text-sky-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-list-check"></i></span><span><strong class="block text-white text-base">Multiple Choice</strong><small class="block text-slate-400 mt-1 leading-relaxed">Pick the right reference from four.</small></span><span class="text-[10px] uppercase tracking-widest text-sky-300 font-bold">Pick</span></button>
-          <button data-game-mode="classic" class="game-mode-choice mode-card p-4 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-left flex flex-col gap-3 items-start min-h-36"><span class="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-keyboard"></i></span><span><strong class="block text-white text-base">Classic Bible Guess</strong><small class="block text-slate-400 mt-1 leading-relaxed">Type the book, chapter, and verse.</small></span><span class="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Classic</span></button>
-          <button data-game-mode="blitz" class="game-mode-choice mode-card p-4 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-left flex flex-col gap-3 items-start min-h-36"><span class="w-12 h-12 rounded-2xl bg-rose-500/15 text-rose-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-bolt"></i></span><span><strong class="block text-white text-base">Blitz Guessing</strong><small class="block text-slate-400 mt-1 leading-relaxed">You have only 3 seconds per verse.</small></span><span class="text-[10px] uppercase tracking-widest text-rose-300 font-bold">3-SECOND RUSH</span></button>
+          <button data-game-mode="multiple" class="game-mode-choice mode-card p-5 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-center flex flex-col gap-3 items-center justify-center min-h-44"><span class="w-12 h-12 rounded-2xl bg-sky-500/15 text-sky-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-list-check"></i></span><span><strong class="block text-white text-base">Multiple Choice</strong><small class="block text-slate-400 mt-1 leading-relaxed">Pick the right reference from four.</small></span><span class="text-[10px] uppercase tracking-widest text-sky-300 font-bold">Pick</span></button>
+          <button data-game-mode="classic" class="game-mode-choice mode-card p-5 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-center flex flex-col gap-3 items-center justify-center min-h-44"><span class="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-keyboard"></i></span><span><strong class="block text-white text-base">Classic Bible Guess</strong><small class="block text-slate-400 mt-1 leading-relaxed">Type the book, chapter, and verse.</small></span><span class="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Classic</span></button>
+          <button data-game-mode="blitz" class="game-mode-choice mode-card p-5 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-center flex flex-col gap-3 items-center justify-center min-h-44"><span class="w-12 h-12 rounded-2xl bg-rose-500/15 text-rose-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-bolt"></i></span><span><strong class="block text-white text-base">Blitz Guessing</strong><small class="block text-slate-400 mt-1 leading-relaxed">You have only 3 seconds per verse.</small></span><span class="text-[10px] uppercase tracking-widest text-rose-300 font-bold">3-SECOND RUSH</span></button>
         </div>
       </div>
     </div>
 
     <!-- 2. MODE SELECTION MODAL -->
     <div id="modal-mode" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
-      <div class="glass-card w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/50 flex flex-col">
+      <div class="glass-card w-full max-w-2xl rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/50 flex flex-col">
         <div class="flex items-center justify-between mb-6">
           <button id="btn-back-to-splash" class="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 transition py-1 px-2.5 rounded-lg bg-slate-800/80 border border-slate-700">
             <i class="fa-solid fa-arrow-left"></i> Back
@@ -202,9 +202,9 @@
         <h3 class="text-2xl font-bold text-white text-center mb-1">Choose Difficulty</h3>
         <p class="text-xs text-slate-400 text-center mb-6">Choose the difficulty level for the verses</p>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch mb-2">
           <!-- Beginner Button -->
-          <button id="btn-select-beginner" class="difficulty-card p-5 rounded-2xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 hover:border-amber-400 text-left transition group flex flex-col gap-3 items-start min-h-44">
+          <button id="btn-select-beginner" class="difficulty-card p-5 rounded-2xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 hover:border-amber-400 text-center transition group flex flex-col gap-3 items-center justify-center min-h-44">
             <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
               <i class="fa-solid fa-seedling text-lg"></i>
             </div>
@@ -219,7 +219,7 @@
           </button>
 
           <!-- Pro Button -->
-          <button id="btn-select-pro" class="difficulty-card p-5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/15 border border-purple-500/30 hover:border-purple-400 text-left transition group flex flex-col gap-3 items-start min-h-44">
+          <button id="btn-select-pro" class="difficulty-card p-5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/15 border border-purple-500/30 hover:border-purple-400 text-center transition group flex flex-col gap-3 items-center justify-center min-h-44">
             <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
               <i class="fa-solid fa-fire text-lg"></i>
             </div>
@@ -1101,14 +1101,22 @@
       const isContinuousVerse = verse => continuousBaseIds.has(verse.id.replace(/_v\d+$/, ''));
       const wordCount = verse => verse.text.trim().split(/\s+/).filter(Boolean).length;
 
+      // Short category is a curated set of the 10 shortest verses from Intermediate.
+      // Those verses are moved out of Intermediate so categories stay distinct.
+      const standaloneVerses = VERSE_DATABASE.filter(verse => !isContinuousVerse(verse));
+      const intermediateCandidates = standaloneVerses
+        .filter(verse => wordCount(verse) > 10 && wordCount(verse) <= 25)
+        .sort((a, b) => wordCount(a) - wordCount(b) || a.id.localeCompare(b.id));
+      const shortVerseIds = new Set(intermediateCandidates.slice(0, 10).map(verse => verse.id));
+
       const verses = VERSE_DATABASE.filter(verse => {
         const continuous = isContinuousVerse(verse);
         if (category === 'continuous') return continuous;
         if (continuous) return false;
 
         const words = wordCount(verse);
-        if (category === 'short') return words <= 10;
-        if (category === 'intermediate') return words > 10 && words <= 25;
+        if (category === 'short') return shortVerseIds.has(verse.id);
+        if (category === 'intermediate') return words > 10 && words <= 25 && !shortVerseIds.has(verse.id);
         if (category === 'long') return words > 25;
         return false;
       });
