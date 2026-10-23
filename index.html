@@ -525,6 +525,13 @@
       feedback: document.getElementById('modal-feedback'),
       gameMode: document.getElementById('modal-game-mode')
     };
+    // Explicitly hide modal layers on startup to prevent invisible overlays intercepting clicks.
+    Object.values(modals).forEach(modal => {
+      if (modal) {
+        modal.style.display = 'none';
+        modal.style.pointerEvents = 'none';
+      }
+    });
 
     const elements = {
       badgeContainer: document.getElementById('game-info-badge'),
@@ -729,7 +736,12 @@
     }
 
     function showModal(modalKey) {
-      modals[modalKey].classList.remove('hidden');
+      const modal = modals[modalKey];
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+      modal.style.pointerEvents = 'auto';
+      modal.style.zIndex = modalKey === 'gameMode' ? '70' : '60';
     }
 
     function stopGameAndExit() {
@@ -743,7 +755,11 @@
     }
 
     function hideModal(modalKey) {
-      modals[modalKey].classList.add('hidden');
+      const modal = modals[modalKey];
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.style.display = 'none';
+      modal.style.pointerEvents = 'none';
     }
 
 
