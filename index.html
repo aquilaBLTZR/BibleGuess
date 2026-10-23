@@ -294,7 +294,7 @@
         </p>
         <div id="blitz-feedback" class="hidden relative z-10 mt-4 text-center" aria-live="polite">
           <p id="blitz-feedback-title" class="hidden"></p>
-          <p id="blitz-feedback-verse" class="hidden text-sm text-slate-300 leading-relaxed mt-2"></p>
+          <p id="blitz-feedback-verse" class="hidden text-3xl sm:text-4xl font-extrabold uppercase text-red-500 leading-tight mt-2"></p>
         </div>
         <div class="absolute bottom-1 right-4 text-slate-600 text-4xl select-none font-serif opacity-30">”</div>
       </div>
@@ -1342,9 +1342,9 @@
         elements.guessInput.disabled = true;
         elements.blitzFeedback.classList.remove('hidden');
         elements.blitzFeedbackTitle.textContent = isCorrect ? 'CORRECT!' : (isTimeout ? "TIME'S UP!" : 'WRONG!');
-        elements.blitzFeedbackTitle.className = `font-extrabold text-3xl sm:text-4xl ${isCorrect ? 'text-emerald-400' : 'text-red-500'}`;
+        elements.blitzFeedbackTitle.className = `font-extrabold text-lg ${isCorrect ? 'text-emerald-400' : 'text-red-500'}`;
         if (!isCorrect) {
-          elements.blitzFeedbackVerse.textContent = `${currentVerse.ref} — ${currentVerse.text}`;
+          elements.blitzFeedbackVerse.textContent = currentVerse.ref;
           elements.blitzFeedbackVerse.classList.remove('hidden');
         } else {
           elements.blitzFeedbackVerse.textContent = '';
