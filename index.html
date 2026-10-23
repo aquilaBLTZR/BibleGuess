@@ -180,25 +180,32 @@
       <div class="glass-card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/50 flex flex-col">
         <div class="flex items-center justify-between mb-5"><button id="btn-game-mode-back" class="text-xs text-slate-400 hover:text-white py-2 px-3 rounded-lg bg-slate-800/80 border border-slate-700"><i class="fa-solid fa-arrow-left"></i> Back</button><span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Choose a game</span></div>
         <h3 class="text-2xl font-extrabold text-white text-center mb-1">Choose Your Mode</h3><p class="text-sm text-slate-400 text-center mb-6">Four ways to test your Bible knowledge.</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch">
-          <button data-game-mode="practice" class="game-mode-choice mode-card w-full min-w-0 p-4 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-left flex items-start gap-3 min-h-36">
-            <span class="w-11 h-11 shrink-0 rounded-xl bg-emerald-500/15 text-emerald-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-lightbulb"></i></span>
-            <span class="min-w-0 flex-1"><strong class="block text-left text-white text-base leading-snug">Practice Mode</strong><small class="block text-left text-slate-400 mt-1 leading-relaxed">Untimed, with progressive hints.</small><span class="block text-left text-[10px] uppercase tracking-widest text-emerald-300 font-bold mt-3">Learn</span></span>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 items-stretch">
+          <button data-game-mode="practice" class="game-mode-choice mode-card min-w-0 w-full p-3 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-center flex flex-col items-center gap-3">
+            <span class="w-16 h-16 rounded-full bg-emerald-500/15 text-emerald-300 flex items-center justify-center text-3xl"><i class="fa-solid fa-lightbulb"></i></span>
+            <strong class="block w-[calc(100%+1.5rem)] -mx-3 px-2 py-2 bg-emerald-500/20 text-white text-sm leading-tight">Practice Mode</strong>
+            <small class="block text-center text-slate-400 leading-relaxed">Untimed, with progressive hints.</small>
+            <span class="mt-auto text-[10px] uppercase tracking-widest text-emerald-300 font-bold">Learn</span>
           </button>
-          <button data-game-mode="multiple" class="game-mode-choice mode-card w-full min-w-0 p-4 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-left flex items-start gap-3 min-h-36">
-            <span class="w-11 h-11 shrink-0 rounded-xl bg-sky-500/15 text-sky-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-list-check"></i></span>
-            <span class="min-w-0 flex-1"><strong class="block text-left text-white text-base leading-snug">Multiple Choice</strong><small class="block text-left text-slate-400 mt-1 leading-relaxed">Pick the right reference from four.</small><span class="block text-left text-[10px] uppercase tracking-widest text-sky-300 font-bold mt-3">Pick</span></span>
+          <button data-game-mode="multiple" class="game-mode-choice mode-card min-w-0 w-full p-3 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-center flex flex-col items-center gap-3">
+            <span class="w-16 h-16 rounded-full bg-sky-500/15 text-sky-300 flex items-center justify-center text-3xl"><i class="fa-solid fa-list-check"></i></span>
+            <strong class="block w-[calc(100%+1.5rem)] -mx-3 px-2 py-2 bg-sky-500/20 text-white text-sm leading-tight">Multiple Choice</strong>
+            <small class="block text-center text-slate-400 leading-relaxed">Pick the right reference from four.</small>
+            <span class="mt-auto text-[10px] uppercase tracking-widest text-sky-300 font-bold">Pick</span>
           </button>
-          <button data-game-mode="classic" class="game-mode-choice mode-card w-full min-w-0 p-4 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-left flex items-start gap-3 min-h-36">
-            <span class="w-11 h-11 shrink-0 rounded-xl bg-amber-500/15 text-amber-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-keyboard"></i></span>
-            <span class="min-w-0 flex-1"><strong class="block text-left text-white text-base leading-snug">Classic Bible Guess</strong><small class="block text-left text-slate-400 mt-1 leading-relaxed">Type the book, chapter, and verse.</small><span class="block text-left text-[10px] uppercase tracking-widest text-amber-300 font-bold mt-3">Classic</span></span>
+          <button data-game-mode="classic" class="game-mode-choice mode-card min-w-0 w-full p-3 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-center flex flex-col items-center gap-3">
+            <span class="w-16 h-16 rounded-full bg-amber-500/15 text-amber-300 flex items-center justify-center text-3xl"><i class="fa-solid fa-keyboard"></i></span>
+            <strong class="block w-[calc(100%+1.5rem)] -mx-3 px-2 py-2 bg-amber-500/20 text-white text-sm leading-tight">Classic Bible Guess</strong>
+            <small class="block text-center text-slate-400 leading-relaxed">Type the book, chapter, and verse.</small>
+            <span class="mt-auto text-[10px] uppercase tracking-widest text-amber-300 font-bold">Classic</span>
           </button>
-          <button data-game-mode="blitz" class="game-mode-choice mode-card w-full min-w-0 p-4 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-left flex items-start gap-3 min-h-36">
-            <span class="w-11 h-11 shrink-0 rounded-xl bg-rose-500/15 text-rose-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-bolt"></i></span>
-            <span class="min-w-0 flex-1"><strong class="block text-left text-white text-base leading-snug">Blitz Guessing</strong><small class="block text-left text-slate-400 mt-1 leading-relaxed">You have only 3 seconds per verse.</small><span class="block text-left text-[10px] uppercase tracking-widest text-rose-300 font-bold mt-3">3-SECOND RUSH</span></span>
+          <button data-game-mode="blitz" class="game-mode-choice mode-card min-w-0 w-full p-3 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-center flex flex-col items-center gap-3">
+            <span class="w-16 h-16 rounded-full bg-rose-500/15 text-rose-300 flex items-center justify-center text-3xl"><i class="fa-solid fa-bolt"></i></span>
+            <strong class="block w-[calc(100%+1.5rem)] -mx-3 px-2 py-2 bg-rose-500/20 text-white text-sm leading-tight">Blitz Guessing</strong>
+            <small class="block text-center text-slate-400 leading-relaxed">You have only 3 seconds per verse.</small>
+            <span class="mt-auto text-[10px] uppercase tracking-widest text-rose-300 font-bold">3-Second Rush</span>
           </button>
-        </div>
-      </div>
+        </div>    </div>
     </div>
 
     <!-- 2. MODE SELECTION MODAL -->
@@ -215,22 +222,18 @@
         <p class="text-xs text-slate-400 text-center mb-6">Choose the difficulty level for the verses</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch mb-2">
-          <button id="btn-select-beginner" class="difficulty-card w-full min-w-0 p-5 rounded-2xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 hover:border-amber-400 text-left transition group flex items-start gap-3 min-h-36">
-            <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
-              <i class="fa-solid fa-seedling text-lg"></i>
-            </div>
-            <div class="min-w-0 flex-1 text-left">
-              <div class="font-bold text-white group-hover:text-amber-400 transition leading-snug">Beginner</div>
-              <p class="text-xs text-slate-400 mt-1 leading-relaxed">A curated selection of well-known and important verses.</p>
+          <button id="btn-select-beginner" class="difficulty-card min-w-0 w-full p-5 rounded-2xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 hover:border-amber-400 transition group flex flex-col items-center gap-3 text-center">
+            <div class="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400"><i class="fa-solid fa-seedling text-2xl"></i></div>
+            <div class="w-full">
+              <div class="font-bold text-white group-hover:text-amber-400 transition px-2 py-2 bg-amber-500/20">Beginner</div>
+              <p class="text-xs text-slate-400 mt-3 leading-relaxed text-center">A curated selection of well-known and important verses.</p>
             </div>
           </button>
-          <button id="btn-select-pro" class="difficulty-card w-full min-w-0 p-5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/15 border border-purple-500/30 hover:border-purple-400 text-left transition group flex items-start gap-3 min-h-36">
-            <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-300 shrink-0">
-              <i class="fa-solid fa-fire text-lg"></i>
-            </div>
-            <div class="min-w-0 flex-1 text-left">
-              <div class="font-bold text-white group-hover:text-purple-300 transition leading-snug">Pro</div>
-              <p class="text-xs text-slate-400 mt-1 leading-relaxed">Use the full verse pool for a broader challenge.</p>
+          <button id="btn-select-pro" class="difficulty-card min-w-0 w-full p-5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/15 border border-purple-500/30 hover:border-purple-400 transition group flex flex-col items-center gap-3 text-center">
+            <div class="w-16 h-16 rounded-full bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-300"><i class="fa-solid fa-fire text-2xl"></i></div>
+            <div class="w-full">
+              <div class="font-bold text-white group-hover:text-purple-300 transition px-2 py-2 bg-purple-500/20">Pro</div>
+              <p class="text-xs text-slate-400 mt-3 leading-relaxed text-center">Use the full verse pool for a broader challenge.</p>
             </div>
           </button>
         </div>
