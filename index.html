@@ -294,6 +294,10 @@
         <p id="verse-text-display" class="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed text-slate-100 text-center relative z-10 px-2">
           ...
         </p>
+        <div id="blitz-feedback" class="hidden relative z-10 mt-4 text-center" aria-live="polite">
+          <p id="blitz-feedback-title" class="font-extrabold text-lg"></p>
+          <p id="blitz-feedback-verse" class="hidden text-sm text-slate-300 leading-relaxed mt-2"></p>
+        </div>
         <div class="absolute bottom-1 right-4 text-slate-600 text-4xl select-none font-serif opacity-30">”</div>
       </div>
 
@@ -318,9 +322,9 @@
           <span class="text-xs text-slate-400">Format: <code class="text-amber-300 font-mono">[Book] [Chapter]:[Verse]</code> (a dot also works)</span>
         </div>
       </form>
-      <div id="practice-hint-wrap" class="hidden mt-3"><button id="btn-practice-hint" type="button" class="w-full py-3 px-5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-sm font-bold"><i class="fa-solid fa-lightbulb"></i> REVEAL HINT</button><p id="practice-hint-text" class="text-center text-sm text-emerald-200 mt-2 min-h-5"></p></div>
+      <div id="practice-hint-wrap" class="hidden mt-3"><button id="btn-practice-hint" type="button" class="inline-flex self-start py-3 px-5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-sm font-bold"><i class="fa-solid fa-lightbulb"></i> REVEAL HINT</button><p id="practice-hint-text" class="text-center text-sm text-emerald-200 mt-2 min-h-5"></p></div>
       <div id="multiple-choice-options" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-      <button id="btn-stop-game" type="button" class="w-full mt-3 py-3 px-5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-sm font-bold flex items-center justify-center gap-2">
+      <button id="btn-stop-game" type="button" class="inline-flex self-start mt-3 py-3 px-5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-sm font-bold flex items-center justify-center gap-2">
         <i class="fa-solid fa-stop"></i> STOP GAME
       </button>
     </div>
@@ -367,7 +371,7 @@
         <button id="btn-next-verse" class="w-full py-3.5 px-6 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-base transition flex items-center justify-center gap-2">
           NEXT VERSE <i class="fa-solid fa-arrow-right text-xs"></i>
         </button>
-        <button id="btn-stop-game-feedback" type="button" class="w-full mt-3 py-3 px-6 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold text-sm transition flex items-center justify-center gap-2">
+        <button id="btn-stop-game-feedback" type="button" class="inline-flex self-start mt-3 py-3 px-6 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold text-sm transition flex items-center justify-center gap-2">
           <i class="fa-solid fa-stop"></i> STOP GAME
         </button>
       </div>
@@ -581,7 +585,8 @@
       timeLeft: 0,
       userAnswers: [],
       maxRounds: 10,
-      blitzCountdownDone: false
+      blitzCountdownDone: false,
+      blitzAdvanceId: null
     };
 
     // --- DOM ELEMENTS ---
@@ -642,6 +647,9 @@
       timerBar: document.getElementById('timer-bar'),
       timerBarWrapper: document.getElementById('timer-bar-wrapper'),
       verseTextDisplay: document.getElementById('verse-text-display'),
+      blitzFeedback: document.getElementById('blitz-feedback'),
+      blitzFeedbackTitle: document.getElementById('blitz-feedback-title'),
+      blitzFeedbackVerse: document.getElementById('blitz-feedback-verse'),
       guessForm: document.getElementById('guess-form'),
       guessInput: document.getElementById('guess-input'),
       feedbackIconContainer: document.getElementById('feedback-icon-container'),
@@ -830,6 +838,10 @@
     function stopGameAndExit() {
       stopTimer();
       clearCountdown();
+      if (state.blitzAdvanceId) {
+        clearTimeout(state.blitzAdvanceId);
+        state.blitzAdvanceId = null;
+      }
       hideCountdown();
       Object.keys(modals).forEach(hideModal);
       elements.guessInput.disabled = false;
@@ -1129,6 +1141,10 @@
     function startNewGame() {
       clearCountdown();
       hideCountdown();
+      if (state.blitzAdvanceId) {
+        clearTimeout(state.blitzAdvanceId);
+        state.blitzAdvanceId = null;
+      }
       state.blitzCountdownDone = false;
       // 1. Filter Verse Pool
       let pool = [];
@@ -1164,6 +1180,10 @@
       const currentVerse = state.activeVerses[state.currentIndex];
       elements.verseCounter.textContent = state.currentIndex + 1;
       elements.verseTextDisplay.textContent = '';
+      elements.blitzFeedback.classList.add('hidden');
+      elements.blitzFeedbackTitle.textContent = '';
+      elements.blitzFeedbackVerse.textContent = '';
+      elements.blitzFeedbackVerse.classList.add('hidden');
       elements.guessInput.value = '';
       state.hintStep = 0;
       elements.practiceHintText.textContent = '';
@@ -1318,7 +1338,29 @@
         isCorrect: isCorrect
       });
 
-      // Present Feedback
+      // Blitz gives only a quick right/wrong signal, reveals the verse on a miss,
+      // then advances automatically without opening the feedback modal.
+      if (state.gameMode === 'blitz') {
+        elements.guessInput.disabled = true;
+        elements.blitzFeedback.classList.remove('hidden');
+        elements.blitzFeedbackTitle.textContent = isCorrect ? 'CORRECT!' : (isTimeout ? "TIME'S UP!" : 'WRONG!');
+        elements.blitzFeedbackTitle.className = `font-extrabold text-lg ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}`;
+        if (!isCorrect) {
+          elements.blitzFeedbackVerse.textContent = `${currentVerse.ref} — ${currentVerse.text}`;
+          elements.blitzFeedbackVerse.classList.remove('hidden');
+        } else {
+          elements.blitzFeedbackVerse.textContent = '';
+          elements.blitzFeedbackVerse.classList.add('hidden');
+        }
+        state.blitzAdvanceId = setTimeout(() => {
+          state.blitzAdvanceId = null;
+          elements.blitzFeedback.classList.add('hidden');
+          advanceGame();
+        }, isCorrect ? 550 : 1100);
+        return;
+      }
+
+      // Other modes retain the regular feedback modal.
       showFeedbackModal(isCorrect, isTimeout, userGuessRaw, currentVerse);
     }
 
