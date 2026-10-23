@@ -837,13 +837,13 @@
         const expanded = {
           ...verse,
           id: offset === 0 ? verse.id : `${verse.id}_v${verseNumber}`,
-          ref: `${verse.ref.replace(/:\\d+-\\d+$/, '')}:${verseNumber}`,
+          ref: `${verse.ref.replace(/:\d+-\d+$/, '')}:${verseNumber}`,
           v: String(verseNumber),
           text
         };
         EXPANDED_VERSE_DATABASE.push(expanded);
         expandedIds.add(expanded.id);
-        const words = text.replace(/[,:;.!?]+/g, '').split(/\\s+/).filter(Boolean);
+        const words = text.replace(/[,:;.!?]+/g, '').split(/\s+/).filter(Boolean);
         REVIEW_KEYWORDS[expanded.id] = words.slice(0, Math.min(6, words.length)).join(' ');
       });
     });
