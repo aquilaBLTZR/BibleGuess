@@ -55,6 +55,26 @@
       transition: width 0.1s linear;
     }
 
+    @keyframes pop-in {
+      0% { opacity: 0; transform: scale(0.88) translateY(12px); }
+      70% { opacity: 1; transform: scale(1.035) translateY(-2px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes countdown-pop {
+      0% { opacity: 0; transform: scale(0.45) rotate(-8deg); }
+      65% { opacity: 1; transform: scale(1.18) rotate(3deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0); }
+    }
+    .pop-in { animation: pop-in 420ms cubic-bezier(.2,.8,.2,1) both; }
+    .modal-backdrop:not(.hidden) > div { animation: pop-in 360ms cubic-bezier(.2,.8,.2,1) both; }
+    button, .glass-card { transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease; }
+    button:hover:not(:disabled) { transform: translateY(-2px) scale(1.025); }
+    button:active:not(:disabled) { transform: translateY(0) scale(.97); }
+    #countdown-number { animation: countdown-pop 520ms cubic-bezier(.2,.8,.2,1) both; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
     button:focus-visible, input:focus-visible {
       outline: 3px solid #facc15;
       outline-offset: 3px;
@@ -246,13 +266,20 @@
             type="submit" 
             class="absolute right-2 top-2 bottom-2 px-6 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition flex items-center justify-center gap-2 shadow"
           >
-            IPASA <i class="fa-solid fa-paper-plane text-xs"></i>
+            SUBMIT <i class="fa-solid fa-paper-plane text-xs"></i>
           </button>
         </div>
         <div class="text-center">
           <span class="text-xs text-slate-400">Format: <code class="text-amber-300 font-mono">[Book] [Chapter]:[Verse]</code> (a dot also works)</span>
         </div>
       </form>
+    </div>
+
+    <!-- Verse countdown overlay -->
+    <div id="countdown-overlay" class="fixed inset-0 modal-backdrop z-[60] hidden flex-col items-center justify-center p-4 text-center">
+      <p class="text-amber-300 text-sm sm:text-base uppercase tracking-[0.3em] font-bold mb-4">Get ready</p>
+      <div id="countdown-number" class="text-8xl sm:text-9xl font-black text-white drop-shadow-[0_0_30px_rgba(250,204,21,0.35)]">3</div>
+      <p class="text-slate-400 text-sm mt-5">Your next verse is coming up...</p>
     </div>
 
     <!-- 5. FEEDBACK MODAL (After each guess) -->
@@ -421,6 +448,7 @@
       currentIndex: 0,
       score: 0,
       timerId: null,
+      countdownId: null,
       timeLeft: 0,
       userAnswers: [],
       maxRounds: 10
@@ -468,6 +496,8 @@
       feedbackCorrectAnswer: document.getElementById('feedback-correct-answer'),
       feedbackVerseText: document.getElementById('feedback-verse-text'),
       btnNextVerse: document.getElementById('btn-next-verse'),
+      countdownOverlay: document.getElementById('countdown-overlay'),
+      countdownNumber: document.getElementById('countdown-number'),
       summaryTotal: document.getElementById('summary-total'),
       summaryPercentage: document.getElementById('summary-percentage'),
       summaryList: document.getElementById('summary-list'),
@@ -564,6 +594,9 @@
       });
       screens[screenKey].classList.remove('hidden');
       screens[screenKey].classList.add('flex');
+      screens[screenKey].classList.remove('pop-in');
+      void screens[screenKey].offsetWidth;
+      screens[screenKey].classList.add('pop-in');
 
       if (screenKey === 'game') {
         elements.badgeContainer.classList.remove('hidden');
@@ -582,6 +615,8 @@
 
     // --- GAME ENGINE LOGIC ---
     function startNewGame() {
+      clearCountdown();
+      hideCountdown();
       // 1. Filter Verse Pool
       let pool = [];
       if (state.selectedMode === 'beginner') {
@@ -610,21 +645,62 @@
     }
 
     function loadCurrentVerse() {
+      stopTimer();
+      clearCountdown();
       const currentVerse = state.activeVerses[state.currentIndex];
       elements.verseCounter.textContent = state.currentIndex + 1;
-      elements.verseTextDisplay.textContent = currentVerse.text;
+      elements.verseTextDisplay.textContent = '';
       elements.guessInput.value = '';
-      elements.guessInput.focus();
+      elements.guessInput.disabled = true;
+      elements.guessInput.blur();
+      showCountdown(() => {
+        elements.verseTextDisplay.textContent = currentVerse.text;
+        elements.guessInput.disabled = false;
+        elements.guessInput.focus();
 
-      // Configure Timer Display
-      if (state.selectedTimer > 0) {
-        elements.timerDisplayContainer.classList.remove('hidden');
-        elements.timerBarWrapper.classList.remove('hidden');
-        elements.timerSeconds.textContent = `${state.selectedTimer}s`;
-        startTimer(state.selectedTimer);
-      } else {
-        elements.timerDisplayContainer.classList.add('hidden');
-        elements.timerBarWrapper.classList.add('hidden');
+        // The answer timer starts only after the verse is revealed.
+        if (state.selectedTimer > 0) {
+          elements.timerDisplayContainer.classList.remove('hidden');
+          elements.timerBarWrapper.classList.remove('hidden');
+          elements.timerSeconds.textContent = `${state.selectedTimer}s`;
+          startTimer(state.selectedTimer);
+        } else {
+          elements.timerDisplayContainer.classList.add('hidden');
+          elements.timerBarWrapper.classList.add('hidden');
+        }
+      });
+    }
+
+    function showCountdown(onComplete) {
+      const sequence = [3, 2, 1];
+      let index = 0;
+      elements.countdownOverlay.classList.remove('hidden');
+      elements.countdownOverlay.classList.add('flex', 'pop-in');
+      const tick = () => {
+        if (index >= sequence.length) {
+          hideCountdown();
+          state.countdownId = null;
+          onComplete();
+          return;
+        }
+        elements.countdownNumber.textContent = sequence[index++];
+        elements.countdownNumber.style.animation = 'none';
+        void elements.countdownNumber.offsetWidth;
+        elements.countdownNumber.style.animation = '';
+        state.countdownId = setTimeout(tick, 1000);
+      };
+      tick();
+    }
+
+    function hideCountdown() {
+      elements.countdownOverlay.classList.add('hidden');
+      elements.countdownOverlay.classList.remove('flex', 'pop-in');
+    }
+
+    function clearCountdown() {
+      if (state.countdownId) {
+        clearTimeout(state.countdownId);
+        state.countdownId = null;
       }
     }
 
