@@ -190,7 +190,7 @@
           <button data-game-mode="multiple" class="game-mode-choice mode-card min-w-0 w-full min-h-[290px] p-4 sm:p-5 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-center flex flex-col items-center gap-3">
             <span class="w-16 h-16 rounded-full bg-sky-500/15 text-sky-300 flex items-center justify-center text-4xl"><i class="fa-solid fa-list-check"></i></span>
             <strong class="flex items-center justify-center w-full min-h-[56px] px-2 py-3 bg-sky-500/20 text-white text-base sm:text-lg leading-tight rounded-md">Multiple Choice</strong>
-            <small class="block text-center text-slate-400 text-sm sm:text-base leading-relaxed">Choose the correct Bible reference from four options.</small>
+            <small class="block text-center text-slate-400 text-sm sm:text-base leading-relaxed">Choose the correct Bible reference from four options, with your choice of timer.</small>
             <span class="mt-auto text-[10px] uppercase tracking-widest text-sky-300 font-bold">Pick</span>
           </button>
           <button data-game-mode="classic" class="game-mode-choice mode-card min-w-0 w-full p-3 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-center flex flex-col items-center gap-3">
@@ -775,7 +775,7 @@
 
       function continueAfterDifficulty() {
         hideModal('mode');
-        if (state.gameMode === 'practice' || state.gameMode === 'multiple') {
+        if (state.gameMode === 'practice') {
           state.selectedTimer = 0;
           startNewGame();
         } else if (state.gameMode === 'blitz') {
