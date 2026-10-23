@@ -622,6 +622,23 @@
         handleAnswerSubmit(elements.guessInput.value.trim());
       });
 
+      // Two-step typing: enter chapter:verse first, press Enter, then type the book
+      // at the beginning. Any other input submits normally.
+      elements.guessInput.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+
+        const currentInput = elements.guessInput.value;
+        const numbersFirst = currentInput.trim().match(/^(\\d+)\\s*([:.])\\s*([\\d-]+)$/);
+
+        if (numbersFirst) {
+          e.preventDefault();
+          elements.guessInput.value = ` ${numbersFirst[1]}${numbersFirst[2]}${numbersFirst[3]}`;
+          elements.guessInput.focus();
+          elements.guessInput.setSelectionRange(0, 0);
+        }
+        // If it isn't only a chapter/verse reference, let the form submit as usual.
+      });
+
       // Next Verse Button
       elements.btnNextVerse.addEventListener('click', () => {
         hideModal('feedback');
