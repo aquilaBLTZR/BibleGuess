@@ -132,7 +132,33 @@
       <button id="btn-start-game" class="w-full py-4 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/20 transition transform active:scale-95 flex items-center justify-center gap-2">
         <i class="fa-solid fa-play"></i> START GAME
       </button>
+      <button id="btn-review-mode" class="w-full mt-3 py-3.5 px-6 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 font-bold text-base transition transform active:scale-95 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-book-open-reader text-amber-400"></i> REVIEW MODE
+      </button>
     </div>
+
+    <!-- REVIEW MODE -->
+    <section id="screen-review" class="w-full max-w-3xl hidden flex-col">
+      <div class="flex items-center justify-between gap-3 mb-5">
+        <button id="btn-review-back" class="text-xs text-slate-300 hover:text-white flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-800 border border-slate-700">
+          <i class="fa-solid fa-arrow-left"></i> BACK
+        </button>
+        <div class="text-right">
+          <h2 class="text-xl sm:text-2xl font-extrabold text-white">Review Mode</h2>
+          <p class="text-xs text-slate-400">Read the verse and remember its keyword</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <button id="btn-review-beginner" class="py-3 px-4 rounded-xl border border-amber-400 bg-amber-500/15 text-amber-300 font-bold transition">
+          <i class="fa-solid fa-seedling mr-2"></i> Beginner
+        </button>
+        <button id="btn-review-pro" class="py-3 px-4 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 font-bold transition">
+          <i class="fa-solid fa-fire mr-2"></i> Pro
+        </button>
+      </div>
+      <p id="review-count" class="text-xs text-slate-500 mb-3"></p>
+      <div id="review-list" class="space-y-3"></div>
+    </section>
 
     <!-- 2. MODE SELECTION MODAL -->
     <div id="modal-mode" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
@@ -457,6 +483,7 @@
     // --- DOM ELEMENTS ---
     const screens = {
       splash: document.getElementById('screen-splash'),
+      review: document.getElementById('screen-review'),
       game: document.getElementById('screen-game'),
       summary: document.getElementById('screen-summary')
     };
@@ -473,6 +500,12 @@
       currentTimerBadge: document.getElementById('current-timer-badge'),
       btnChangeSetup: document.getElementById('btn-change-setup'),
       btnStartGame: document.getElementById('btn-start-game'),
+      btnReviewMode: document.getElementById('btn-review-mode'),
+      btnReviewBack: document.getElementById('btn-review-back'),
+      btnReviewBeginner: document.getElementById('btn-review-beginner'),
+      btnReviewPro: document.getElementById('btn-review-pro'),
+      reviewCount: document.getElementById('review-count'),
+      reviewList: document.getElementById('review-list'),
       btnBackToSplash: document.getElementById('btn-back-to-splash'),
       btnSelectBeginner: document.getElementById('btn-select-beginner'),
       btnSelectPro: document.getElementById('btn-select-pro'),
@@ -511,10 +544,17 @@
     initEventListeners();
 
     function initEventListeners() {
-      // 1. Splash -> Start Game
+      // 1. Splash navigation
       elements.btnStartGame.addEventListener('click', () => {
         showModal('mode');
       });
+      elements.btnReviewMode.addEventListener('click', () => {
+        renderReviewMode('beginner');
+        showScreen('review');
+      });
+      elements.btnReviewBack.addEventListener('click', () => showScreen('splash'));
+      elements.btnReviewBeginner.addEventListener('click', () => renderReviewMode('beginner'));
+      elements.btnReviewPro.addEventListener('click', () => renderReviewMode('pro'));
 
       // 2. Mode Modal Navigation
       elements.btnBackToSplash.addEventListener('click', () => {
@@ -611,6 +651,74 @@
 
     function hideModal(modalKey) {
       modals[modalKey].classList.add('hidden');
+    }
+
+
+    // --- REVIEW MODE ---
+    // Keywords are memory aids. Verse text is displayed directly from the existing ADB database.
+    const REVIEW_KEYWORDS = {
+      b1:"God's commandments",b2:"Way of holiness",b3:"The righteous",b4:"Train a child",
+      b5:"Wisdom's call",b6:"Pride and shame",b7:"Despising a neighbor",b8:"Diligent hands",
+      b9:"A merry heart",b10:"A prudent wife",b11:"Heart and adultery",b12:"Let your light shine",
+      b13:"Diligent hands",b14:"Christ, end of the law",b15:"Love without hypocrisy",
+      b16:"Overcome evil with good",b17:"All things work together",b18:"Seek first the kingdom",
+      b19:"Called to be saints",b20:"God of peace",b21:"Decently and in order",
+      b22:"Evil company corrupts",b23:"Do all in love",b24:"Faith, hope, love",
+      b25:"Cheerful giving",b26:"Serpent's subtlety",b27:"Examine yourselves",
+      b28:"Humble prayer and healing",b29:"Edification of the church",b30:"Love is patient",
+      b31:"Salvation of the soul",b32:"Blessing instead of evil",b33:"Hospitality",
+      b34:"Faith tested by fire",b35:"Endure temptation",b36:"Desire gives birth to sin",
+      b37:"Let your yes be yes",b38:"Prayer and confession",b39:"Know good, do good",
+      b40:"Mercy triumphs",b41:"If the Lord wills",b42:"Grow in godly qualities",
+      b43:"Ask in faith",b44:"Holiness and honor",b45:"Rejoice and give thanks",
+      b46:"Grace given to others",b47:"Scripture equips",b48:"Pillar of truth",
+      b49:"Godliness is profitable",b50:"Hope of eternal life",b51:"Avoid foolish disputes",
+      b52:"Give thanks to the Lord",b53:"Delight in the Lord",b54:"The righteous have troubles",
+      b55:"Number our days",b56:"Make a joyful noise",p1:"God's love and salvation",
+      p2:"Strength through Christ",p3:"Creation's beginning",p4:"The Lord is my shepherd",
+      p5:"Saved by grace",p6:"Faith is assurance",p7:"Fruit of the Spirit",p8:"Hope and a future"
+    };
+
+    function renderReviewMode(level) {
+      const verses = level === 'beginner' ? VERSE_DATABASE.filter(v => v.isBeginner) : [...VERSE_DATABASE];
+      elements.btnReviewBeginner.className = level === 'beginner'
+        ? "py-3 px-4 rounded-xl border border-amber-400 bg-amber-500/15 text-amber-300 font-bold transition"
+        : "py-3 px-4 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 font-bold transition";
+      elements.btnReviewPro.className = level === 'pro'
+        ? "py-3 px-4 rounded-xl border border-purple-400 bg-purple-500/15 text-purple-300 font-bold transition"
+        : "py-3 px-4 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 font-bold transition";
+      elements.reviewCount.textContent = `${level === 'beginner' ? 'Beginner' : 'Pro'} review • ${verses.length} entries`;
+      elements.reviewList.innerHTML = '';
+
+      verses.forEach((verse, index) => {
+        const card = document.createElement('article');
+        card.className = "glass-card rounded-2xl border border-slate-700/80 p-4 sm:p-5";
+        const header = document.createElement('div');
+        header.className = "flex items-center justify-between gap-3 mb-3";
+        const ref = document.createElement('h3');
+        ref.className = "font-bold text-amber-300 text-sm sm:text-base";
+        ref.textContent = verse.ref;
+        const number = document.createElement('span');
+        number.className = "text-[10px] text-slate-500 shrink-0";
+        number.textContent = `${index + 1} / ${verses.length}`;
+        header.append(ref, number);
+
+        const text = document.createElement('p');
+        text.className = "text-sm sm:text-base text-slate-100 leading-relaxed";
+        text.textContent = verse.text;
+
+        const keywordWrap = document.createElement('div');
+        keywordWrap.className = "mt-4 pt-3 border-t border-slate-700/70 flex flex-wrap items-center gap-2";
+        const label = document.createElement('span');
+        label.className = "text-[10px] uppercase tracking-widest font-bold text-slate-500";
+        label.textContent = "Keyword";
+        const keyword = document.createElement('span');
+        keyword.className = "inline-flex rounded-full bg-amber-500/10 border border-amber-500/25 px-3 py-1 text-xs sm:text-sm font-semibold text-amber-200";
+        keyword.textContent = REVIEW_KEYWORDS[verse.id] || "Remember the main idea";
+        keywordWrap.append(label, keyword);
+        card.append(header, text, keywordWrap);
+        elements.reviewList.appendChild(card);
+      });
     }
 
     // --- GAME ENGINE LOGIC ---
