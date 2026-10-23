@@ -828,7 +828,13 @@
     VERSE_DATABASE.forEach(verse => {
       const texts = COMBINED_VERSE_TEXTS[verse.id];
       if (!texts) {
-        EXPANDED_VERSE_DATABASE.push(verse);
+        // Beginner is reserved for short, standalone verses (15 words or fewer).
+        // Longer standalone verses are Pro.
+        const wordCount = verse.text.trim().split(/\s+/).filter(Boolean).length;
+        EXPANDED_VERSE_DATABASE.push({
+          ...verse,
+          isBeginner: wordCount <= 15
+        });
         return;
       }
       const start = COMBINED_VERSE_STARTS[verse.id];
@@ -839,7 +845,9 @@
           id: offset === 0 ? verse.id : `${verse.id}_v${verseNumber}`,
           ref: `${verse.ref.replace(/:\d+-\d+$/, '')}:${verseNumber}`,
           v: String(verseNumber),
-          text
+          text,
+          // Every verse from a compiled passage belongs in Pro, even if that individual verse is short.
+          isBeginner: false
         };
         EXPANDED_VERSE_DATABASE.push(expanded);
         expandedIds.add(expanded.id);
