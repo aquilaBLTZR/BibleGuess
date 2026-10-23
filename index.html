@@ -208,6 +208,7 @@
         <button data-review-category="intermediate" class="review-category-choice mode-card px-3 py-3 rounded-xl bg-sky-500/10 hover:bg-sky-500/15 border border-sky-500/30 text-sky-200 text-sm font-bold transition">Intermediate</button>
         <button data-review-category="long" class="review-category-choice mode-card px-3 py-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/15 border border-purple-500/30 text-purple-200 text-sm font-bold transition">Long</button>
         <button data-review-category="continuous" class="review-category-choice mode-card px-3 py-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-amber-200 text-sm font-bold transition">Continuous</button>
+        <button id="btn-open-flashcards" class="mode-card px-3 py-2 rounded-lg bg-fuchsia-500/10 hover:bg-fuchsia-500/15 border border-fuchsia-500/30 text-fuchsia-200 text-sm font-bold transition"><i class="fa-solid fa-layer-group mr-1"></i> Flashcards</button>
       </div>
       <p id="review-count" class="text-xs text-slate-500 mb-3"></p>
       <div id="review-list" class="space-y-3"></div>
@@ -647,7 +648,12 @@
       maxRounds: 10,
       blitzCountdownDone: false,
       blitzAdvanceId: null,
-      currentReviewCategory: 'short'
+      currentReviewCategory: 'short',
+      flashcardDeck: [],
+      flashcardIndex: 0,
+      flashcardKnown: 0,
+      flashcardFlipped: false,
+      flashcardRetry: []
     };
 
     // --- DOM ELEMENTS ---
@@ -690,6 +696,7 @@
       multipleChoiceOptions: document.getElementById('multiple-choice-options'),
       btnReviewMode: document.getElementById('btn-review-mode'),
       btnReviewBack: document.getElementById('btn-review-back'),
+      btnOpenFlashcards: document.getElementById('btn-open-flashcards'),
       reviewCategoryButtons: document.querySelectorAll('.review-category-choice'),
       reviewCount: document.getElementById('review-count'),
       reviewList: document.getElementById('review-list'),
@@ -759,6 +766,7 @@
       elements.reviewCategoryButtons.forEach(btn => btn.addEventListener('click', () => {
         renderReviewMode(btn.getAttribute('data-review-category'));
       }));
+      elements.btnOpenFlashcards.addEventListener('click', startFlashcards);
 
       // Left and Right arrows switch study categories while Review Mode is open.
       const reviewCategories = Array.from(elements.reviewCategoryButtons);
@@ -1245,6 +1253,86 @@
         });
         elements.reviewList.appendChild(card);
       });
+    }
+
+    // --- FLASHCARD STUDY MODE ---
+    function startFlashcards() {
+      state.flashcardDeck = shuffleArray(VERSE_DATABASE.filter(verse => verse.text && verse.ref));
+      state.flashcardIndex = 0;
+      state.flashcardKnown = 0;
+      state.flashcardRetry = [];
+      state.flashcardFlipped = false;
+      state.currentReviewCategory = 'flashcards';
+      renderFlashcard();
+    }
+
+    function renderFlashcard() {
+      const total = state.flashcardDeck.length;
+      elements.reviewList.innerHTML = '';
+      elements.reviewCount.textContent = total
+        ? `Flashcards • ${Math.min(state.flashcardIndex + 1, total)} of ${total} • Known: ${state.flashcardKnown}`
+        : 'No flashcards available.';
+      elements.reviewCategoryButtons.forEach(button => button.classList.remove('ring-2', 'ring-amber-300'));
+
+      if (!total || state.flashcardIndex >= total) {
+        const done = document.createElement('div');
+        done.className = 'glass-card rounded-3xl border border-emerald-500/30 p-6 sm:p-10 text-center';
+        done.innerHTML = `
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-emerald-500/10 text-emerald-300 flex items-center justify-center text-3xl"><i class="fa-solid fa-check-double"></i></div>
+          <h3 class="text-2xl font-extrabold text-white mb-2">Deck Complete!</h3>
+          <p class="text-slate-300 mb-2">You marked <strong class="text-emerald-300">${state.flashcardKnown}</strong> cards as known.</p>
+          <p class="text-sm text-slate-400 mb-6">Cards marked “Practice Again” were moved to the end of the deck.</p>
+          <button id="btn-flashcards-restart" class="px-5 py-3 rounded-xl bg-fuchsia-500/20 border border-fuchsia-400/30 text-fuchsia-200 font-bold">SHUFFLE AND START AGAIN</button>`;
+        elements.reviewList.appendChild(done);
+        document.getElementById('btn-flashcards-restart').addEventListener('click', startFlashcards);
+        return;
+      }
+
+      const verse = state.flashcardDeck[state.flashcardIndex];
+      const card = document.createElement('div');
+      card.className = 'glass-card rounded-3xl border border-fuchsia-500/30 p-5 sm:p-8 text-center';
+      card.innerHTML = `
+        <div class="flex items-center justify-between gap-3 mb-5">
+          <span class="text-[10px] uppercase tracking-widest font-bold text-fuchsia-300">VERSE FLASHCARD</span>
+          <span class="text-xs text-slate-500">${state.flashcardIndex + 1} / ${total}</span>
+        </div>
+        <button id="btn-flashcard-flip" type="button" aria-label="Reveal Bible reference" class="w-full min-h-[230px] sm:min-h-[280px] rounded-2xl border border-slate-700 bg-slate-900/70 hover:bg-slate-800/90 p-5 sm:p-8 flex flex-col items-center justify-center gap-5 text-center">
+          <span class="text-xs uppercase tracking-widest text-slate-500">${state.flashcardFlipped ? 'CORRECT REFERENCE' : 'WHAT IS THE REFERENCE?'}</span>
+          <span class="${state.flashcardFlipped ? 'text-3xl sm:text-4xl font-extrabold text-amber-300' : 'text-lg sm:text-xl leading-relaxed text-white'}">${escapeFlashcardText(state.flashcardFlipped ? verse.ref : verse.text)}</span>
+          <span class="text-xs text-fuchsia-300"><i class="fa-solid fa-rotate mr-1"></i>${state.flashcardFlipped ? 'Tap to see the verse' : 'Tap to reveal the answer'}</span>
+        </button>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
+          <button id="btn-flashcard-again" class="py-3 px-4 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-200 font-bold"><i class="fa-solid fa-rotate-right mr-2"></i>Practice Again</button>
+          <button id="btn-flashcard-known" class="py-3 px-4 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-200 font-bold"><i class="fa-solid fa-check mr-2"></i>Know It</button>
+        </div>
+        <p class="text-xs text-slate-500 mt-4">Try to recall the reference before revealing it.</p>`;
+      elements.reviewList.appendChild(card);
+      document.getElementById('btn-flashcard-flip').addEventListener('click', () => {
+        state.flashcardFlipped = !state.flashcardFlipped;
+        renderFlashcard();
+      });
+      document.getElementById('btn-flashcard-known').addEventListener('click', () => {
+        state.flashcardKnown++;
+        state.flashcardIndex++;
+        state.flashcardFlipped = false;
+        renderFlashcard();
+      });
+      document.getElementById('btn-flashcard-again').addEventListener('click', () => {
+        state.flashcardRetry.push(verse);
+        state.flashcardIndex++;
+        if (state.flashcardIndex >= state.flashcardDeck.length && state.flashcardRetry.length) {
+          state.flashcardDeck.push(...state.flashcardRetry);
+          state.flashcardRetry = [];
+        }
+        state.flashcardFlipped = false;
+        renderFlashcard();
+      });
+    }
+
+    function escapeFlashcardText(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[char]);
     }
 
     // --- GAME ENGINE LOGIC ---
