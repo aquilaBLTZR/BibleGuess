@@ -167,23 +167,11 @@
           <p class="text-xs text-slate-400">Read the verse and remember its keyword</p>
         </div>
       </div>
-      <div id="review-category-list" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
-        <button data-review-category="short" class="review-category-choice mode-card p-4 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-400 text-left flex flex-col gap-3 items-start min-h-32">
-          <span class="w-11 h-11 rounded-xl bg-emerald-500/15 text-emerald-300 flex items-center justify-center text-xl"><i class="fa-solid fa-feather"></i></span>
-          <span><strong class="block text-white text-sm">Short Verses</strong><small class="block text-slate-400 mt-1 leading-relaxed">Quick verses to memorize.</small></span>
-        </button>
-        <button data-review-category="intermediate" class="review-category-choice mode-card p-4 rounded-2xl bg-sky-500/10 hover:bg-sky-500/15 border border-sky-500/30 text-left flex flex-col gap-3 items-start min-h-32">
-          <span class="w-11 h-11 rounded-xl bg-sky-500/15 text-sky-300 flex items-center justify-center text-xl"><i class="fa-solid fa-book-open"></i></span>
-          <span><strong class="block text-white text-sm">Intermediate</strong><small class="block text-slate-400 mt-1 leading-relaxed">Verses with more to remember.</small></span>
-        </button>
-        <button data-review-category="long" class="review-category-choice mode-card p-4 rounded-2xl bg-purple-500/10 hover:bg-purple-500/15 border border-purple-500/30 text-left flex flex-col gap-3 items-start min-h-32">
-          <span class="w-11 h-11 rounded-xl bg-purple-500/15 text-purple-300 flex items-center justify-center text-xl"><i class="fa-solid fa-book-bible"></i></span>
-          <span><strong class="block text-white text-sm">Long Verses</strong><small class="block text-slate-400 mt-1 leading-relaxed">Longer passages to study.</small></span>
-        </button>
-        <button data-review-category="continuous" class="review-category-choice mode-card p-4 rounded-2xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-left flex flex-col gap-3 items-start min-h-32">
-          <span class="w-11 h-11 rounded-xl bg-amber-500/15 text-amber-300 flex items-center justify-center text-xl"><i class="fa-solid fa-lines-leaning"></i></span>
-          <span><strong class="block text-white text-sm">Continuous</strong><small class="block text-slate-400 mt-1 leading-relaxed">Passages with multiple verses.</small></span>
-        </button>
+      <div id="review-category-list" class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+        <button data-review-category="short" class="review-category-choice mode-card px-3 py-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/30 text-emerald-200 text-sm font-bold transition">Short</button>
+        <button data-review-category="intermediate" class="review-category-choice mode-card px-3 py-3 rounded-xl bg-sky-500/10 hover:bg-sky-500/15 border border-sky-500/30 text-sky-200 text-sm font-bold transition">Intermediate</button>
+        <button data-review-category="long" class="review-category-choice mode-card px-3 py-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/15 border border-purple-500/30 text-purple-200 text-sm font-bold transition">Long</button>
+        <button data-review-category="continuous" class="review-category-choice mode-card px-3 py-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-amber-200 text-sm font-bold transition">Continuous</button>
       </div>
       <p id="review-count" class="text-xs text-slate-500 mb-3"></p>
       <div id="review-list" class="space-y-3"></div>
@@ -1084,38 +1072,50 @@
     function renderReviewMode(category) {
       const continuousBaseIds = new Set(Object.keys(COMBINED_VERSE_TEXTS));
       const isContinuousVerse = verse => continuousBaseIds.has(verse.id.replace(/_v\d+$/, ''));
+      const wordCount = verse => verse.text.trim().split(/\s+/).filter(Boolean).length;
+
       const verses = VERSE_DATABASE.filter(verse => {
         const continuous = isContinuousVerse(verse);
         if (category === 'continuous') return continuous;
         if (continuous) return false;
-        const wordCount = verse.text.trim().split(/\\s+/).filter(Boolean).length;
-        if (category === 'short') return wordCount <= 15;
-        if (category === 'intermediate') return wordCount > 15 && wordCount <= 35;
-        return wordCount > 35;
+
+        const words = wordCount(verse);
+        if (category === 'short') return words <= 10;
+        if (category === 'intermediate') return words > 10 && words <= 25;
+        if (category === 'long') return words > 25;
+        return false;
       });
 
-      const activeClasses = {
-        short: 'border-emerald-400 bg-emerald-500/15',
-        intermediate: 'border-sky-400 bg-sky-500/15',
-        long: 'border-purple-400 bg-purple-500/15',
-        continuous: 'border-amber-400 bg-amber-500/15'
+      const categoryNames = {
+        short: 'Short',
+        intermediate: 'Intermediate',
+        long: 'Long',
+        continuous: 'Continuous'
       };
+      const colors = {
+        short: ['emerald', 'border-emerald-400 bg-emerald-500/20 text-emerald-200'],
+        intermediate: ['sky', 'border-sky-400 bg-sky-500/20 text-sky-200'],
+        long: ['purple', 'border-purple-400 bg-purple-500/20 text-purple-200'],
+        continuous: ['amber', 'border-amber-400 bg-amber-500/20 text-amber-200']
+      };
+
       elements.reviewCategoryButtons.forEach(button => {
         const key = button.getAttribute('data-review-category');
-        const color = key === 'short' ? 'emerald' : key === 'intermediate' ? 'sky' : key === 'long' ? 'purple' : 'amber';
-        button.className = `review-category-choice mode-card p-4 rounded-2xl border text-left flex flex-col gap-3 items-start min-h-32 transition ${activeClasses[key] || 'border-slate-700 bg-slate-800'}`;
-        if (key !== category) button.className = `review-category-choice mode-card p-4 rounded-2xl bg-${color}-500/10 hover:bg-${color}-500/15 border border-${color}-500/30 text-left flex flex-col gap-3 items-start min-h-32 transition`;
+        const color = colors[key]?.[0] || 'slate';
+        const active = colors[key]?.[1] || 'border-slate-600 bg-slate-700 text-white';
+        button.className = key === category
+          ? `review-category-choice mode-card px-3 py-3 rounded-xl border text-sm font-bold transition ${active}`
+          : `review-category-choice mode-card px-3 py-3 rounded-xl bg-${color}-500/10 hover:bg-${color}-500/15 border border-${color}-500/30 text-${color}-200 text-sm font-bold transition`;
       });
 
-      const categoryNames = { short: 'Short Verses', intermediate: 'Intermediate', long: 'Long Verses', continuous: 'Continuous' };
-      elements.reviewCount.textContent = `${categoryNames[category] || 'Study'} review • ${verses.length} verses`;
+      elements.reviewCount.textContent = `${categoryNames[category] || 'Study'} • ${verses.length} verses`;
       elements.reviewList.innerHTML = '';
 
-      // Keep consecutive verses from the same passage together as a single study card.
+      // Continuous passages are displayed as grouped multi-verse cards.
       const groups = [];
       const groupById = new Map();
       verses.forEach(verse => {
-        const groupId = verse.id.replace(/_v\d+$/, '');
+        const groupId = category === 'continuous' ? verse.id.replace(/_v\d+$/, '') : verse.id;
         let group = groupById.get(groupId);
         if (!group) {
           group = { id: groupId, verses: [] };
@@ -1169,6 +1169,7 @@
         elements.reviewList.appendChild(card);
       });
     }
+
     // --- GAME ENGINE LOGIC ---
     function startNewGame() {
       clearCountdown();
