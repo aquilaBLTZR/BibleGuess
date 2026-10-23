@@ -546,6 +546,12 @@
       playTone(880, 0.12, "triangle", 0.035);
       playTone(659.3, 0.2, "sawtooth", 0.025, 0.12);
     }
+
+    // A distinct, consistent descending buzzer for incorrect guesses.
+    function playWrongAnswerSound() {
+      playTone(220, 0.22, "sawtooth", 0.045);
+      playTone(185, 0.28, "sawtooth", 0.04, 0.16);
+    }
     function launchConfetti() {
       const colors = ["#facc15", "#34d399", "#38bdf8", "#fb7185", "#c084fc", "#f8fafc"];
       for (let i = 0; i < 76; i++) {
@@ -1281,6 +1287,8 @@
         elements.scoreCounter.textContent = state.score;
         playWinSound();
         launchConfetti();
+      } else if (!isTimeout) {
+        playWrongAnswerSound();
       }
 
       // Record Answer
