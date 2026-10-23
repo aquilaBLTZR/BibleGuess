@@ -119,7 +119,6 @@
         <i class="fa-solid fa-circle-info"></i>
       </div>
       <h2 class="text-xl font-extrabold text-white mb-2">Bible Guess Beta v1.2.0</h2>
-      <p class="text-sm text-slate-300 leading-relaxed mb-2">Vibe coded using gpt-6</p>
       <p class="text-sm text-slate-400 leading-relaxed mb-6">Developed by MCGI Productions Valenzuela</p>
       <button id="btn-close-credits" class="py-2.5 px-5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-sm">CLOSE</button>
     </div>
@@ -137,12 +136,24 @@
       <p class="text-slate-400 text-sm max-w-sm mb-8 leading-relaxed">
         Test your knowledge of Scripture. Guess the correct book, chapter, and verse.
       </p>
-      <button id="btn-start-game" class="w-full py-4 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/20 transition transform active:scale-95 flex items-center justify-center gap-2">
-        <i class="fa-solid fa-play"></i> START GAME
-      </button>
-      <button id="btn-review-mode" class="w-full mt-3 py-3.5 px-6 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 font-bold text-base transition transform active:scale-95 flex items-center justify-center gap-2">
-        <i class="fa-solid fa-book-open-reader text-amber-400"></i> REVIEW MODE
-      </button>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full text-left">
+        <button id="btn-start-game" class="mode-card group p-5 sm:p-6 min-h-56 rounded-3xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 hover:border-amber-400 text-left transition flex flex-col items-start justify-between gap-5">
+          <span class="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-400/20 flex items-center justify-center text-4xl text-amber-300 group-hover:scale-105 transition"><i class="fa-solid fa-play"></i></span>
+          <span>
+            <strong class="block text-2xl font-extrabold text-white">PLAY</strong>
+            <span class="block text-sm text-amber-300 font-bold mt-1">Start Game</span>
+            <small class="block text-slate-400 mt-2 leading-relaxed">Test your Bible knowledge with different guessing modes.</small>
+          </span>
+        </button>
+        <button id="btn-review-mode" class="mode-card group p-5 sm:p-6 min-h-56 rounded-3xl bg-sky-500/10 hover:bg-sky-500/15 border border-sky-500/30 hover:border-sky-400 text-left transition flex flex-col items-start justify-between gap-5">
+          <span class="w-16 h-16 rounded-2xl bg-sky-500/15 border border-sky-400/20 flex items-center justify-center text-4xl text-sky-300 group-hover:scale-105 transition"><i class="fa-solid fa-book-open-reader"></i></span>
+          <span>
+            <strong class="block text-2xl font-extrabold text-white">STUDY</strong>
+            <span class="block text-sm text-sky-300 font-bold mt-1">Review Mode</span>
+            <small class="block text-slate-400 mt-2 leading-relaxed">Read verses, review their references, and remember key phrases.</small>
+          </span>
+        </button>
+      </div>
     </div>
 
     <!-- REVIEW MODE -->
@@ -156,12 +167,22 @@
           <p class="text-xs text-slate-400">Read the verse and remember its keyword</p>
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-3 mb-5">
-        <button id="btn-review-beginner" class="py-3 px-4 rounded-xl border border-amber-400 bg-amber-500/15 text-amber-300 font-bold transition">
-          <i class="fa-solid fa-seedling mr-2"></i> Beginner
+      <div id="review-category-list" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+        <button data-review-category="short" class="review-category-choice mode-card p-4 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-400 text-left flex flex-col gap-3 items-start min-h-32">
+          <span class="w-11 h-11 rounded-xl bg-emerald-500/15 text-emerald-300 flex items-center justify-center text-xl"><i class="fa-solid fa-feather"></i></span>
+          <span><strong class="block text-white text-sm">Short Verses</strong><small class="block text-slate-400 mt-1 leading-relaxed">Quick verses to memorize.</small></span>
         </button>
-        <button id="btn-review-pro" class="py-3 px-4 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 font-bold transition">
-          <i class="fa-solid fa-fire mr-2"></i> Pro
+        <button data-review-category="intermediate" class="review-category-choice mode-card p-4 rounded-2xl bg-sky-500/10 hover:bg-sky-500/15 border border-sky-500/30 text-left flex flex-col gap-3 items-start min-h-32">
+          <span class="w-11 h-11 rounded-xl bg-sky-500/15 text-sky-300 flex items-center justify-center text-xl"><i class="fa-solid fa-book-open"></i></span>
+          <span><strong class="block text-white text-sm">Intermediate</strong><small class="block text-slate-400 mt-1 leading-relaxed">Verses with more to remember.</small></span>
+        </button>
+        <button data-review-category="long" class="review-category-choice mode-card p-4 rounded-2xl bg-purple-500/10 hover:bg-purple-500/15 border border-purple-500/30 text-left flex flex-col gap-3 items-start min-h-32">
+          <span class="w-11 h-11 rounded-xl bg-purple-500/15 text-purple-300 flex items-center justify-center text-xl"><i class="fa-solid fa-book-bible"></i></span>
+          <span><strong class="block text-white text-sm">Long Verses</strong><small class="block text-slate-400 mt-1 leading-relaxed">Longer passages to study.</small></span>
+        </button>
+        <button data-review-category="continuous" class="review-category-choice mode-card p-4 rounded-2xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-left flex flex-col gap-3 items-start min-h-32">
+          <span class="w-11 h-11 rounded-xl bg-amber-500/15 text-amber-300 flex items-center justify-center text-xl"><i class="fa-solid fa-lines-leaning"></i></span>
+          <span><strong class="block text-white text-sm">Continuous</strong><small class="block text-slate-400 mt-1 leading-relaxed">Passages with multiple verses.</small></span>
         </button>
       </div>
       <p id="review-count" class="text-xs text-slate-500 mb-3"></p>
@@ -633,8 +654,7 @@
       multipleChoiceOptions: document.getElementById('multiple-choice-options'),
       btnReviewMode: document.getElementById('btn-review-mode'),
       btnReviewBack: document.getElementById('btn-review-back'),
-      btnReviewBeginner: document.getElementById('btn-review-beginner'),
-      btnReviewPro: document.getElementById('btn-review-pro'),
+      reviewCategoryButtons: document.querySelectorAll('.review-category-choice'),
       reviewCount: document.getElementById('review-count'),
       reviewList: document.getElementById('review-list'),
       btnBackToSplash: document.getElementById('btn-back-to-splash'),
@@ -696,12 +716,13 @@
         showModal('mode');
       }));
       elements.btnReviewMode.addEventListener('click', () => {
-        renderReviewMode('beginner');
+        renderReviewMode('short');
         showScreen('review');
       });
       elements.btnReviewBack.addEventListener('click', () => showScreen('splash'));
-      elements.btnReviewBeginner.addEventListener('click', () => renderReviewMode('beginner'));
-      elements.btnReviewPro.addEventListener('click', () => renderReviewMode('pro'));
+      elements.reviewCategoryButtons.forEach(btn => btn.addEventListener('click', () => {
+        renderReviewMode(btn.getAttribute('data-review-category'));
+      }));
 
       // 2. Mode Modal Navigation
       elements.btnBackToSplash.addEventListener('click', () => {
@@ -1060,26 +1081,41 @@
 
 
 
-    function renderReviewMode(level) {
-      // Beginner and Pro are separate pools. Pro contains only entries not marked Beginner.
-      const verses = level === 'beginner'
-        ? VERSE_DATABASE.filter(v => v.isBeginner)
-        : VERSE_DATABASE.filter(v => !v.isBeginner);
+    function renderReviewMode(category) {
+      const continuousBaseIds = new Set(Object.keys(COMBINED_VERSE_TEXTS));
+      const isContinuousVerse = verse => continuousBaseIds.has(verse.id.replace(/_v\\d+$/, ''));
+      const verses = VERSE_DATABASE.filter(verse => {
+        const continuous = isContinuousVerse(verse);
+        if (category === 'continuous') return continuous;
+        if (continuous) return false;
+        const wordCount = verse.text.trim().split(/\\s+/).filter(Boolean).length;
+        if (category === 'short') return wordCount <= 15;
+        if (category === 'intermediate') return wordCount > 15 && wordCount <= 35;
+        return wordCount > 35;
+      });
 
-      elements.btnReviewBeginner.className = level === 'beginner'
-        ? "py-3 px-4 rounded-xl border border-amber-400 bg-amber-500/15 text-amber-300 font-bold transition"
-        : "py-3 px-4 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 font-bold transition";
-      elements.btnReviewPro.className = level === 'pro'
-        ? "py-3 px-4 rounded-xl border border-purple-400 bg-purple-500/15 text-purple-300 font-bold transition"
-        : "py-3 px-4 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 font-bold transition";
-      elements.reviewCount.textContent = `${level === 'beginner' ? 'Beginner' : 'Pro'} review • ${verses.length} verses`;
+      const activeClasses = {
+        short: 'border-emerald-400 bg-emerald-500/15',
+        intermediate: 'border-sky-400 bg-sky-500/15',
+        long: 'border-purple-400 bg-purple-500/15',
+        continuous: 'border-amber-400 bg-amber-500/15'
+      };
+      elements.reviewCategoryButtons.forEach(button => {
+        const key = button.getAttribute('data-review-category');
+        const color = key === 'short' ? 'emerald' : key === 'intermediate' ? 'sky' : key === 'long' ? 'purple' : 'amber';
+        button.className = `review-category-choice mode-card p-4 rounded-2xl border text-left flex flex-col gap-3 items-start min-h-32 transition ${activeClasses[key] || 'border-slate-700 bg-slate-800'}`;
+        if (key !== category) button.className = `review-category-choice mode-card p-4 rounded-2xl bg-${color}-500/10 hover:bg-${color}-500/15 border border-${color}-500/30 text-left flex flex-col gap-3 items-start min-h-32 transition`;
+      });
+
+      const categoryNames = { short: 'Short Verses', intermediate: 'Intermediate', long: 'Long Verses', continuous: 'Continuous' };
+      elements.reviewCount.textContent = `${categoryNames[category] || 'Study'} review • ${verses.length} verses`;
       elements.reviewList.innerHTML = '';
 
-      // Group split verses from the same original passage into one review card.
+      // Keep consecutive verses from the same passage together as a single study card.
       const groups = [];
       const groupById = new Map();
       verses.forEach(verse => {
-        const groupId = verse.id.replace(/_v\d+$/, '');
+        const groupId = verse.id.replace(/_v\\d+$/, '');
         let group = groupById.get(groupId);
         if (!group) {
           group = { id: groupId, verses: [] };
@@ -1108,7 +1144,6 @@
         group.verses.forEach((verse, verseIndex) => {
           const verseBlock = document.createElement('div');
           verseBlock.className = verseIndex === 0 ? "space-y-2" : "space-y-2 mt-5 pt-4 border-t border-slate-700/60";
-
           const verseLine = document.createElement('div');
           verseLine.className = "flex items-start gap-3";
           const verseNumber = document.createElement('span');
