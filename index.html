@@ -828,12 +828,12 @@
     VERSE_DATABASE.forEach(verse => {
       const texts = COMBINED_VERSE_TEXTS[verse.id];
       if (!texts) {
-        // Beginner is reserved for short, standalone verses (15 words or fewer).
-        // Longer standalone verses are Pro.
+        // Beginner includes short and intermediate standalone verses (25 words or fewer).
+        // Very long standalone verses and all verses split from compiled passages are Pro.
         const wordCount = verse.text.trim().split(/\s+/).filter(Boolean).length;
         EXPANDED_VERSE_DATABASE.push({
           ...verse,
-          isBeginner: wordCount <= 15
+          isBeginner: wordCount <= 25
         });
         return;
       }
