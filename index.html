@@ -138,7 +138,7 @@
       </p>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
         <button id="btn-start-game" class="mode-card group p-5 sm:p-6 min-h-56 rounded-3xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 hover:border-amber-400 transition flex flex-col items-center justify-center gap-4 text-center">
-          <span class="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-400/20 flex items-center justify-center text-4xl text-amber-300 group-hover:scale-105 transition"><i class="fa-solid fa-play"></i></span>
+          <span class="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-400/20 flex items-center justify-center text-4xl text-amber-300 group-hover:scale-105 transition"><i class="fa-solid fa-gamepad"></i></span>
           <span>
             <strong class="block text-2xl font-extrabold text-white">PLAY</strong>
             <small class="block text-slate-400 mt-2 leading-relaxed">Test your Bible knowledge with different guessing modes.</small>
@@ -165,8 +165,8 @@
           <p class="text-xs text-slate-400">Read the verse and remember its keyword</p>
         </div>
       </div>
-      <div id="review-category-list" class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-        <button data-review-category="short" class="review-category-choice mode-card px-3 py-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/30 text-emerald-200 text-sm font-bold transition">Short</button>
+      <div id="review-category-list" class="flex flex-wrap items-center justify-center gap-2 mb-4" aria-label="Study categories. Use left and right arrow keys to switch categories.">
+        <button data-review-category="short" class="review-category-choice mode-card w-fit px-3 py-2 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/30 text-emerald-200 text-sm font-bold transition">Short</button>
         <button data-review-category="intermediate" class="review-category-choice mode-card px-3 py-3 rounded-xl bg-sky-500/10 hover:bg-sky-500/15 border border-sky-500/30 text-sky-200 text-sm font-bold transition">Intermediate</button>
         <button data-review-category="long" class="review-category-choice mode-card px-3 py-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/15 border border-purple-500/30 text-purple-200 text-sm font-bold transition">Long</button>
         <button data-review-category="continuous" class="review-category-choice mode-card px-3 py-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 text-amber-200 text-sm font-bold transition">Continuous</button>
@@ -710,6 +710,29 @@
         renderReviewMode(btn.getAttribute('data-review-category'));
       }));
 
+      // Left and Right arrows switch study categories while Review Mode is open.
+      const reviewCategories = Array.from(elements.reviewCategoryButtons);
+      document.addEventListener('keydown', (e) => {
+        if (elements.screenReview.classList.contains('hidden')) return;
+        if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        if (e.target instanceof HTMLElement &&
+            (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.target.tagName))) return;
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+
+        e.preventDefault();
+        const activeIndex = Math.max(0, reviewCategories.findIndex(btn =>
+          btn.classList.contains('border-emerald-400') ||
+          btn.classList.contains('border-sky-400') ||
+          btn.classList.contains('border-purple-400') ||
+          btn.classList.contains('border-amber-400')
+        ));
+        const direction = e.key === 'ArrowRight' ? 1 : -1;
+        const nextIndex = (activeIndex + direction + reviewCategories.length) % reviewCategories.length;
+        const nextButton = reviewCategories[nextIndex];
+        renderReviewMode(nextButton.getAttribute('data-review-category'));
+        nextButton.focus({ preventScroll: true });
+      });
+
       // 2. Mode Modal Navigation
       elements.btnBackToSplash.addEventListener('click', () => {
         hideModal('mode');
@@ -1102,8 +1125,8 @@
         const color = colors[key]?.[0] || 'slate';
         const active = colors[key]?.[1] || 'border-slate-600 bg-slate-700 text-white';
         button.className = key === category
-          ? `review-category-choice mode-card px-3 py-3 rounded-xl border text-sm font-bold transition ${active}`
-          : `review-category-choice mode-card px-3 py-3 rounded-xl bg-${color}-500/10 hover:bg-${color}-500/15 border border-${color}-500/30 text-${color}-200 text-sm font-bold transition`;
+          ? `review-category-choice mode-card w-fit px-3 py-2 rounded-lg border text-sm font-bold transition ${active}`
+          : `review-category-choice mode-card w-fit px-3 py-2 rounded-lg bg-${color}-500/10 hover:bg-${color}-500/15 border border-${color}-500/30 text-${color}-200 text-sm font-bold transition`;
       });
 
       elements.reviewCount.textContent = `${categoryNames[category] || 'Study'} • ${verses.length} verses`;
