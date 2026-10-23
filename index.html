@@ -160,6 +160,20 @@
       <div id="review-list" class="space-y-3"></div>
     </section>
 
+    <!-- Game mode selection -->
+    <div id="modal-game-mode" class="fixed inset-0 modal-backdrop z-[55] hidden flex items-center justify-center p-4">
+      <div class="glass-card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/50 flex flex-col">
+        <div class="flex items-center justify-between mb-5"><button id="btn-game-mode-back" class="text-xs text-slate-400 hover:text-white py-2 px-3 rounded-lg bg-slate-800/80 border border-slate-700"><i class="fa-solid fa-arrow-left"></i> Back</button><span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Choose a game</span></div>
+        <h3 class="text-2xl font-extrabold text-white text-center mb-1">Choose Your Mode</h3><p class="text-sm text-slate-400 text-center mb-6">Four ways to test your Bible knowledge.</p>
+        <div class="grid gap-3">
+          <button data-game-mode="practice" class="game-mode-choice p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-left flex gap-4 items-center"><span class="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl"><i class="fa-solid fa-lightbulb"></i></span><span><strong class="block text-white">Practice Mode</strong><small class="text-slate-400">Untimed, with progressive hints.</small></span></button>
+          <button data-game-mode="multiple" class="game-mode-choice p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-left flex gap-4 items-center"><span class="w-11 h-11 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-xl"><i class="fa-solid fa-list-check"></i></span><span><strong class="block text-white">Multiple Choice</strong><small class="text-slate-400">Choose one of four verse references.</small></span></button>
+          <button data-game-mode="classic" class="game-mode-choice p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-left flex gap-4 items-center"><span class="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl"><i class="fa-solid fa-keyboard"></i></span><span><strong class="block text-white">Classic Bible Guess</strong><small class="text-slate-400">Type answers with Beginner or Pro verses.</small></span></button>
+          <button data-game-mode="blitz" class="game-mode-choice p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-left flex gap-4 items-center"><span class="w-11 h-11 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-xl"><i class="fa-solid fa-bolt"></i></span><span><strong class="block text-white">Blitz Guessing</strong><small class="text-slate-400">Only 3 seconds per verse. Beginner or Pro.</small></span></button>
+        </div>
+      </div>
+    </div>
+
     <!-- 2. MODE SELECTION MODAL -->
     <div id="modal-mode" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
       <div class="glass-card w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/50 flex flex-col">
@@ -299,6 +313,8 @@
           <span class="text-xs text-slate-400">Format: <code class="text-amber-300 font-mono">[Book] [Chapter]:[Verse]</code> (a dot also works)</span>
         </div>
       </form>
+      <div id="practice-hint-wrap" class="hidden mt-3"><button id="btn-practice-hint" type="button" class="w-full py-3 px-5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-sm font-bold"><i class="fa-solid fa-lightbulb"></i> REVEAL HINT</button><p id="practice-hint-text" class="text-center text-sm text-emerald-200 mt-2 min-h-5"></p></div>
+      <div id="multiple-choice-options" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
       <button id="btn-stop-game" type="button" class="w-full mt-3 py-3 px-5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-sm font-bold flex items-center justify-center gap-2">
         <i class="fa-solid fa-stop"></i> STOP GAME
       </button>
@@ -482,6 +498,8 @@
     // --- GAME STATE ---
     let state = {
       selectedMode: 'beginner', // 'beginner' or 'pro'
+      gameMode: 'classic',
+      hintStep: 0
       selectedTimer: 5,         // seconds: 3, 5, 10, or 0 (untimed)
       activeVerses: [],
       currentIndex: 0,
@@ -504,7 +522,8 @@
     const modals = {
       mode: document.getElementById('modal-mode'),
       timer: document.getElementById('modal-timer'),
-      feedback: document.getElementById('modal-feedback')
+      feedback: document.getElementById('modal-feedback'),
+      gameMode: document.getElementById('modal-game-mode')
     };
 
     const elements = {
@@ -516,6 +535,12 @@
       btnStopGameCountdown: document.getElementById('btn-stop-game-countdown'),
       btnStopGameFeedback: document.getElementById('btn-stop-game-feedback'),
       btnStartGame: document.getElementById('btn-start-game'),
+      btnGameModeBack: document.getElementById('btn-game-mode-back'),
+      gameModeChoices: document.querySelectorAll('.game-mode-choice'),
+      practiceHintWrap: document.getElementById('practice-hint-wrap'),
+      btnPracticeHint: document.getElementById('btn-practice-hint'),
+      practiceHintText: document.getElementById('practice-hint-text'),
+      multipleChoiceOptions: document.getElementById('multiple-choice-options'),
       btnReviewMode: document.getElementById('btn-review-mode'),
       btnReviewBack: document.getElementById('btn-review-back'),
       btnReviewBeginner: document.getElementById('btn-review-beginner'),
@@ -562,9 +587,13 @@
 
     function initEventListeners() {
       // 1. Splash navigation
-      elements.btnStartGame.addEventListener('click', () => {
+      elements.btnStartGame.addEventListener('click', () => showModal('gameMode'));
+      elements.btnGameModeBack.addEventListener('click', () => hideModal('gameMode'));
+      elements.gameModeChoices.forEach(btn => btn.addEventListener('click', () => {
+        state.gameMode = btn.getAttribute('data-game-mode');
+        hideModal('gameMode');
         showModal('mode');
-      });
+      }));
       elements.btnReviewMode.addEventListener('click', () => {
         renderReviewMode('beginner');
         showScreen('review');
@@ -576,18 +605,17 @@
       // 2. Mode Modal Navigation
       elements.btnBackToSplash.addEventListener('click', () => {
         hideModal('mode');
+        showModal('gameMode');
       });
 
       elements.btnSelectBeginner.addEventListener('click', () => {
         state.selectedMode = 'beginner';
-        hideModal('mode');
-        showModal('timer');
+        continueAfterDifficulty();
       });
 
       elements.btnSelectPro.addEventListener('click', () => {
         state.selectedMode = 'pro';
-        hideModal('mode');
-        showModal('timer');
+        continueAfterDifficulty();
       });
 
       // 3. Timer Modal Navigation
@@ -605,16 +633,31 @@
         });
       });
 
+      function continueAfterDifficulty() {
+        hideModal('mode');
+        if (state.gameMode === 'practice' || state.gameMode === 'multiple') {
+          state.selectedTimer = 0;
+          startNewGame();
+        } else if (state.gameMode === 'blitz') {
+          state.selectedTimer = 3;
+          startNewGame();
+        } else {
+          showModal('timer');
+        }
+      }
+
       // Change Setup button in header
       elements.btnChangeSetup.addEventListener('click', () => {
         stopTimer();
-        showModal('mode');
+        showModal('gameMode');
       });
 
       // Stop Game buttons remain available during play, feedback, and countdown.
       [elements.btnStopGame, elements.btnStopGameCountdown, elements.btnStopGameFeedback].forEach(btn => {
         btn.addEventListener('click', stopGameAndExit);
       });
+
+      elements.btnPracticeHint.addEventListener('click', revealPracticeHint);
 
       // Guess Form Submit
       elements.guessForm.addEventListener('submit', (e) => {
@@ -679,8 +722,9 @@
 
       if (screenKey === 'game') {
         elements.badgeContainer.classList.remove('hidden');
-        elements.currentModeBadge.textContent = state.selectedMode === 'beginner' ? 'Beginner' : 'Pro';
-        elements.currentTimerBadge.textContent = state.selectedTimer > 0 ? `${state.selectedTimer}s` : 'Untimed';
+        const modeNames = { practice: 'Practice', multiple: 'Multiple Choice', classic: 'Classic', blitz: 'Blitz' };
+        elements.currentModeBadge.textContent = modeNames[state.gameMode] + ' · ' + (state.selectedMode === 'beginner' ? 'Beginner' : 'Pro');
+        elements.currentTimerBadge.textContent = state.gameMode === 'blitz' ? '3s Blitz' : (state.selectedTimer > 0 ? state.selectedTimer + 's' : 'Untimed');
       }
     }
 
@@ -1021,12 +1065,20 @@
       elements.verseCounter.textContent = state.currentIndex + 1;
       elements.verseTextDisplay.textContent = '';
       elements.guessInput.value = '';
+      state.hintStep = 0;
+      elements.practiceHintText.textContent = '';
+      elements.btnPracticeHint.disabled = false;
+      elements.btnPracticeHint.classList.remove('opacity-50');
+      elements.practiceHintWrap.classList.toggle('hidden', state.gameMode !== 'practice');
+      elements.multipleChoiceOptions.classList.toggle('hidden', state.gameMode !== 'multiple');
+      elements.guessForm.classList.toggle('hidden', state.gameMode === 'multiple');
       elements.guessInput.disabled = true;
       elements.guessInput.blur();
       showCountdown(() => {
         elements.verseTextDisplay.textContent = currentVerse.text;
         elements.guessInput.disabled = false;
-        elements.guessInput.focus();
+        if (state.gameMode !== 'multiple') elements.guessInput.focus();
+        if (state.gameMode === 'multiple') renderMultipleChoiceOptions(currentVerse);
 
         // The answer timer starts only after the verse is revealed.
         if (state.selectedTimer > 0) {
@@ -1122,7 +1174,7 @@
       let isCorrect = false;
 
       if (!isTimeout && userGuessRaw.length > 0) {
-        isCorrect = evaluateGuess(userGuessRaw, currentVerse);
+        isCorrect = state.gameMode === 'multiple' ? userGuessRaw === currentVerse.ref : evaluateGuess(userGuessRaw, currentVerse);
       }
 
       if (isCorrect) {
@@ -1139,6 +1191,33 @@
 
       // Present Feedback
       showFeedbackModal(isCorrect, isTimeout, userGuessRaw, currentVerse);
+    }
+
+    function revealPracticeHint() {
+      const verse = state.activeVerses[state.currentIndex];
+      state.hintStep += 1;
+      const hints = ["Keyword: " + getVerseKeyword(verse), "Book: " + verse.book, "Chapter: " + verse.ch, "Verse: " + verse.v];
+      elements.practiceHintText.textContent = hints[Math.min(state.hintStep, 4) - 1];
+      if (state.hintStep >= 4) {
+        elements.btnPracticeHint.disabled = true;
+        elements.btnPracticeHint.classList.add("opacity-50");
+        handleAnswerSubmit("Answer revealed by hint");
+      }
+    }
+
+    function renderMultipleChoiceOptions(correctVerse) {
+      const pool = state.selectedMode === "beginner" ? VERSE_DATABASE.filter(v => v.isBeginner) : VERSE_DATABASE.filter(v => !v.isBeginner);
+      const distractors = shuffleArray(pool.filter(v => v.id !== correctVerse.id)).slice(0, 3);
+      const choices = shuffleArray([correctVerse, ...distractors]);
+      elements.multipleChoiceOptions.innerHTML = "";
+      choices.forEach(choice => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-400 text-white font-bold text-left transition";
+        button.textContent = choice.ref;
+        button.addEventListener("click", () => handleAnswerSubmit(choice.ref));
+        elements.multipleChoiceOptions.appendChild(button);
+      });
     }
 
     function evaluateGuess(guessStr, verse) {
@@ -1177,15 +1256,15 @@
       if (isCorrect) {
         elements.feedbackIconContainer.className = "w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
         elements.feedbackIcon.className = "fa-solid fa-check";
-        elements.feedbackTitle.textContent = "CORRECT!";
+        elements.feedbackTitle.textContent = state.gameMode === "practice" ? "GUESSED!" : "CORRECT!";
         elements.feedbackTitle.className = "text-2xl font-extrabold text-emerald-400 mb-1";
-        elements.feedbackSubtitle.textContent = "Great job! You found the correct verse.";
+        elements.feedbackSubtitle.textContent = state.gameMode === "practice" ? "You identified the verse! Keep practicing." : "Great job! You found the correct verse.";
       } else {
         elements.feedbackIconContainer.className = "w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4 bg-rose-500/20 text-rose-400 border border-rose-500/30";
         elements.feedbackIcon.className = "fa-solid fa-xmark";
-        elements.feedbackTitle.textContent = isTimeout ? "TIME’S UP!" : "INCORRECT!";
+        elements.feedbackTitle.textContent = state.gameMode === "practice" ? "NICE TRY" : (isTimeout ? "TIME’S UP!" : "INCORRECT!");
         elements.feedbackTitle.className = "text-2xl font-extrabold text-rose-400 mb-1";
-        elements.feedbackSubtitle.textContent = isTimeout ? "You ran out of time." : "Try again on the next verse.";
+        elements.feedbackSubtitle.textContent = state.gameMode === "practice" ? "Keep going. You’ll get the next one." : (isTimeout ? "You ran out of time." : "Try again on the next verse.");
       }
 
       elements.feedbackUserGuess.textContent = isTimeout ? "--- (Time ran out) ---" : (userGuess || "---");
