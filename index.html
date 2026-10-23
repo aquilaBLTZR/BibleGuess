@@ -327,9 +327,9 @@
 
     <!-- Verse countdown overlay -->
     <div id="countdown-overlay" class="fixed inset-0 modal-backdrop z-[60] hidden flex-col items-center justify-center p-4 text-center">
-      <p class="text-amber-300 text-sm sm:text-base uppercase tracking-[0.3em] font-bold mb-4">Get ready</p>
+      <p id="countdown-heading" class="text-amber-300 text-sm sm:text-base uppercase tracking-[0.3em] font-bold mb-4">Get ready</p>
       <div id="countdown-number" class="text-8xl sm:text-9xl font-black text-white drop-shadow-[0_0_30px_rgba(250,204,21,0.35)]">3</div>
-      <p class="text-slate-400 text-sm mt-5">Your next verse is coming up...</p>
+      <p id="countdown-message" class="text-slate-300 text-sm sm:text-base mt-5 max-w-sm">Your next verse is coming up...</p>
       <button id="btn-stop-game-countdown" type="button" class="mt-8 px-5 py-3 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-bold text-sm flex items-center gap-2">
         <i class="fa-solid fa-stop"></i> STOP GAME
       </button>
@@ -580,7 +580,8 @@
       countdownId: null,
       timeLeft: 0,
       userAnswers: [],
-      maxRounds: 10
+      maxRounds: 10,
+      blitzCountdownDone: false
     };
 
     // --- DOM ELEMENTS ---
@@ -612,6 +613,8 @@
       btnChangeSetup: document.getElementById('btn-change-setup'),
       btnStopGame: document.getElementById('btn-stop-game'),
       btnStopGameCountdown: document.getElementById('btn-stop-game-countdown'),
+      countdownHeading: document.getElementById('countdown-heading'),
+      countdownMessage: document.getElementById('countdown-message'),
       btnStopGameFeedback: document.getElementById('btn-stop-game-feedback'),
       btnStartGame: document.getElementById('btn-start-game'),
       btnGameModeBack: document.getElementById('btn-game-mode-back'),
@@ -1126,6 +1129,7 @@
     function startNewGame() {
       clearCountdown();
       hideCountdown();
+      state.blitzCountdownDone = false;
       // 1. Filter Verse Pool
       let pool = [];
       if (state.selectedMode === 'beginner') {
@@ -1170,13 +1174,15 @@
       elements.guessForm.classList.toggle('hidden', state.gameMode === 'multiple');
       elements.guessInput.disabled = true;
       elements.guessInput.blur();
-      showCountdown(() => {
+      const revealVerse = () => {
         elements.verseTextDisplay.textContent = currentVerse.text;
         elements.guessInput.disabled = false;
         if (state.gameMode !== 'multiple') elements.guessInput.focus();
         if (state.gameMode === 'multiple') renderMultipleChoiceOptions(currentVerse);
 
-        // The answer timer starts only after the verse is revealed.
+        // Blitz starts with one 10-second preparation countdown, then moves
+        // straight to each next verse without another countdown/cooldown.
+        if (state.gameMode === 'blitz') state.blitzCountdownDone = true;
         if (state.selectedTimer > 0) {
           elements.timerDisplayContainer.classList.remove('hidden');
           elements.timerBarWrapper.classList.remove('hidden');
@@ -1186,12 +1192,26 @@
           elements.timerDisplayContainer.classList.add('hidden');
           elements.timerBarWrapper.classList.add('hidden');
         }
-      });
+      };
+
+      if (state.gameMode === 'blitz' && state.blitzCountdownDone) {
+        hideCountdown();
+        revealVerse();
+      } else {
+        showCountdown(revealVerse);
+      }
     }
 
     function showCountdown(onComplete) {
-      const sequence = [3, 2, 1];
+      const isBlitzIntro = state.gameMode === 'blitz' && !state.blitzCountdownDone;
+      const sequence = isBlitzIntro
+        ? [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+        : [3, 2, 1];
       let index = 0;
+      elements.countdownHeading.textContent = isBlitzIntro ? 'BLITZ MODE' : 'GET READY';
+      elements.countdownMessage.textContent = isBlitzIntro
+        ? 'Blitz has no cooldowns, prepare yourself! Goodluck'
+        : 'Your next verse is coming up...';
       elements.countdownOverlay.classList.remove('hidden');
       elements.countdownOverlay.classList.add('flex', 'pop-in');
       const tick = () => {
