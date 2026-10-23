@@ -85,6 +85,44 @@
       outline-offset: 3px;
     }
 
+    /* Mobile-only layout improvements. Desktop styling remains unchanged. */
+    @media (max-width: 640px) {
+      body { min-height: 100dvh; }
+      header { padding: 0.75rem 1rem; }
+      header .w-10.h-10 { width: 2.5rem; height: 2.5rem; }
+      header h1 { font-size: 1.1rem; }
+      header p { font-size: 0.65rem; }
+      main { padding: 0.75rem !important; }
+      #screen-splash { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+      #btn-start-game { min-height: 10rem; width: 100%; }
+      #screen-review { width: 100%; }
+      #screen-game { width: 100%; }
+      #screen-game .glass-card { padding: 1rem !important; }
+      #screen-game h2, #verse-text { overflow-wrap: anywhere; }
+      #verse-text { font-size: 1.2rem; line-height: 1.65; }
+      #guess-input { font-size: 16px; }
+      #multiple-choice-options { grid-template-columns: minmax(0, 1fr); }
+      #timer-display-container { padding: 0.35rem 0.55rem; gap: 0.25rem; }
+      #screen-summary { width: 100%; }
+      #summary-list { max-height: 35dvh; }
+      .modal-backdrop { overflow-y: auto; align-items: flex-start; padding: 0.75rem !important; }
+      .modal-backdrop > .glass-card { width: 100%; max-width: 100%; max-height: calc(100dvh - 1.5rem); overflow-y: auto; padding: 1.1rem !important; margin: auto 0; }
+      #modal-game-mode > .glass-card { min-height: 0; }
+      #modal-game-mode .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; }
+      #modal-game-mode .game-mode-choice { min-height: 0; padding: 0.8rem 0.55rem; gap: 0.6rem; }
+      #modal-game-mode .game-mode-choice > span:first-child { width: 3rem; height: 3rem; font-size: 1.25rem; }
+      #modal-game-mode .game-mode-choice strong { min-height: 3rem; font-size: 0.8rem; padding: 0.55rem 0.35rem; overflow-wrap: anywhere; }
+      #modal-game-mode .game-mode-choice small { font-size: 0.7rem; line-height: 1.45; }
+      #modal-game-mode .game-mode-choice > span:last-child { font-size: 0.58rem; }
+      #modal-mode .difficulty-card { min-height: 0; padding: 1rem; gap: 0.75rem; }
+      #modal-mode .difficulty-card > div:first-child { width: 3.5rem; height: 3.5rem; }
+      #modal-mode .difficulty-card p { font-size: 0.75rem; }
+      #modal-timer .grid { gap: 0.6rem; }
+      #modal-timer .btn-timer-opt { padding: 1rem 0.6rem; }
+      #modal-feedback { padding: 0.75rem; }
+      #modal-feedback > .glass-card { padding: 1.25rem !important; }
+      button { touch-action: manipulation; }
+    }
     /* Keep hidden screens hidden even if the Tailwind CDN is unavailable. */
     .hidden {
       display: none !important;
