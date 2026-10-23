@@ -1255,6 +1255,7 @@
       elements.guessInput.value = '';
       state.hintStep = 0;
       elements.practiceHintText.textContent = '';
+      elements.practiceHintText.classList.add('hidden');
       elements.btnPracticeHint.disabled = false;
       elements.btnPracticeHint.classList.remove('opacity-50');
       elements.btnPracticeHint.classList.toggle('hidden', state.gameMode !== 'practice');
@@ -1440,6 +1441,7 @@
       state.hintStep += 1;
       const hints = ["Keyword: " + getVerseKeyword(verse), "Book: " + verse.book, "Chapter: " + verse.ch, "Verse: " + verse.v];
       elements.practiceHintText.textContent = hints[Math.min(state.hintStep, 4) - 1];
+      elements.practiceHintText.classList.remove('hidden');
       if (state.hintStep >= 4) {
         elements.btnPracticeHint.disabled = true;
         elements.btnPracticeHint.classList.add("opacity-50");
