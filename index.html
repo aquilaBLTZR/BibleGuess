@@ -597,7 +597,8 @@
       userAnswers: [],
       maxRounds: 10,
       blitzCountdownDone: false,
-      blitzAdvanceId: null
+      blitzAdvanceId: null,
+      currentReviewCategory: 'short'
     };
 
     // --- DOM ELEMENTS ---
@@ -713,7 +714,7 @@
       // Left and Right arrows switch study categories while Review Mode is open.
       const reviewCategories = Array.from(elements.reviewCategoryButtons);
       document.addEventListener('keydown', (e) => {
-        if (elements.screenReview.classList.contains('hidden')) return;
+        if (screens.review.classList.contains('hidden')) return;
         if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
         if (e.target instanceof HTMLElement &&
             (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))) return;
@@ -721,10 +722,7 @@
 
         e.preventDefault();
         const activeIndex = Math.max(0, reviewCategories.findIndex(btn =>
-          btn.classList.contains('border-emerald-400') ||
-          btn.classList.contains('border-sky-400') ||
-          btn.classList.contains('border-purple-400') ||
-          btn.classList.contains('border-amber-400')
+          btn.getAttribute('data-review-category') === state.currentReviewCategory
         ));
         const direction = e.key === 'ArrowRight' ? 1 : -1;
         const nextIndex = (activeIndex + direction + reviewCategories.length) % reviewCategories.length;
@@ -1091,6 +1089,7 @@
 
 
     function renderReviewMode(category) {
+      state.currentReviewCategory = category;
       const continuousBaseIds = new Set(Object.keys(COMBINED_VERSE_TEXTS));
       const isContinuousVerse = verse => continuousBaseIds.has(verse.id.replace(/_v\d+$/, ''));
       const wordCount = verse => verse.text.trim().split(/\s+/).filter(Boolean).length;
