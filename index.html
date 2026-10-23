@@ -716,7 +716,7 @@
         if (elements.screenReview.classList.contains('hidden')) return;
         if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
         if (e.target instanceof HTMLElement &&
-            (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.target.tagName))) return;
+            (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))) return;
         if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
 
         e.preventDefault();
