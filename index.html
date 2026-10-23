@@ -252,10 +252,13 @@
             VERSE <span id="verse-counter" class="text-base font-bold text-white">1</span> / <span id="verse-total">10</span>
           </div>
         </div>
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
           <div class="text-xs font-semibold text-slate-400">
             SCORE <span id="score-counter" class="text-base font-bold text-amber-400">0</span>
           </div>
+          <button id="btn-stop-game" type="button" class="px-3 py-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-xs font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-stop"></i><span>STOP GAME</span>
+          </button>
           <!-- Timer Display -->
           <div id="timer-display-container" class="flex items-center gap-1.5 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700">
             <i class="fa-regular fa-clock text-amber-400 text-xs"></i>
@@ -306,6 +309,9 @@
       <p class="text-amber-300 text-sm sm:text-base uppercase tracking-[0.3em] font-bold mb-4">Get ready</p>
       <div id="countdown-number" class="text-8xl sm:text-9xl font-black text-white drop-shadow-[0_0_30px_rgba(250,204,21,0.35)]">3</div>
       <p class="text-slate-400 text-sm mt-5">Your next verse is coming up...</p>
+      <button id="btn-stop-game-countdown" type="button" class="mt-8 px-5 py-3 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-bold text-sm flex items-center gap-2">
+        <i class="fa-solid fa-stop"></i> STOP GAME
+      </button>
     </div>
 
     <!-- 5. FEEDBACK MODAL (After each guess) -->
@@ -331,10 +337,17 @@
             <span class="text-slate-500 block uppercase tracking-wider font-semibold mt-2">Full Verse:</span>
             <p id="feedback-verse-text" class="text-slate-300 italic text-xs mt-0.5 leading-relaxed"></p>
           </div>
+          <div>
+            <span class="text-slate-500 block uppercase tracking-wider font-semibold mt-2">Keyword:</span>
+            <p id="feedback-keyword" class="text-amber-200 font-semibold text-sm mt-0.5 leading-relaxed"></p>
+          </div>
         </div>
 
         <button id="btn-next-verse" class="w-full py-3.5 px-6 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-base transition flex items-center justify-center gap-2">
           NEXT VERSE <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+        <button id="btn-stop-game-feedback" type="button" class="w-full mt-3 py-3 px-6 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold text-sm transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-stop"></i> STOP GAME
         </button>
       </div>
     </div>
@@ -499,6 +512,9 @@
       currentModeBadge: document.getElementById('current-mode-badge'),
       currentTimerBadge: document.getElementById('current-timer-badge'),
       btnChangeSetup: document.getElementById('btn-change-setup'),
+      btnStopGame: document.getElementById('btn-stop-game'),
+      btnStopGameCountdown: document.getElementById('btn-stop-game-countdown'),
+      btnStopGameFeedback: document.getElementById('btn-stop-game-feedback'),
       btnStartGame: document.getElementById('btn-start-game'),
       btnReviewMode: document.getElementById('btn-review-mode'),
       btnReviewBack: document.getElementById('btn-review-back'),
@@ -528,6 +544,7 @@
       feedbackUserGuess: document.getElementById('feedback-user-guess'),
       feedbackCorrectAnswer: document.getElementById('feedback-correct-answer'),
       feedbackVerseText: document.getElementById('feedback-verse-text'),
+      feedbackKeyword: document.getElementById('feedback-keyword'),
       btnNextVerse: document.getElementById('btn-next-verse'),
       countdownOverlay: document.getElementById('countdown-overlay'),
       countdownNumber: document.getElementById('countdown-number'),
@@ -594,6 +611,11 @@
         showModal('mode');
       });
 
+      // Stop Game buttons remain available during play, feedback, and countdown.
+      [elements.btnStopGame, elements.btnStopGameCountdown, elements.btnStopGameFeedback].forEach(btn => {
+        btn.addEventListener('click', stopGameAndExit);
+      });
+
       // Guess Form Submit
       elements.guessForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -647,6 +669,16 @@
 
     function showModal(modalKey) {
       modals[modalKey].classList.remove('hidden');
+    }
+
+    function stopGameAndExit() {
+      stopTimer();
+      clearCountdown();
+      hideCountdown();
+      Object.keys(modals).forEach(hideModal);
+      elements.guessInput.disabled = false;
+      elements.badgeContainer.classList.add('hidden');
+      showScreen('splash');
     }
 
     function hideModal(modalKey) {
@@ -1116,6 +1148,14 @@
         verse.altBook.some(alt => userBook === normalizeBook(alt));
     }
 
+    function getVerseKeyword(verse) {
+      const savedKeyword = REVIEW_KEYWORDS[verse.id];
+      if (savedKeyword) return savedKeyword;
+      // Give every verse a useful keyword, including entries without a curated review keyword.
+      const words = verse.text.replace(/[“”"'.,:;!?()]/g, '').split(/\s+/).filter(Boolean);
+      return words.slice(0, Math.min(6, words.length)).join(' ') || 'Remember the main idea';
+    }
+
     function showFeedbackModal(isCorrect, isTimeout, userGuess, verse) {
       if (isCorrect) {
         elements.feedbackIconContainer.className = "w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
@@ -1134,6 +1174,7 @@
       elements.feedbackUserGuess.textContent = isTimeout ? "--- (Time ran out) ---" : (userGuess || "---");
       elements.feedbackCorrectAnswer.textContent = verse.ref;
       elements.feedbackVerseText.textContent = `"${verse.text}"`;
+      elements.feedbackKeyword.textContent = getVerseKeyword(verse);
 
       showModal('feedback');
     }
