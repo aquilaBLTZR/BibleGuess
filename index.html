@@ -628,7 +628,7 @@
         if (e.key !== 'Enter') return;
 
         const currentInput = elements.guessInput.value;
-        const numbersFirst = currentInput.trim().match(/^(\\d+)\\s*([:.])\\s*([\\d-]+)$/);
+        const numbersFirst = currentInput.trim().match(/^(\d+)\s*([:.])\s*([\d-]+)$/);
 
         if (numbersFirst) {
           e.preventDefault();
