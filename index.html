@@ -54,6 +54,11 @@
     .timer-bar {
       transition: width 0.1s linear;
     }
+    .mode-card, .difficulty-card { position: relative; overflow: hidden; transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease; }
+    .mode-card:hover, .difficulty-card:hover { transform: translateY(-4px) scale(1.015); box-shadow: 0 12px 28px rgba(0,0,0,.22); }
+    .mode-card::after, .difficulty-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.08), transparent 55%); pointer-events: none; }
+    .confetti-piece { position: fixed; top: -14px; width: 9px; height: 13px; z-index: 200; pointer-events: none; animation: confetti-fall 1.35s cubic-bezier(.15,.65,.35,1) forwards; border-radius: 2px; }
+    @keyframes confetti-fall { to { transform: translate3d(var(--drift), 105vh, 0) rotate(var(--spin)); opacity: .15; } }
 
     @keyframes pop-in {
       0% { opacity: 0; transform: scale(0.88) translateY(12px); }
@@ -165,11 +170,11 @@
       <div class="glass-card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/50 flex flex-col">
         <div class="flex items-center justify-between mb-5"><button id="btn-game-mode-back" class="text-xs text-slate-400 hover:text-white py-2 px-3 rounded-lg bg-slate-800/80 border border-slate-700"><i class="fa-solid fa-arrow-left"></i> Back</button><span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Choose a game</span></div>
         <h3 class="text-2xl font-extrabold text-white text-center mb-1">Choose Your Mode</h3><p class="text-sm text-slate-400 text-center mb-6">Four ways to test your Bible knowledge.</p>
-        <div class="grid gap-3">
-          <button data-game-mode="practice" class="game-mode-choice p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-left flex gap-4 items-center"><span class="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl"><i class="fa-solid fa-lightbulb"></i></span><span><strong class="block text-white">Practice Mode</strong><small class="text-slate-400">Untimed, with progressive hints.</small></span></button>
-          <button data-game-mode="multiple" class="game-mode-choice p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-left flex gap-4 items-center"><span class="w-11 h-11 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-xl"><i class="fa-solid fa-list-check"></i></span><span><strong class="block text-white">Multiple Choice</strong><small class="text-slate-400">Choose one of four verse references.</small></span></button>
-          <button data-game-mode="classic" class="game-mode-choice p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-left flex gap-4 items-center"><span class="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl"><i class="fa-solid fa-keyboard"></i></span><span><strong class="block text-white">Classic Bible Guess</strong><small class="text-slate-400">Type answers with Beginner or Pro verses.</small></span></button>
-          <button data-game-mode="blitz" class="game-mode-choice p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-left flex gap-4 items-center"><span class="w-11 h-11 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-xl"><i class="fa-solid fa-bolt"></i></span><span><strong class="block text-white">Blitz Guessing</strong><small class="text-slate-400">Only 3 seconds per verse. Beginner or Pro.</small></span></button>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button data-game-mode="practice" class="game-mode-choice mode-card p-4 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-left flex flex-col gap-3 items-start min-h-36"><span class="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-lightbulb"></i></span><span><strong class="block text-white text-base">Practice Mode</strong><small class="block text-slate-400 mt-1 leading-relaxed">Untimed, with progressive hints.</small></span><span class="text-[10px] uppercase tracking-widest text-emerald-300 font-bold">Learn</span></button>
+          <button data-game-mode="multiple" class="game-mode-choice mode-card p-4 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-left flex flex-col gap-3 items-start min-h-36"><span class="w-12 h-12 rounded-2xl bg-sky-500/15 text-sky-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-list-check"></i></span><span><strong class="block text-white text-base">Multiple Choice</strong><small class="block text-slate-400 mt-1 leading-relaxed">Pick the right reference from four.</small></span><span class="text-[10px] uppercase tracking-widest text-sky-300 font-bold">Pick</span></button>
+          <button data-game-mode="classic" class="game-mode-choice mode-card p-4 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-left flex flex-col gap-3 items-start min-h-36"><span class="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-keyboard"></i></span><span><strong class="block text-white text-base">Classic Bible Guess</strong><small class="block text-slate-400 mt-1 leading-relaxed">Type the book, chapter, and verse.</small></span><span class="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Classic</span></button>
+          <button data-game-mode="blitz" class="game-mode-choice mode-card p-4 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-left flex flex-col gap-3 items-start min-h-36"><span class="w-12 h-12 rounded-2xl bg-rose-500/15 text-rose-300 flex items-center justify-center text-2xl"><i class="fa-solid fa-bolt"></i></span><span><strong class="block text-white text-base">Blitz Guessing</strong><small class="block text-slate-400 mt-1 leading-relaxed">You have only 3 seconds per verse.</small></span><span class="text-[10px] uppercase tracking-widest text-rose-300 font-bold">3-SECOND RUSH</span></button>
         </div>
       </div>
     </div>
@@ -187,9 +192,9 @@
         <h3 class="text-2xl font-bold text-white text-center mb-1">Choose Difficulty</h3>
         <p class="text-xs text-slate-400 text-center mb-6">Choose the difficulty level for the verses</p>
 
-        <div class="space-y-4 mb-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
           <!-- Beginner Button -->
-          <button id="btn-select-beginner" class="w-full p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 text-left transition group flex items-start gap-4">
+          <button id="btn-select-beginner" class="difficulty-card p-5 rounded-2xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 hover:border-amber-400 text-left transition group flex flex-col gap-3 items-start min-h-44">
             <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
               <i class="fa-solid fa-seedling text-lg"></i>
             </div>
@@ -205,7 +210,7 @@
           </button>
 
           <!-- Pro Button -->
-          <button id="btn-select-pro" class="w-full p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 text-left transition group flex items-start gap-4">
+          <button id="btn-select-pro" class="difficulty-card p-5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/15 border border-purple-500/30 hover:border-purple-400 text-left transition group flex flex-col gap-3 items-start min-h-44">
             <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
               <i class="fa-solid fa-fire text-lg"></i>
             </div>
@@ -495,6 +500,43 @@
     // Source: getBible API, Tagalog / Ang Dating Biblia (1905).
     // This is the public-domain 1905 edition; it is not represented as the
     // separately corrected edition displayed by Digital Bible.
+    // --- PLAYFUL FEEDBACK: tiny synthesized sounds, no external audio files needed ---
+    let audioContext = null;
+    function playTone(frequency, duration = 0.075, type = "sine", volume = 0.045, delay = 0) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        audioContext = audioContext || new AudioCtx();
+        if (audioContext.state === "suspended") audioContext.resume();
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime + delay);
+        gain.gain.setValueAtTime(volume, audioContext.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + delay + duration);
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+        oscillator.start(audioContext.currentTime + delay);
+        oscillator.stop(audioContext.currentTime + delay + duration);
+      } catch (_) {}
+    }
+    function playClickSound() { playTone(520, 0.045, "sine", 0.022); playTone(760, 0.04, "sine", 0.012, 0.025); }
+    function playWinSound() { playTone(523, 0.12, "sine", 0.055); playTone(659, 0.13, "sine", 0.05, 0.09); playTone(784, 0.2, "sine", 0.05, 0.18); playTone(1047, 0.24, "triangle", 0.04, 0.28); }
+    function launchConfetti() {
+      const colors = ["#facc15", "#34d399", "#38bdf8", "#fb7185", "#c084fc", "#f8fafc"];
+      for (let i = 0; i < 76; i++) {
+        const piece = document.createElement("span");
+        piece.className = "confetti-piece";
+        piece.style.left = (Math.random() * 100) + "vw";
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.setProperty("--drift", ((Math.random() - 0.5) * 240) + "px");
+        piece.style.setProperty("--spin", ((Math.random() * 900) - 450) + "deg");
+        piece.style.animationDelay = (Math.random() * 0.22) + "s";
+        document.body.appendChild(piece);
+        window.setTimeout(() => piece.remove(), 1800);
+      }
+    }
+
     // --- GAME STATE ---
     let state = {
       selectedMode: 'beginner', // 'beginner' or 'pro'
@@ -591,6 +633,10 @@
     // This script is at the end of the page, so the DOM is already available.
     // Initialize immediately instead of relying on DOMContentLoaded timing.
     initEventListeners();
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (button && !button.disabled) playClickSound();
+    });
 
     function initEventListeners() {
       // 1. Splash navigation
@@ -1196,6 +1242,8 @@
       if (isCorrect) {
         state.score += 1;
         elements.scoreCounter.textContent = state.score;
+        playWinSound();
+        launchConfetti();
       }
 
       // Record Answer
