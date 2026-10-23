@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tl" class="dark">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BibleGuess - Tagalog Edition</title>
+  <title>BibleGuess - Ang Dating Biblia</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -55,6 +55,11 @@
       transition: width 0.1s linear;
     }
 
+    button:focus-visible, input:focus-visible {
+      outline: 3px solid #facc15;
+      outline-offset: 3px;
+    }
+
     /* Keep hidden screens hidden even if the Tailwind CDN is unavailable. */
     .hidden {
       display: none !important;
@@ -73,7 +78,7 @@
         <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
           Bible<span class="text-amber-400">Guess</span>
         </h1>
-        <p class="text-xs text-slate-400 font-medium">Ang Dating Biblia • Source: supplied ZIP</p>
+        <p class="text-xs text-slate-400 font-medium">Ang Dating Biblia • 1905 Edition</p>
       </div>
     </div>
 
@@ -102,7 +107,7 @@
       </div>
       <h2 class="text-3xl font-extrabold text-white mb-2">BIBLE GUESS</h2>
       <p class="text-slate-400 text-sm max-w-sm mb-8 leading-relaxed">
-        Subukin ang iyong kaalaman sa mga talata ng Banal na Kasulatan. Hulaan ang tamang Aklat, Kabanata, at Talata.
+        Test your knowledge of Scripture. Guess the correct book, chapter, and verse.
       </p>
       <button id="btn-start-game" class="w-full py-4 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/20 transition transform active:scale-95 flex items-center justify-center gap-2">
         <i class="fa-solid fa-play"></i> START GAME
@@ -120,7 +125,7 @@
         </div>
 
         <h3 class="text-2xl font-bold text-white text-center mb-1">Choose Mode</h3>
-        <p class="text-xs text-slate-400 text-center mb-6">Pumili ng antas ng kahirapan ng mga talata</p>
+        <p class="text-xs text-slate-400 text-center mb-6">Choose the difficulty level for the verses</p>
 
         <div class="space-y-4 mb-2">
           <!-- Beginner Button -->
@@ -134,7 +139,7 @@
                 <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-semibold border border-amber-500/30">Curated Pool</span>
               </div>
               <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-                Naglalaman ng partikular na tanyag at mahahalagang talata (Exodo, Isaias, Kawikaan, Mateo, Roma, Corinto, atbp.)
+                A curated selection of well-known and important verses.
               </p>
             </div>
           </button>
@@ -150,7 +155,7 @@
                 <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-semibold border border-purple-500/30">Full Pool</span>
               </div>
               <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-                Gamitin ang lahat ng talata sa database para sa higit na hamon at malawak na pagsusulit.
+                Use the full verse pool for a broader challenge.
               </p>
             </div>
           </button>
@@ -169,7 +174,7 @@
         </div>
 
         <h3 class="text-2xl font-bold text-white text-center mb-1">Select Timer</h3>
-        <p class="text-xs text-slate-400 text-center mb-6">Ilang segundo ang ibibigay sa bawat bawat talata?</p>
+        <p class="text-xs text-slate-400 text-center mb-6">How many seconds do you want for each verse?</p>
 
         <div class="grid grid-cols-2 gap-3 mb-4">
           <button data-timer="3" class="btn-timer-opt p-4 rounded-2xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-center transition flex flex-col items-center">
@@ -198,7 +203,7 @@
       <div class="flex items-center justify-between mb-4 bg-slate-800/60 border border-slate-700/60 rounded-2xl p-4 backdrop-blur-md">
         <div class="flex items-center gap-3">
           <div class="text-xs font-semibold text-slate-400">
-            TALATA <span id="verse-counter" class="text-base font-bold text-white">1</span> / <span id="verse-total">10</span>
+            VERSE <span id="verse-counter" class="text-base font-bold text-white">1</span> / <span id="verse-total">10</span>
           </div>
         </div>
         <div class="flex items-center gap-4">
@@ -233,7 +238,7 @@
           <input 
             type="text" 
             id="guess-input" 
-            placeholder="Halimbawa: aw 37:5, ex 20:3, roma 8:28..." 
+            placeholder="Example: aw 37:5, ex 20:3, roma 8:28..." 
             autocomplete="off" 
             class="w-full py-4 px-5 rounded-2xl bg-slate-800/90 border-2 border-slate-700 text-white placeholder-slate-500 font-medium text-base focus:outline-none focus:border-amber-400 transition shadow-inner"
           >
@@ -245,7 +250,7 @@
           </button>
         </div>
         <div class="text-center">
-          <span class="text-xs text-slate-400">Format: <code class="text-amber-300 font-mono">[Aklat] [Kabanata]:[Talata]</code></span>
+          <span class="text-xs text-slate-400">Format: <code class="text-amber-300 font-mono">[Book] [Chapter]:[Verse]</code> (a dot also works)</span>
         </div>
       </form>
     </div>
@@ -262,21 +267,21 @@
         <!-- Details Card -->
         <div class="w-full bg-slate-900/90 rounded-2xl p-4 border border-slate-800 text-left mb-6 space-y-2 text-xs">
           <div>
-            <span class="text-slate-500 block uppercase tracking-wider font-semibold">Iyong Hula:</span>
+            <span class="text-slate-500 block uppercase tracking-wider font-semibold">Your Guess:</span>
             <span id="feedback-user-guess" class="font-mono font-bold text-sm text-white"></span>
           </div>
           <div>
-            <span class="text-slate-500 block uppercase tracking-wider font-semibold">Tamang Sagot:</span>
+            <span class="text-slate-500 block uppercase tracking-wider font-semibold">Correct Answer:</span>
             <span id="feedback-correct-answer" class="font-mono font-bold text-sm text-amber-400"></span>
           </div>
           <div>
-            <span class="text-slate-500 block uppercase tracking-wider font-semibold mt-2">Buong Teksto:</span>
+            <span class="text-slate-500 block uppercase tracking-wider font-semibold mt-2">Full Verse:</span>
             <p id="feedback-verse-text" class="text-slate-300 italic text-xs mt-0.5 leading-relaxed"></p>
           </div>
         </div>
 
         <button id="btn-next-verse" class="w-full py-3.5 px-6 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-base transition flex items-center justify-center gap-2">
-          SUSUNOD NA TALATA <i class="fa-solid fa-arrow-right text-xs"></i>
+          NEXT VERSE <i class="fa-solid fa-arrow-right text-xs"></i>
         </button>
       </div>
     </div>
@@ -287,25 +292,25 @@
         <div class="w-20 h-20 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-4xl mx-auto mb-4">
           <i class="fa-solid fa-trophy"></i>
         </div>
-        <h2 class="text-3xl font-extrabold text-white mb-1">Tapos na ang Laro!</h2>
-        <p class="text-xs text-slate-400 mb-6">Narito ang buod ng iyong mga nasagot</p>
+        <h2 class="text-3xl font-extrabold text-white mb-1">Game Over!</h2>
+        <p class="text-xs text-slate-400 mb-6">Here is a summary of your answers</p>
 
         <!-- Final Score Display -->
         <div class="bg-slate-900/80 rounded-2xl p-4 border border-slate-800 mb-6 flex justify-around items-center">
           <div>
-            <div class="text-xs text-slate-500 uppercase tracking-wider">Kabuuan</div>
+            <div class="text-xs text-slate-500 uppercase tracking-wider">Total Score</div>
             <div id="summary-total" class="text-2xl font-black text-white">0/10</div>
           </div>
           <div class="h-8 w-px bg-slate-800"></div>
           <div>
-            <div class="text-xs text-slate-500 uppercase tracking-wider">Puntos %</div>
+            <div class="text-xs text-slate-500 uppercase tracking-wider">Score %</div>
             <div id="summary-percentage" class="text-2xl font-black text-amber-400">0%</div>
           </div>
         </div>
 
         <!-- Answers Review List -->
         <div class="text-left mb-6">
-          <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Pagsusuri ng mga Sagot</h4>
+          <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Answer Review</h4>
           <div id="summary-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
             <!-- Dynamic elements -->
           </div>
@@ -314,10 +319,10 @@
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-3">
           <button id="btn-play-again" class="flex-1 py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-rotate-right"></i> ULITIN ANG LARO
+            <i class="fa-solid fa-rotate-right"></i> PLAY AGAIN
           </button>
           <button id="btn-change-setup-summary" class="flex-1 py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-sm transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-sliders"></i> BAGUHIN ANG SETUP
+            <i class="fa-solid fa-sliders"></i> CHANGE SETUP
           </button>
         </div>
       </div>
@@ -327,7 +332,7 @@
 
   <!-- FOOTER -->
   <footer class="w-full text-center py-4 border-t border-slate-800/80 text-xs text-slate-500">
-    <p>BibleGuess • Tagalog ADB 1905 Scripture Quiz</p>
+    <p>BibleGuess • Ang Dating Biblia 1905 Scripture Quiz</p>
   </footer>
 
   <!-- JAVASCRIPT LOGIC -->
@@ -531,6 +536,15 @@
         advanceGame();
       });
 
+      // Keyboard support: Enter advances from feedback; Enter in the guess field
+      // submits the form through its native submit handler.
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !modals.feedback.classList.contains('hidden')) {
+          e.preventDefault();
+          elements.btnNextVerse.click();
+        }
+      });
+
       // Summary Screen Buttons
       elements.btnPlayAgain.addEventListener('click', () => {
         startNewGame();
@@ -673,7 +687,7 @@
       // Record Answer
       state.userAnswers.push({
         verse: currentVerse,
-        userGuess: isTimeout ? 'Naubusan ng oras' : (userGuessRaw || 'Walang sagot'),
+        userGuess: isTimeout ? 'Time ran out' : (userGuessRaw || 'No answer'),
         isCorrect: isCorrect
       });
 
@@ -709,18 +723,18 @@
       if (isCorrect) {
         elements.feedbackIconContainer.className = "w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
         elements.feedbackIcon.className = "fa-solid fa-check";
-        elements.feedbackTitle.textContent = "TAMA!";
+        elements.feedbackTitle.textContent = "CORRECT!";
         elements.feedbackTitle.className = "text-2xl font-extrabold text-emerald-400 mb-1";
-        elements.feedbackSubtitle.textContent = "Magaling! Nakuha mo ang tamang talata.";
+        elements.feedbackSubtitle.textContent = "Great job! You found the correct verse.";
       } else {
         elements.feedbackIconContainer.className = "w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4 bg-rose-500/20 text-rose-400 border border-rose-500/30";
         elements.feedbackIcon.className = "fa-solid fa-xmark";
-        elements.feedbackTitle.textContent = isTimeout ? "ORAS NA!" : "MALI!";
+        elements.feedbackTitle.textContent = isTimeout ? "TIME’S UP!" : "INCORRECT!";
         elements.feedbackTitle.className = "text-2xl font-extrabold text-rose-400 mb-1";
-        elements.feedbackSubtitle.textContent = isTimeout ? "Naubusan ka ng oras sa pagsagot." : "Subukang muli sa susunod na pagkakataon.";
+        elements.feedbackSubtitle.textContent = isTimeout ? "You ran out of time." : "Try again on the next verse.";
       }
 
-      elements.feedbackUserGuess.textContent = isTimeout ? "--- (Naubusan ng oras) ---" : (userGuess || "---");
+      elements.feedbackUserGuess.textContent = isTimeout ? "--- (Time ran out) ---" : (userGuess || "---");
       elements.feedbackCorrectAnswer.textContent = verse.ref;
       elements.feedbackVerseText.textContent = `"${verse.text}"`;
 
@@ -755,7 +769,7 @@
             <span class="font-bold w-5 text-slate-500">${idx + 1}.</span>
             <div>
               <div class="font-bold text-white">${ans.verse.ref}</div>
-              <div class="text-[11px] opacity-80">Iyong Hula: <code class="font-mono">${ans.userGuess}</code></div>
+              <div class="text-[11px] opacity-80">Your Guess: <code class="font-mono">${ans.userGuess}</code></div>
             </div>
           </div>
           <div class="text-sm">
