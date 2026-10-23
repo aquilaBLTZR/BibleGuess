@@ -330,11 +330,18 @@
           <span class="text-xs text-slate-400">Format: <code class="text-amber-300 font-mono">[Book] [Chapter]:[Verse]</code> (a dot also works)</span>
         </div>
       </form>
-      <div id="practice-hint-wrap" class="hidden mt-3"><button id="btn-practice-hint" type="button" class="inline-flex self-start py-3 px-5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-sm font-bold"><i class="fa-solid fa-lightbulb"></i> REVEAL HINT</button><p id="practice-hint-text" class="text-center text-sm text-emerald-200 mt-2 min-h-5"></p></div>
+      <div id="practice-hint-wrap" class="mt-3">
+        <p id="practice-hint-text" class="hidden text-center text-sm text-emerald-200 mb-3 min-h-5"></p>
+        <div class="flex items-center justify-between gap-3">
+          <button id="btn-practice-hint" type="button" class="hidden inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-sm font-bold">
+            <i class="fa-solid fa-lightbulb fa-fw"></i> REVEAL HINT
+          </button>
+          <button id="btn-stop-game" type="button" class="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-sm font-bold">
+            <i class="fa-solid fa-right-from-bracket fa-fw"></i> EXIT
+          </button>
+        </div>
+      </div>
       <div id="multiple-choice-options" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-      <button id="btn-stop-game" type="button" class="inline-flex self-start mt-3 py-3 px-5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-sm font-bold flex items-center justify-center gap-2">
-        <i class="fa-solid fa-stop"></i> STOP GAME
-      </button>
     </div>
 
     <!-- Verse countdown overlay -->
@@ -343,7 +350,7 @@
       <div id="countdown-number" class="text-8xl sm:text-9xl font-black text-white drop-shadow-[0_0_30px_rgba(250,204,21,0.35)]">3</div>
       <p id="countdown-message" class="text-slate-300 text-sm sm:text-base mt-5 max-w-sm">Your next verse is coming up...</p>
       <button id="btn-stop-game-countdown" type="button" class="mt-8 px-5 py-3 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-bold text-sm flex items-center gap-2">
-        <i class="fa-solid fa-stop"></i> STOP GAME
+        <i class="fa-solid fa-right-from-bracket"></i> EXIT
       </button>
     </div>
 
@@ -781,7 +788,7 @@
       elements.btnStopGameSummary = document.getElementById('btn-stop-game-summary');
       elements.btnStopGameSummary.addEventListener('click', stopGameAndExit);
 
-      // Stop Game buttons remain available during play, feedback, and countdown.
+      // Exit buttons remain available during play, feedback, and countdown.
       [elements.btnStopGame, elements.btnStopGameCountdown, elements.btnStopGameFeedback].forEach(btn => {
         btn.addEventListener('click', stopGameAndExit);
       });
@@ -1242,7 +1249,7 @@
       elements.practiceHintText.textContent = '';
       elements.btnPracticeHint.disabled = false;
       elements.btnPracticeHint.classList.remove('opacity-50');
-      elements.practiceHintWrap.classList.toggle('hidden', state.gameMode !== 'practice');
+      elements.btnPracticeHint.classList.toggle('hidden', state.gameMode !== 'practice');
       elements.multipleChoiceOptions.classList.toggle('hidden', state.gameMode !== 'multiple');
       elements.guessForm.classList.toggle('hidden', state.gameMode === 'multiple');
       elements.guessInput.disabled = true;
