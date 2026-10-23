@@ -107,20 +107,22 @@
       </div>
     </div>
 
-    <!-- Mode Badge & Change Setup -->
-    <div id="game-info-badge" class="hidden flex items-center gap-2">
-      <span id="current-mode-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">
-        Beginner
-      </span>
-      <span id="current-timer-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">
-        5s
-      </span>
-      <button id="btn-change-setup" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-sm flex items-center gap-1 border border-slate-700">
-        <i class="fa-solid fa-gear text-xs"></i>
-        <span class="hidden sm:inline">Setup</span>
-      </button>
-    </div>
+    <button id="btn-show-credits" aria-label="About Bible Guess" title="About Bible Guess" class="w-10 h-10 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-amber-300 transition flex items-center justify-center text-lg">
+      <i class="fa-solid fa-circle-info"></i>
+    </button>
   </header>
+
+  <!-- APP CREDITS -->
+  <div id="modal-credits" class="fixed inset-0 modal-backdrop z-[70] hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-center">
+      <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-2xl mx-auto mb-4">
+        <i class="fa-solid fa-circle-info"></i>
+      </div>
+      <h2 class="text-xl font-extrabold text-white mb-2">Bible Guess Beta v1.2.0</h2>
+      <p class="text-sm text-slate-400 mb-6">Vibe coded by Aquila Baltazar using gpt -6.0</p>
+      <button id="btn-close-credits" class="py-2.5 px-5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-sm">CLOSE</button>
+    </div>
+  </div>
 
   <!-- MAIN CONTAINER -->
   <main class="w-full max-w-4xl mx-auto px-4 py-6 flex-grow flex flex-col justify-center items-center">
@@ -414,6 +416,9 @@
             <i class="fa-solid fa-sliders"></i> CHANGE SETUP
           </button>
         </div>
+        <button id="btn-stop-game-summary" class="mt-3 w-full py-3 px-4 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold text-sm transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-stop"></i> STOP GAME
+        </button>
       </div>
     </div>
 
@@ -599,7 +604,8 @@
       mode: document.getElementById('modal-mode'),
       timer: document.getElementById('modal-timer'),
       feedback: document.getElementById('modal-feedback'),
-      gameMode: document.getElementById('modal-game-mode')
+      gameMode: document.getElementById('modal-game-mode'),
+      credits: document.getElementById('modal-credits')
     };
     // Explicitly hide modal layers on startup to prevent invisible overlays intercepting clicks.
     Object.values(modals).forEach(modal => {
@@ -610,10 +616,8 @@
     });
 
     const elements = {
-      badgeContainer: document.getElementById('game-info-badge'),
-      currentModeBadge: document.getElementById('current-mode-badge'),
-      currentTimerBadge: document.getElementById('current-timer-badge'),
-      btnChangeSetup: document.getElementById('btn-change-setup'),
+      btnShowCredits: document.getElementById('btn-show-credits'),
+      btnCloseCredits: document.getElementById('btn-close-credits'),
       btnStopGame: document.getElementById('btn-stop-game'),
       btnStopGameCountdown: document.getElementById('btn-stop-game-countdown'),
       countdownHeading: document.getElementById('countdown-heading'),
@@ -742,11 +746,11 @@
         }
       }
 
-      // Change Setup button in header
-      elements.btnChangeSetup.addEventListener('click', () => {
-        stopTimer();
-        showModal('gameMode');
-      });
+      // App credits info dialog
+      elements.btnShowCredits.addEventListener('click', () => showModal('credits'));
+      elements.btnCloseCredits.addEventListener('click', () => hideModal('credits'));
+      elements.btnStopGameSummary = document.getElementById('btn-stop-game-summary');
+      elements.btnStopGameSummary.addEventListener('click', stopGameAndExit);
 
       // Stop Game buttons remain available during play, feedback, and countdown.
       [elements.btnStopGame, elements.btnStopGameCountdown, elements.btnStopGameFeedback].forEach(btn => {
@@ -816,12 +820,7 @@
       void screens[screenKey].offsetWidth;
       screens[screenKey].classList.add('pop-in');
 
-      if (screenKey === 'game') {
-        elements.badgeContainer.classList.remove('hidden');
-        const modeNames = { practice: 'Practice', multiple: 'Multiple Choice', classic: 'Classic', blitz: 'Blitz' };
-        elements.currentModeBadge.textContent = modeNames[state.gameMode] + ' · ' + (state.selectedMode === 'beginner' ? 'Beginner' : 'Pro');
-        elements.currentTimerBadge.textContent = state.gameMode === 'blitz' ? '3s Blitz' : (state.selectedTimer > 0 ? state.selectedTimer + 's' : 'Untimed');
-      }
+
     }
 
     function showModal(modalKey) {
@@ -843,7 +842,6 @@
       hideCountdown();
       Object.keys(modals).forEach(hideModal);
       elements.guessInput.disabled = false;
-      elements.badgeContainer.classList.add('hidden');
       showScreen('splash');
     }
 
