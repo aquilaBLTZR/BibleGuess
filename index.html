@@ -201,8 +201,7 @@
             <div>
               <div class="font-bold text-white group-hover:text-amber-400 transition flex items-center gap-2">
                 Beginner
-                <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-semibold border border-amber-500/30">Curated Pool</span>
-              </div>
+                </div>
               <p class="text-xs text-slate-400 mt-1 leading-relaxed">
                 A curated selection of well-known and important verses.
               </p>
@@ -217,8 +216,7 @@
             <div>
               <div class="font-bold text-white group-hover:text-amber-400 transition flex items-center gap-2">
                 Pro
-                <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-semibold border border-purple-500/30">Full Pool</span>
-              </div>
+                </div>
               <p class="text-xs text-slate-400 mt-1 leading-relaxed">
                 Use the full verse pool for a broader challenge.
               </p>
@@ -296,7 +294,7 @@
         </p>
         <div id="blitz-feedback" class="hidden relative z-10 mt-4 text-center" aria-live="polite">
           <p id="blitz-feedback-title" class="hidden"></p>
-          <p id="blitz-feedback-verse" class="hidden text-xl sm:text-2xl md:text-3xl font-extrabold text-red-500 leading-relaxed mt-2"></p>
+          <p id="blitz-feedback-verse" class="hidden text-sm text-slate-300 leading-relaxed mt-2"></p>
         </div>
         <div class="absolute bottom-1 right-4 text-slate-600 text-4xl select-none font-serif opacity-30">”</div>
       </div>
@@ -1344,7 +1342,7 @@
         elements.guessInput.disabled = true;
         elements.blitzFeedback.classList.remove('hidden');
         elements.blitzFeedbackTitle.textContent = isCorrect ? 'CORRECT!' : (isTimeout ? "TIME'S UP!" : 'WRONG!');
-        elements.blitzFeedbackTitle.className = `font-extrabold text-lg ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}`;
+        elements.blitzFeedbackTitle.className = `font-extrabold text-3xl sm:text-4xl ${isCorrect ? 'text-emerald-400' : 'text-red-500'}`;
         if (!isCorrect) {
           elements.blitzFeedbackVerse.textContent = `${currentVerse.ref} — ${currentVerse.text}`;
           elements.blitzFeedbackVerse.classList.remove('hidden');
