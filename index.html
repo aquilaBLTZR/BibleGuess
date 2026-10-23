@@ -520,8 +520,37 @@
         oscillator.stop(audioContext.currentTime + delay + duration);
       } catch (_) {}
     }
-    function playClickSound() { playTone(520, 0.045, "sine", 0.022); playTone(760, 0.04, "sine", 0.012, 0.025); }
-    function playWinSound() { playTone(523, 0.12, "sine", 0.055); playTone(659, 0.13, "sine", 0.05, 0.09); playTone(784, 0.2, "sine", 0.05, 0.18); playTone(1047, 0.24, "triangle", 0.04, 0.28); }
+    // Each interaction gets a different bright, high-pitched pop/chirp so clicks don't sound repetitive.
+    function playClickSound(button) {
+      const sounds = [
+        () => { playTone(880, 0.055, "sine", 0.035); playTone(1320, 0.045, "triangle", 0.018, 0.025); },
+        () => { playTone(1046.5, 0.06, "triangle", 0.032); playTone(1568, 0.035, "sine", 0.018, 0.03); },
+        () => { playTone(740, 0.045, "sine", 0.03); playTone(1174.7, 0.07, "sine", 0.025, 0.035); },
+        () => { playTone(1244.5, 0.04, "triangle", 0.027); playTone(988, 0.06, "sine", 0.024, 0.025); },
+        () => { playTone(932.3, 0.05, "sine", 0.032); playTone(1480, 0.045, "triangle", 0.02, 0.02); }
+      ];
+      const last = playClickSound.lastIndex;
+      let next = Math.floor(Math.random() * sounds.length);
+      if (next === last) next = (next + 1 + Math.floor(Math.random() * (sounds.length - 1))) % sounds.length;
+      playClickSound.lastIndex = next;
+      sounds[next]();
+    }
+    playClickSound.lastIndex = -1;
+
+    function playWinSound() {
+      const melodies = [
+        [[784, 0], [1174.7, 0.07], [1568, 0.14], [2093, 0.23]],
+        [[1046.5, 0], [1318.5, 0.08], [1760, 0.16], [2349.3, 0.25]],
+        [[988, 0], [1480, 0.06], [1975.5, 0.13], [2637, 0.22]],
+        [[880, 0], [1108.7, 0.07], [1661.2, 0.14], [2217.5, 0.23]]
+      ];
+      const melody = melodies[Math.floor(Math.random() * melodies.length)];
+      melody.forEach(([frequency, delay], index) => {
+        playTone(frequency, index === melody.length - 1 ? 0.25 : 0.12, index % 2 ? "triangle" : "sine", 0.045, delay);
+      });
+      // A tiny sparkle flourish makes the reward feel brighter without being too loud.
+      playTone(3136, 0.09, "sine", 0.018, 0.31);
+    }
     function launchConfetti() {
       const colors = ["#facc15", "#34d399", "#38bdf8", "#fb7185", "#c084fc", "#f8fafc"];
       for (let i = 0; i < 76; i++) {
@@ -635,7 +664,11 @@
     initEventListeners();
     document.addEventListener("click", (event) => {
       const button = event.target.closest("button");
-      if (button && !button.disabled) playClickSound();
+      if (button && !button.disabled) {
+        // Correct-answer actions use their own celebratory sound instead of a regular click.
+        const isAnswerChoice = button.closest("#multiple-choice-options");
+        if (!isAnswerChoice) playClickSound(button);
+      }
     });
 
     function initEventListeners() {
