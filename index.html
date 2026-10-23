@@ -1083,7 +1083,7 @@
 
     function renderReviewMode(category) {
       const continuousBaseIds = new Set(Object.keys(COMBINED_VERSE_TEXTS));
-      const isContinuousVerse = verse => continuousBaseIds.has(verse.id.replace(/_v\\d+$/, ''));
+      const isContinuousVerse = verse => continuousBaseIds.has(verse.id.replace(/_v\d+$/, ''));
       const verses = VERSE_DATABASE.filter(verse => {
         const continuous = isContinuousVerse(verse);
         if (category === 'continuous') return continuous;
@@ -1115,7 +1115,7 @@
       const groups = [];
       const groupById = new Map();
       verses.forEach(verse => {
-        const groupId = verse.id.replace(/_v\\d+$/, '');
+        const groupId = verse.id.replace(/_v\d+$/, '');
         let group = groupById.get(groupId);
         if (!group) {
           group = { id: groupId, verses: [] };
