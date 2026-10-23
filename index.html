@@ -136,20 +136,18 @@
       <p class="text-slate-400 text-sm max-w-sm mb-8 leading-relaxed">
         Test your knowledge of Scripture. Guess the correct book, chapter, and verse.
       </p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full text-left">
-        <button id="btn-start-game" class="mode-card group p-5 sm:p-6 min-h-56 rounded-3xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 hover:border-amber-400 text-left transition flex flex-col items-start justify-between gap-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+        <button id="btn-start-game" class="mode-card group p-5 sm:p-6 min-h-56 rounded-3xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/30 hover:border-amber-400 transition flex flex-col items-center justify-center gap-4 text-center">
           <span class="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-400/20 flex items-center justify-center text-4xl text-amber-300 group-hover:scale-105 transition"><i class="fa-solid fa-play"></i></span>
           <span>
             <strong class="block text-2xl font-extrabold text-white">PLAY</strong>
-            <span class="block text-sm text-amber-300 font-bold mt-1">Start Game</span>
             <small class="block text-slate-400 mt-2 leading-relaxed">Test your Bible knowledge with different guessing modes.</small>
           </span>
         </button>
-        <button id="btn-review-mode" class="mode-card group p-5 sm:p-6 min-h-56 rounded-3xl bg-sky-500/10 hover:bg-sky-500/15 border border-sky-500/30 hover:border-sky-400 text-left transition flex flex-col items-start justify-between gap-5">
+        <button id="btn-review-mode" class="mode-card group p-5 sm:p-6 min-h-56 rounded-3xl bg-sky-500/10 hover:bg-sky-500/15 border border-sky-500/30 hover:border-sky-400 transition flex flex-col items-center justify-center gap-4 text-center">
           <span class="w-16 h-16 rounded-2xl bg-sky-500/15 border border-sky-400/20 flex items-center justify-center text-4xl text-sky-300 group-hover:scale-105 transition"><i class="fa-solid fa-book-open-reader"></i></span>
           <span>
             <strong class="block text-2xl font-extrabold text-white">STUDY</strong>
-            <span class="block text-sm text-sky-300 font-bold mt-1">Review Mode</span>
             <small class="block text-slate-400 mt-2 leading-relaxed">Read verses, review their references, and remember key phrases.</small>
           </span>
         </button>
@@ -1247,7 +1245,10 @@
         }
       };
 
-      if (state.gameMode === 'blitz' && state.blitzCountdownDone) {
+      // Practice Mode gets a single 3-second countdown at the start only.
+      // Later verses load immediately without cooldowns.
+      if ((state.gameMode === 'blitz' && state.blitzCountdownDone) ||
+          (state.gameMode === 'practice' && state.currentIndex > 0)) {
         hideCountdown();
         revealVerse();
       } else {
