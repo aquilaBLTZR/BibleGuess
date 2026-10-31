@@ -192,7 +192,18 @@
       </div>
     </div>
 
-    <!-- REVIEW MODE -->
+
+    <section id="screen-library-select" class="w-full max-w-2xl hidden flex-col">
+      <div class="flex items-center justify-between gap-3 mb-6">
+        <button id="btn-library-back" class="text-xs text-slate-300 py-2 px-3 rounded-xl bg-slate-800 border border-slate-700"><i class="fa-solid fa-arrow-left"></i> BACK</button>
+        <span id="library-select-label" class="text-xs text-slate-500 uppercase tracking-wider font-bold">Choose collection</span>
+      </div>
+      <h2 id="library-select-title" class="text-2xl sm:text-3xl font-extrabold text-white text-center mb-2">Choose Verses</h2>
+      <p id="library-select-description" class="text-sm text-slate-400 text-center mb-6">Choose a verse collection.</p>
+      <div id="library-collection-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      <p id="library-empty-message" class="hidden text-center text-sm text-slate-500 mt-5">No dated collections have been added yet.</p>
+    </section>
+\n    <!-- REVIEW MODE -->
     <section id="screen-review" class="w-full max-w-3xl hidden flex-col">
       <div class="flex items-center justify-between gap-3 mb-5">
         <button id="btn-review-back" class="text-xs text-slate-300 hover:text-white flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-800 border border-slate-700">
@@ -648,7 +659,7 @@
       maxRounds: 10,
       blitzCountdownDone: false,
       blitzAdvanceId: null,
-      currentReviewCategory: 'short',
+      currentReviewCategory: 'short',\n      sourceMode: 'classic', collectionVerses: [], collectionMeta: null, libraryPurpose: 'play',
       flashcardDeck: [],
       flashcardIndex: 0,
       flashcardKnown: 0,
@@ -658,7 +669,7 @@
 
     // --- DOM ELEMENTS ---
     const screens = {
-      splash: document.getElementById('screen-splash'),
+      splash: document.getElementById('screen-splash'),\n      librarySelect: document.getElementById('screen-library-select'),
       review: document.getElementById('screen-review'),
       game: document.getElementById('screen-game'),
       summary: document.getElementById('screen-summary')
@@ -687,7 +698,7 @@
       countdownHeading: document.getElementById('countdown-heading'),
       countdownMessage: document.getElementById('countdown-message'),
       btnStopGameFeedback: document.getElementById('btn-stop-game-feedback'),
-      btnStartGame: document.getElementById('btn-start-game'),
+      btnStartGame: document.getElementById('btn-start-game'),\n      btnLibraryBack: document.getElementById('btn-library-back'), librarySelectLabel: document.getElementById('library-select-label'), librarySelectTitle: document.getElementById('library-select-title'), librarySelectDescription: document.getElementById('library-select-description'), libraryCollectionList: document.getElementById('library-collection-list'), libraryEmptyMessage: document.getElementById('library-empty-message'),
       btnGameModeBack: document.getElementById('btn-game-mode-back'),
       gameModeChoices: document.querySelectorAll('.game-mode-choice'),
       practiceHintWrap: document.getElementById('practice-hint-wrap'),
@@ -751,7 +762,7 @@
 
     function initEventListeners() {
       // 1. Splash navigation
-      elements.btnStartGame.addEventListener('click', () => showModal('gameMode'));
+      elements.btnStartGame.addEventListener('click', () => openLibraryChoices('play'));\n      elements.btnLibraryBack.addEventListener('click', () => showScreen('splash'));
       elements.btnGameModeBack.addEventListener('click', () => hideModal('gameMode'));
       elements.gameModeChoices.forEach(btn => btn.addEventListener('click', () => {
         state.gameMode = btn.getAttribute('data-game-mode');
@@ -762,7 +773,7 @@
         renderReviewMode('short');
         showScreen('review');
       });
-      elements.btnReviewBack.addEventListener('click', () => showScreen('splash'));
+      elements.btnReviewBack.addEventListener('click', () => openLibraryChoices('study'));
       elements.reviewCategoryButtons.forEach(btn => btn.addEventListener('click', () => {
         renderReviewMode(btn.getAttribute('data-review-category'));
       }));
@@ -939,6 +950,55 @@
       modal.style.pointerEvents = 'none';
     }
 
+
+
+    // RECENT VERSE COLLECTIONS: add dated files to data/new-verse-collections.json.
+    async function openLibraryChoices(purpose) {
+      state.libraryPurpose=purpose; state.sourceMode='classic'; state.collectionVerses=[]; state.collectionMeta=null;
+      elements.librarySelectLabel.textContent=purpose==='play'?'PLAY':'STUDY';
+      elements.librarySelectTitle.textContent=purpose==='play'?'Choose Your Verses':'Choose What to Study';
+      elements.librarySelectDescription.textContent=purpose==='play'?'Choose a recent dated collection or the original verse pool.':'Choose recent topics or the original study categories.';
+      elements.libraryCollectionList.innerHTML=''; elements.libraryEmptyMessage.classList.add('hidden');
+      if(purpose==='play'){
+        addLibraryChoice('NEW VERSES','Recent PM, WS, PBB, and SPBB collections, organized by date.','fa-calendar-days',()=>loadRecentCollections());
+        addLibraryChoice('CLASSIC VERSES','The original BibleGuess verse database.','fa-book-open',()=>{state.sourceMode='classic';hideLibraryAndContinue();});
+      } else {
+        addLibraryChoice('RECENT TOPICS','Dated congregation topics with verse keywords.','fa-calendar-check',()=>loadRecentCollections());
+        addLibraryChoice('CLASSIC VERSES','The original Short, Intermediate, Long, and Continuous categories.','fa-book-open',()=>{state.sourceMode='classic';renderReviewMode('short');showScreen('review');});
+      }
+      showScreen('librarySelect');
+    }
+    function addLibraryChoice(title,description,icon,action){
+      const b=document.createElement('button'); b.className='mode-card rounded-2xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/15 p-5 text-left flex items-center gap-4';
+      const i=document.createElement('span'); i.className='w-12 h-12 shrink-0 rounded-xl bg-amber-500/15 text-amber-300 flex items-center justify-center text-xl'; i.innerHTML='<i class="fa-solid '+icon+'"></i>';
+      const c=document.createElement('span'),h=document.createElement('strong'),d=document.createElement('small'); h.className='block text-white font-extrabold';h.textContent=title;d.className='block text-slate-400 mt-1 leading-relaxed';d.textContent=description;c.append(h,d);b.append(i,c);b.addEventListener('click',action);elements.libraryCollectionList.appendChild(b);
+    }
+    async function loadRecentCollections(){
+      elements.libraryCollectionList.innerHTML='<p class="col-span-full text-center text-slate-400">Loading dated collections...</p>';
+      try{
+        const response=await fetch('data/new-verse-collections.json',{cache:'no-store'});if(!response.ok)throw new Error('index missing');
+        const collections=await response.json();elements.libraryCollectionList.innerHTML='';
+        if(!Array.isArray(collections)||!collections.length){elements.libraryEmptyMessage.textContent='No dated collections have been added yet.';elements.libraryEmptyMessage.classList.remove('hidden');return;}
+        collections.forEach(meta=>addLibraryChoice(meta.title||((meta.congregation||'')+' '+(meta.date||'')),(meta.congregation||'Congregation')+' • '+(meta.date||'')+' • '+(meta.verseCount||'')+' verses','fa-calendar-day',()=>loadOneCollection(meta)));
+      }catch(e){elements.libraryCollectionList.innerHTML='';elements.libraryEmptyMessage.textContent='Could not load dated collections. Check your connection and collection index.';elements.libraryEmptyMessage.classList.remove('hidden');}
+    }
+    async function loadOneCollection(meta){
+      try{
+        const response=await fetch(meta.file,{cache:'no-store'});if(!response.ok)throw new Error('file missing');
+        const data=await response.json(),verses=Array.isArray(data)?data:data.verses;if(!Array.isArray(verses)||!verses.length)throw new Error('empty');
+        state.collectionVerses=verses.map((v,n)=>({...v,id:v.id||('recent_'+meta.id+'_'+n),altBook:v.altBook||[],isBeginner:v.isBeginner!==false,keyword:v.keyword||'Remember the main idea'}));
+        state.collectionMeta=meta;state.sourceMode='recent';
+        if(state.libraryPurpose==='play')hideLibraryAndContinue();else{renderRecentTopics();showScreen('review');}
+      }catch(e){elements.libraryCollectionList.innerHTML='';elements.libraryEmptyMessage.textContent='This dated collection could not be loaded. Check its JSON file.';elements.libraryEmptyMessage.classList.remove('hidden');}
+    }
+    function hideLibraryAndContinue(){showScreen('splash');showModal('gameMode');}
+    function getActiveVersePool(){return state.sourceMode==='recent'?state.collectionVerses:VERSE_DATABASE;}
+    function getStudyVersePool(){return state.sourceMode==='recent'?state.collectionVerses:VERSE_DATABASE;}
+    function renderRecentTopics(){
+      state.currentReviewCategory='recent';elements.reviewCategoryButtons.forEach(b=>b.classList.add('hidden'));
+      elements.reviewCount.textContent=(state.collectionMeta?.title||'Recent Topics')+' • '+state.collectionVerses.length+' verses';elements.reviewList.innerHTML='';
+      state.collectionVerses.forEach(v=>{const card=document.createElement('article');card.className='glass-card rounded-2xl border border-amber-500/20 p-4 mb-3';const ref=document.createElement('div');ref.className='text-amber-300 font-bold text-sm mb-2';ref.textContent=v.ref;const body=document.createElement('p');body.className='text-slate-100 leading-relaxed text-sm';body.textContent=v.text;const key=document.createElement('p');key.className='text-xs text-amber-200 mt-3';key.textContent='Keyword: '+v.keyword;card.append(ref,body,key);elements.reviewList.appendChild(card);});
+    }
 
     // --- REVIEW MODE ---
     // Keywords are memory aids. Verse text is displayed directly from the existing ADB database.
@@ -1153,13 +1213,13 @@
 
       // Short category is a curated set of the 10 shortest verses from Intermediate.
       // Those verses are moved out of Intermediate so categories stay distinct.
-      const standaloneVerses = VERSE_DATABASE.filter(verse => !isContinuousVerse(verse));
+      const studyPool = getStudyVersePool();\n      const standaloneVerses = studyPool.filter(verse => !isContinuousVerse(verse));
       const intermediateCandidates = standaloneVerses
         .filter(verse => wordCount(verse) > 10 && wordCount(verse) <= 25)
         .sort((a, b) => wordCount(a) - wordCount(b) || a.id.localeCompare(b.id));
       const shortVerseIds = new Set(intermediateCandidates.slice(0, 10).map(verse => verse.id));
 
-      const verses = VERSE_DATABASE.filter(verse => {
+      const verses = studyPool.filter(verse => {
         const continuous = isContinuousVerse(verse);
         if (category === 'continuous') return continuous;
         if (continuous) return false;
@@ -1257,7 +1317,7 @@
 
     // --- FLASHCARD STUDY MODE ---
     function startFlashcards() {
-      state.flashcardDeck = shuffleArray(VERSE_DATABASE.filter(verse => verse.text && verse.ref));
+      state.flashcardDeck = shuffleArray(getStudyVersePool().filter(verse => verse.text && verse.ref));
       state.flashcardIndex = 0;
       state.flashcardKnown = 0;
       state.flashcardRetry = [];
@@ -1347,10 +1407,10 @@
       // 1. Filter Verse Pool
       let pool = [];
       if (state.selectedMode === 'beginner') {
-        pool = VERSE_DATABASE.filter(v => v.isBeginner);
+        pool = getActiveVersePool().filter(v => v.isBeginner);
       } else {
         // Pro mode contains only hard/non-Beginner verses, never Beginner duplicates.
-        pool = VERSE_DATABASE.filter(v => !v.isBeginner);
+        pool = getActiveVersePool().filter(v => !v.isBeginner);
       }
 
       // Shuffle Pool
