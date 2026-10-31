@@ -782,7 +782,7 @@
       // Left and Right arrows switch study categories while Review Mode is open.
       const reviewCategories = Array.from(elements.reviewCategoryButtons);
       document.addEventListener('keydown', (e) => {
-        if (screens.review.classList.contains('hidden')) return;
+        if (screens.review.classList.contains('hidden') || state.currentReviewCategory === 'recent') return;
         if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
         if (e.target instanceof HTMLElement &&
             (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))) return;
