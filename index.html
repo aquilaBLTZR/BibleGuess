@@ -987,7 +987,7 @@
       try{
         const response=await fetch(meta.file,{cache:'no-store'});if(!response.ok)throw new Error('file missing');
         const data=await response.json(),verses=Array.isArray(data)?data:data.verses;if(!Array.isArray(verses)||!verses.length)throw new Error('empty');
-        state.collectionVerses=verses.map((v,n)=>({...v,id:v.id||('recent_'+meta.id+'_'+n),altBook:v.altBook||[],isBeginner:v.isBeginner!==false,keyword:v.keyword||'Remember the main idea'}));
+        state.collectionVerses=verses.map((v,n)=>({...v,id:v.id||('recent_'+meta.id+'_'+n),altBook:v.altBook||[],isBeginner:typeof v.isBeginner==='boolean'?v.isBeginner:(v.text.trim().split(/\\s+/).length<=25),keyword:v.keyword||'Remember the main idea'}));
         state.collectionMeta=meta;state.sourceMode='recent';
         if(state.libraryPurpose==='play')hideLibraryAndContinue();else{renderRecentTopics();showScreen('review');}
       }catch(e){elements.libraryCollectionList.innerHTML='';elements.libraryEmptyMessage.textContent='This dated collection could not be loaded. Check its JSON file.';elements.libraryEmptyMessage.classList.remove('hidden');}
@@ -1642,7 +1642,7 @@
     }
 
     function renderMultipleChoiceOptions(correctVerse) {
-      const pool = state.selectedMode === "beginner" ? VERSE_DATABASE.filter(v => v.isBeginner) : VERSE_DATABASE.filter(v => !v.isBeginner);
+      const sourcePool = getActiveVersePool();\n      const pool = state.selectedMode === "beginner" ? sourcePool.filter(v => v.isBeginner) : sourcePool.filter(v => !v.isBeginner);
       const distractors = shuffleArray(pool.filter(v => v.id !== correctVerse.id)).slice(0, 3);
       const choices = shuffleArray([correctVerse, ...distractors]);
       elements.multipleChoiceOptions.innerHTML = "";
@@ -1681,7 +1681,7 @@
     }
 
     function getVerseKeyword(verse) {
-      const savedKeyword = REVIEW_KEYWORDS[verse.id];
+      if (verse.keyword) return verse.keyword;\n      const savedKeyword = REVIEW_KEYWORDS[verse.id];
       if (savedKeyword) return savedKeyword;
       // Give every verse a useful keyword, including entries without a curated review keyword.
       const words = verse.text.replace(/[“”"'.,:;!?()]/g, '').split(/\s+/).filter(Boolean);
