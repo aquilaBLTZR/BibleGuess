@@ -203,7 +203,8 @@
       <div id="library-collection-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
       <p id="library-empty-message" class="hidden text-center text-sm text-slate-500 mt-5">No dated collections have been added yet.</p>
     </section>
-\n    <!-- REVIEW MODE -->
+
+    <!-- REVIEW MODE -->
     <section id="screen-review" class="w-full max-w-3xl hidden flex-col">
       <div class="flex items-center justify-between gap-3 mb-5">
         <button id="btn-review-back" class="text-xs text-slate-300 hover:text-white flex items-center gap-2 py-2 px-3 rounded-xl bg-slate-800 border border-slate-700">
@@ -773,10 +774,7 @@
         hideModal('gameMode');
         showModal('mode');
       }));
-      elements.btnReviewMode.addEventListener('click', () => {
-        renderReviewMode('short');
-        showScreen('review');
-      });
+      elements.btnReviewMode.addEventListener('click', () => openLibraryChoices('study'));
       elements.btnReviewBack.addEventListener('click', () => openLibraryChoices('study'));
       elements.reviewCategoryButtons.forEach(btn => btn.addEventListener('click', () => {
         renderReviewMode(btn.getAttribute('data-review-category'));
@@ -964,7 +962,7 @@
       elements.librarySelectDescription.textContent=purpose==='play'?'Choose a recent dated collection or the original verse pool.':'Choose recent topics or the original study categories.';
       elements.libraryCollectionList.innerHTML=''; elements.libraryEmptyMessage.classList.add('hidden');
       if(purpose==='play'){
-        addLibraryChoice('NEW VERSES','Recent PM, WS, PBB, and SPBB collections, organized by date.','fa-calendar-days',()=>loadRecentCollections());
+        addLibraryChoice('RECENT TOPICS','Recent PM, WS, PBB, and SPBB collections, organized by date.','fa-calendar-days',()=>loadRecentCollections());
         addLibraryChoice('CLASSIC VERSES','The original BibleGuess verse database.','fa-book-open',()=>{state.sourceMode='classic';hideLibraryAndContinue();});
       } else {
         addLibraryChoice('RECENT TOPICS','Dated congregation topics with verse keywords.','fa-calendar-check',()=>loadRecentCollections());
