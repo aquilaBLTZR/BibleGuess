@@ -978,8 +978,9 @@
       try{
         const response=await fetch('data/new-verse-collections.json',{cache:'no-store'});if(!response.ok)throw new Error('index missing');
         const collections=await response.json();elements.libraryCollectionList.innerHTML='';
-        if(!Array.isArray(collections)||!collections.length){elements.libraryEmptyMessage.textContent='No dated collections have been added yet.';elements.libraryEmptyMessage.classList.remove('hidden');return;}
-        collections.forEach(meta=>addLibraryChoice(meta.title||((meta.congregation||'')+' '+(meta.date||'')),(meta.congregation||'Congregation')+' • '+(meta.date||'')+' • '+(meta.verseCount||'')+' verses','fa-calendar-day',()=>loadOneCollection(meta)));
+        const approved=Array.isArray(collections)?collections.filter(meta=>meta.codeword==='NEW VR/ST'&&meta.date&&meta.congregation&&meta.file):[];
+        if(!approved.length){elements.libraryEmptyMessage.textContent='No dated collections have been added yet.';elements.libraryEmptyMessage.classList.remove('hidden');return;}
+        approved.forEach(meta=>addLibraryChoice(meta.title||((meta.congregation||'')+' '+(meta.date||'')),(meta.congregation||'Congregation')+' • '+(meta.date||'')+' • '+(meta.verseCount||'')+' verses','fa-calendar-day',()=>loadOneCollection(meta)));
       }catch(e){elements.libraryCollectionList.innerHTML='';elements.libraryEmptyMessage.textContent='Could not load dated collections. Check your connection and collection index.';elements.libraryEmptyMessage.classList.remove('hidden');}
     }
     async function loadOneCollection(meta){
@@ -1206,6 +1207,7 @@
 
 
     function renderReviewMode(category) {
+      elements.reviewCategoryButtons.forEach(button => button.classList.remove('hidden'));
       state.currentReviewCategory = category;
       const continuousBaseIds = new Set(Object.keys(COMBINED_VERSE_TEXTS));
       const isContinuousVerse = verse => continuousBaseIds.has(verse.id.replace(/_v\d+$/, ''));
