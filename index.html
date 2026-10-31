@@ -659,7 +659,8 @@
       maxRounds: 10,
       blitzCountdownDone: false,
       blitzAdvanceId: null,
-      currentReviewCategory: 'short',\n      sourceMode: 'classic', collectionVerses: [], collectionMeta: null, libraryPurpose: 'play',
+      currentReviewCategory: 'short',
+      sourceMode: 'classic', collectionVerses: [], collectionMeta: null, libraryPurpose: 'play',
       flashcardDeck: [],
       flashcardIndex: 0,
       flashcardKnown: 0,
@@ -669,7 +670,8 @@
 
     // --- DOM ELEMENTS ---
     const screens = {
-      splash: document.getElementById('screen-splash'),\n      librarySelect: document.getElementById('screen-library-select'),
+      splash: document.getElementById('screen-splash'),
+      librarySelect: document.getElementById('screen-library-select'),
       review: document.getElementById('screen-review'),
       game: document.getElementById('screen-game'),
       summary: document.getElementById('screen-summary')
@@ -698,7 +700,8 @@
       countdownHeading: document.getElementById('countdown-heading'),
       countdownMessage: document.getElementById('countdown-message'),
       btnStopGameFeedback: document.getElementById('btn-stop-game-feedback'),
-      btnStartGame: document.getElementById('btn-start-game'),\n      btnLibraryBack: document.getElementById('btn-library-back'), librarySelectLabel: document.getElementById('library-select-label'), librarySelectTitle: document.getElementById('library-select-title'), librarySelectDescription: document.getElementById('library-select-description'), libraryCollectionList: document.getElementById('library-collection-list'), libraryEmptyMessage: document.getElementById('library-empty-message'),
+      btnStartGame: document.getElementById('btn-start-game'),
+      btnLibraryBack: document.getElementById('btn-library-back'), librarySelectLabel: document.getElementById('library-select-label'), librarySelectTitle: document.getElementById('library-select-title'), librarySelectDescription: document.getElementById('library-select-description'), libraryCollectionList: document.getElementById('library-collection-list'), libraryEmptyMessage: document.getElementById('library-empty-message'),
       btnGameModeBack: document.getElementById('btn-game-mode-back'),
       gameModeChoices: document.querySelectorAll('.game-mode-choice'),
       practiceHintWrap: document.getElementById('practice-hint-wrap'),
@@ -762,7 +765,8 @@
 
     function initEventListeners() {
       // 1. Splash navigation
-      elements.btnStartGame.addEventListener('click', () => openLibraryChoices('play'));\n      elements.btnLibraryBack.addEventListener('click', () => showScreen('splash'));
+      elements.btnStartGame.addEventListener('click', () => openLibraryChoices('play'));
+      elements.btnLibraryBack.addEventListener('click', () => showScreen('splash'));
       elements.btnGameModeBack.addEventListener('click', () => hideModal('gameMode'));
       elements.gameModeChoices.forEach(btn => btn.addEventListener('click', () => {
         state.gameMode = btn.getAttribute('data-game-mode');
@@ -987,7 +991,7 @@
       try{
         const response=await fetch(meta.file,{cache:'no-store'});if(!response.ok)throw new Error('file missing');
         const data=await response.json(),verses=Array.isArray(data)?data:data.verses;if(!Array.isArray(verses)||!verses.length)throw new Error('empty');
-        state.collectionVerses=verses.map((v,n)=>({...v,id:v.id||('recent_'+meta.id+'_'+n),altBook:v.altBook||[],isBeginner:typeof v.isBeginner==='boolean'?v.isBeginner:(v.text.trim().split(/\\s+/).length<=25),keyword:v.keyword||'Remember the main idea'}));
+        state.collectionVerses=verses.map((v,n)=>({...v,id:v.id||('recent_'+meta.id+'_'+n),altBook:v.altBook||[],isBeginner:typeof v.isBeginner==='boolean'?v.isBeginner:(v.text.trim().split(/\s+/).length<=25),keyword:v.keyword||'Remember the main idea'}));
         state.collectionMeta=meta;state.sourceMode='recent';
         if(state.libraryPurpose==='play')hideLibraryAndContinue();else{renderRecentTopics();showScreen('review');}
       }catch(e){elements.libraryCollectionList.innerHTML='';elements.libraryEmptyMessage.textContent='This dated collection could not be loaded. Check its JSON file.';elements.libraryEmptyMessage.classList.remove('hidden');}
@@ -1215,7 +1219,8 @@
 
       // Short category is a curated set of the 10 shortest verses from Intermediate.
       // Those verses are moved out of Intermediate so categories stay distinct.
-      const studyPool = getStudyVersePool();\n      const standaloneVerses = studyPool.filter(verse => !isContinuousVerse(verse));
+      const studyPool = getStudyVersePool();
+      const standaloneVerses = studyPool.filter(verse => !isContinuousVerse(verse));
       const intermediateCandidates = standaloneVerses
         .filter(verse => wordCount(verse) > 10 && wordCount(verse) <= 25)
         .sort((a, b) => wordCount(a) - wordCount(b) || a.id.localeCompare(b.id));
@@ -1642,7 +1647,8 @@
     }
 
     function renderMultipleChoiceOptions(correctVerse) {
-      const sourcePool = getActiveVersePool();\n      const pool = state.selectedMode === "beginner" ? sourcePool.filter(v => v.isBeginner) : sourcePool.filter(v => !v.isBeginner);
+      const sourcePool = getActiveVersePool();
+      const pool = state.selectedMode === "beginner" ? sourcePool.filter(v => v.isBeginner) : sourcePool.filter(v => !v.isBeginner);
       const distractors = shuffleArray(pool.filter(v => v.id !== correctVerse.id)).slice(0, 3);
       const choices = shuffleArray([correctVerse, ...distractors]);
       elements.multipleChoiceOptions.innerHTML = "";
@@ -1681,7 +1687,8 @@
     }
 
     function getVerseKeyword(verse) {
-      if (verse.keyword) return verse.keyword;\n      const savedKeyword = REVIEW_KEYWORDS[verse.id];
+      if (verse.keyword) return verse.keyword;
+      const savedKeyword = REVIEW_KEYWORDS[verse.id];
       if (savedKeyword) return savedKeyword;
       // Give every verse a useful keyword, including entries without a curated review keyword.
       const words = verse.text.replace(/[“”"'.,:;!?()]/g, '').split(/\s+/).filter(Boolean);
